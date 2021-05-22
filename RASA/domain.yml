@@ -21,14 +21,73 @@ intents:
     use_entities: true
 entities: []
 slots: {}
+
+
 responses:
-  utter_greet:
+  utter_question:
   - buttons:
-    - payload: /mood_great
-      title: bien
-    - payload: /mood_unhappy
-      title: mal
-    text: ¡Hola! ¿Cómo estás?
+    - payload: /ask_place
+      title: Consulta de lugares
+    - payload: /ask_date
+      title: Consulta de fechas
+    - payload: /ask_document
+      title: Consulta de documentos
+    - payload: /ask_academy
+      title: Consulta academica            
+    text: ¡Hola! ¿En que puedo ayudarte?
+  
+  # CONSULTA SOBRE LUGARES
+  utter_place:
+    text: ¿Que lugar buscas?
+  
+  utter_place_EAO:
+    text: La EAO se encuentra en la av ecuador 500.
+  
+  utter_place_library:
+    text: La biblioteca se encuentra al frente de finanzas
+  
+  # CONSULTA SOBRE FECHAS
+
+  utter_date:
+    text: ¿En base a que proceso?
+
+  utter_date_pagare:
+    text: La fecha limite para pagar el pagare es el 20/10 
+  
+  
+  utter_document:
+  - buttons:
+    - payload: /ask_document_about
+      title: En que consiste
+    - payload: /ask_document_req
+      title: Los requisitos para obtenerlos
+    - payload: /ask_document_inst
+      title: Intrucciones para obtenerlos
+
+  utter_document_req:
+    text: ¿Sobre que proceso desea consultar los documentos?
+
+  utter_document_req_bicentenario:
+    text: Necesitas tu certificado de alumno regular, y 100.000 pesos en efectivo.
+
+  utter_document_inst_CAR:
+    text: Tienes que acceder al LOA, y hacer click en el apartado de documentos.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   utter_cheer_up:
   - image: https://i.imgur.com/nGF1K8f.jpg
     text: 'Aquí tienes algo para animarte:'

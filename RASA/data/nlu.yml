@@ -1,7 +1,7 @@
 version: "2.0"
 nlu:
 - intent: greet
-  examples: |
+examples: |
     - hola
     - Hola hola
     - Buenas tardes
@@ -88,3 +88,67 @@ nlu:
     - Eres humano?
     - ¿estoy hablando con un bot?
     - estoy hablando con una persona?
+
+- intent: ask_place
+  examples: |
+    - Lugar
+
+- intent: ask_date
+  examples: |
+    - Fecha
+
+- intent: ask_document
+  examples: |
+    - Documento
+
+- intent: ask_academy
+  examples: |
+    - Academico
+
+- intent: ask_place_EAO
+  examples: |
+    - Como llego a la EAO
+    - Donde esta la EAO
+    - EAO
+    - Escuela de artes y oficios
+    - Donde estan los sapitos
+
+- intent: ask_place_library
+  examples: |
+    - Como llego a la biblioteca
+    - Donde esta la biblio
+    - Biblioteca
+    - biblio
+    - viblioteca
+
+- intent: ask_date_pagare
+  examples: |
+    - cuando se paga el pagare
+    - hasta cuando puedo pagar el pagare
+    - pagare
+    - fecha del pagare
+    - cuando me echan de la u
+
+- intent: ask_document_req
+  examples: |
+    - documento_req
+
+- intent: ask_document_bicentenario
+  examples: |
+    - sobre la beca bicentenario
+    - beca bicentenario
+    - bicentenario
+    - bicenten
+    - beca bicentena
+
+
+- intent: ask_document_CAR
+  examples: |
+    - sobre el certificado de alumno regular
+    - alumno regular
+    - CAR
+    - car
+    - certif. alumno regul
+    . cerif de alumn regular
+
+    

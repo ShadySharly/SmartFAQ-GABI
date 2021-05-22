@@ -2,27 +2,90 @@ version: "2.0"
 
 stories:
 
-- story: happy path
+- story: ask about EAO_location
   steps:
   - intent: greet
-  - action: utter_greet
-  - intent: mood_great
-  - action: utter_happy
-
-- story: sad path 1
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: mood_unhappy
-  - action: utter_cheer_up
+  - action: utter_question
+  - intent: ask_place
+  - action: utter_place
+  - intent: ask_place_EAO
+  - action: utter_place_EAO
   - action: utter_did_that_help
-  - intent: affirm
-  - action: utter_happy
+  - intent: deny
+  - action: utter_goodbye  
+
+- story: ask about Library_location
+  steps:
+  - intent: greet
+  - action: utter_question
+  - intent: ask_place
+  - action: utter_place
+  - intent: ask_place_library
+  - action: utter_place_library
+  - action: utter_did_that_help
+  - intent: deny
+  - action: utter_goodbye
+
+- story: ask about Pagare_date
+  steps:
+  - intent: greet
+  - action: utter_question
+  - intent: ask_date
+  - action: utter_date
+  - intent: ask_date_pagare
+  - action: utter_date_pagare
+  - action: utter_did_that_help
+  - intent: deny
+  - action: utter_goodbye
+
+- story: ask about Bicentenario_document_req
+  steps:
+  - intent: greet
+  - action: utter_question
+  - intent: ask_document
+  - action: utter_document
+  - intent: ask_document_req
+  - action: utter_document_req
+  - intent: ask_document_bicentenario
+  - action: utter_document_req_bicentenario
+  - action: utter_did_that_help
+  - intent: deny
+  - action: utter_goodbye
+
+- story: ask about CAR_document_inst
+  steps:
+  - intent: greet
+  - action: utter_question
+  - intent: ask_document
+  - action: utter_document
+  - intent: ask_document_inst
+  - action: utter_document_req
+  - intent: ask_document_CAR
+  - action: utter_document_inst_CAR
+  - action: utter_did_that_help
+  - intent: deny
+  - action: utter_goodbye
+
+- story: ask about Calculo_pep1_content
+  steps:
+  - intent: greet
+  - action: utter_question
+  - intent: ask_document
+  - action: utter_document
+  - intent: ask_document_inst
+  - action: utter_document_req
+  - intent: ask_document_CAR
+  - action: utter_document_inst_CAR
+  - action: utter_did_that_help
+  - intent: deny
+  - action: utter_goodbye
+
+
 
 - story: sad path 2
   steps:
   - intent: greet
-  - action: utter_greet
+  - action: utter_question
   - intent: mood_unhappy
   - action: utter_cheer_up
   - action: utter_did_that_help
