@@ -10,3 +10,17 @@ RASA/actions/actions.py
 RASA/models/20210521-194659.tar.gz
 
 RASA/tests/test_stories.yml
+
+RASA/events.db
+
+RASA/events.db-shm
+
+RASA/events.db-wal
+
+RASA/models/20210521-201427.tar.gz
+
+RASA/models/20210521-201926.tar.gz
+
+RASA/models/20210521-203346.tar.gz
+
+RASA/rasa.db
