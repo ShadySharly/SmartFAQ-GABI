@@ -2,7 +2,7 @@ version: "2.0"
 
 stories:
 
-- story: ask about EAO_location
+- story: ask about location_EAO
   steps:
   - intent: greet
   - action: utter_question
@@ -14,7 +14,7 @@ stories:
   - intent: deny
   - action: utter_goodbye  
 
-- story: ask about Library_location
+- story: ask about location_Library
   steps:
   - intent: greet
   - action: utter_question
@@ -26,68 +26,86 @@ stories:
   - intent: deny
   - action: utter_goodbye
 
-- story: ask about Pagare_date
+- story: ask about process_date_Pagare
   steps:
   - intent: greet
   - action: utter_question
-  - intent: ask_date
-  - action: utter_date
-  - intent: ask_date_pagare
+  - intent: ask_process
+  - action: utter_process
+  - intent: ask_process_pagare
+  - action: utter_process_pagare
+  - intent: ask_process_date_pagare
   - action: utter_date_pagare
   - action: utter_did_that_help
   - intent: deny
   - action: utter_goodbye
 
-- story: ask about Bicentenario_document_req
+- story: ask about process_req_Pagare
   steps:
   - intent: greet
   - action: utter_question
-  - intent: ask_document
-  - action: utter_document
-  - intent: ask_document_req
-  - action: utter_document_req
-  - intent: ask_document_bicentenario
-  - action: utter_document_req_bicentenario
+  - intent: ask_process
+  - action: utter_process
+  - intent: ask_process_pagare
+  - action: utter_process_pagare
+  - intent: ask_process_req_pagare
+  - action: utter_req_pagare
   - action: utter_did_that_help
   - intent: deny
   - action: utter_goodbye
 
-- story: ask about CAR_document_inst
+- story: ask about process_info_Pagare
   steps:
   - intent: greet
   - action: utter_question
-  - intent: ask_document
-  - action: utter_document
-  - intent: ask_document_inst
-  - action: utter_document_req
-  - intent: ask_document_CAR
-  - action: utter_document_inst_CAR
+  - intent: ask_process
+  - action: utter_process
+  - intent: ask_process_pagare
+  - action: utter_process_pagare  
+  - intent: ask_process_info_pagare
+  - action: utter_info_pagare
   - action: utter_did_that_help
   - intent: deny
   - action: utter_goodbye
 
-- story: ask about Calculo_pep1_content
+- story: ask about courses_date_pep1_calculo1
   steps:
   - intent: greet
   - action: utter_question
-  - intent: ask_document
-  - action: utter_document
-  - intent: ask_document_inst
-  - action: utter_document_req
-  - intent: ask_document_CAR
-  - action: utter_document_inst_CAR
+  - intent: ask_courses
+  - action: utter_courses
+  - intent: ask_courses_calculo1
+  - action: utter_courses_calculo1
+  - intent: ask_date_pep1_calculo1
+  - action: utter_date_pep1_calculo1
   - action: utter_did_that_help
   - intent: deny
   - action: utter_goodbye
 
-
-
-- story: sad path 2
+- story: ask about courses_content_pep1_calculo1
   steps:
   - intent: greet
   - action: utter_question
-  - intent: mood_unhappy
-  - action: utter_cheer_up
+  - intent: ask_courses
+  - action: utter_courses
+  - intent: ask_courses_calculo1
+  - action: utter_courses_calculo1  
+  - intent: ask_content_pep1_calculo1
+  - action: utter_content_pep1_calculo1
+  - action: utter_did_that_help
+  - intent: deny
+  - action: utter_goodbye
+
+- story: ask about courses_about_calculo1
+  steps:
+  - intent: greet
+  - action: utter_question
+  - intent: ask_courses
+  - action: utter_courses
+  - intent: ask_courses_calculo1
+  - action: utter_courses_calculo1  
+  - intent: ask_about_calculo1_derivative
+  - action: utter_about_calculo1_derivative
   - action: utter_did_that_help
   - intent: deny
   - action: utter_goodbye

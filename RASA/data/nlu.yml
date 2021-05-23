@@ -1,7 +1,7 @@
 version: "2.0"
 nlu:
 - intent: greet
-examples: |
+  examples: |
     - hola
     - Hola hola
     - Buenas tardes
@@ -88,23 +88,15 @@ examples: |
     - Eres humano?
     - ¿estoy hablando con un bot?
     - estoy hablando con una persona?
-
 - intent: ask_place
   examples: |
-    - Lugar
-
-- intent: ask_date
+    - null
+- intent: ask_process
   examples: |
-    - Fecha
-
-- intent: ask_document
+    - null
+- intent: ask_courses
   examples: |
-    - Documento
-
-- intent: ask_academy
-  examples: |
-    - Academico
-
+    - null
 - intent: ask_place_EAO
   examples: |
     - Como llego a la EAO
@@ -112,7 +104,7 @@ examples: |
     - EAO
     - Escuela de artes y oficios
     - Donde estan los sapitos
-
+    - donde esta la EAO
 - intent: ask_place_library
   examples: |
     - Como llego a la biblioteca
@@ -121,34 +113,53 @@ examples: |
     - biblio
     - viblioteca
 
-- intent: ask_date_pagare
+
+- intent: ask_process_pagare
+  examples: |
+    - null
+- intent: ask_process_date_pagare
   examples: |
     - cuando se paga el pagare
     - hasta cuando puedo pagar el pagare
     - pagare
     - fecha del pagare
     - cuando me echan de la u
-
-- intent: ask_document_req
+- intent: ask_process_req_pagare
   examples: |
-    - documento_req
-
-- intent: ask_document_bicentenario
+    - que necesito para pagar el pagare
+    - que requisitos tiene el pagare
+    - requisitos para el pagare
+    - req para el pagare
+    - requisitos pagare
+    - req pagare
+    - necesito pagare
+- intent: ask_process_info_pagare
   examples: |
-    - sobre la beca bicentenario
-    - beca bicentenario
-    - bicentenario
-    - bicenten
-    - beca bicentena
+    - que es el pagare
+    - en que consiste el pagare
+    - que pagare
+    - consiste pagare
 
-
-- intent: ask_document_CAR
+- intent: ask_courses_calculo1
   examples: |
-    - sobre el certificado de alumno regular
-    - alumno regular
-    - CAR
-    - car
-    - certif. alumno regul
-    . cerif de alumn regular
-
-    
+    - Calculo 1
+- intent: ask_date_pep1_calculo1
+  examples: |
+    - cuando es la pep1 de calculo 1
+    - cuando es pep1 de calculo 1
+    - que dia es pep 1 de calculo1
+    - fecha de la pep 1 de calculo 1
+    - cuando es la fecha de la pep1 de calculo 1   
+- intent: ask_content_pep1_calculo1
+  examples: |
+    - cual es el contenido pep1 de calculo 1
+    - que entra en la pep1 de calculo 1
+    - que materia entra en pep 1 de calculo1
+    - materia de pep 1 de calculo 1
+    - contenido de pep 1 de calculo 1     
+- intent: ask_about_calculo1_derivative
+  examples: |
+    - como puedo derivar
+    - cuales son los pasos para derivar
+    - como derivo
+    - derivada

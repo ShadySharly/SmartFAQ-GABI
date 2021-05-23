@@ -19,75 +19,90 @@ intents:
     use_entities: true
 - bot_challenge:
     use_entities: true
+- ask_place:
+    use_entities: true
+- ask_process:
+    use_entities: true
+- ask_courses:
+    use_entities: true
+- ask_place_EAO:
+    use_entities: true
+- ask_place_library:
+    use_entities: true
+- ask_process_pagare:
+    use_entities: true
+- ask_process_date_pagare:
+    use_entities: true
+- ask_process_req_pagare:
+    use_entities: true
+- ask_process_info_pagare:
+    use_entities: true
+- ask_courses_calculo1:
+    use_entities: true
+- ask_date_pep1_calculo1:
+    use_entities: true
+- ask_about_calculo1_derivative:
+    use_entities: true
+- ask_content_pep1_calculo1:
+    use_entities: true
 entities: []
 slots: {}
-
-
 responses:
   utter_question:
   - buttons:
     - payload: /ask_place
       title: Consulta de lugares
-    - payload: /ask_date
-      title: Consulta de fechas
-    - payload: /ask_document
-      title: Consulta de documentos
-    - payload: /ask_academy
-      title: Consulta academica            
+    - payload: /ask_process
+      title: Consulta de procesos
+    - payload: /ask_courses
+      title: Consulta de cursos
     text: ¡Hola! ¿En que puedo ayudarte?
-  
-  # CONSULTA SOBRE LUGARES
   utter_place:
-    text: ¿Que lugar buscas?
-  
+  - text: ¿Que lugar buscas?
   utter_place_EAO:
-    text: La EAO se encuentra en la av ecuador 500.
-  
+  - text: La EAO se encuentra en la av ecuador 500.
   utter_place_library:
-    text: La biblioteca se encuentra al frente de finanzas
-  
-  # CONSULTA SOBRE FECHAS
-
-  utter_date:
-    text: ¿En base a que proceso?
-
-  utter_date_pagare:
-    text: La fecha limite para pagar el pagare es el 20/10 
-  
-  
-  utter_document:
+  - text: La biblioteca se encuentra al frente de finanzas
+  utter_process:
   - buttons:
-    - payload: /ask_document_about
-      title: En que consiste
-    - payload: /ask_document_req
-      title: Los requisitos para obtenerlos
-    - payload: /ask_document_inst
-      title: Intrucciones para obtenerlos
-
-  utter_document_req:
-    text: ¿Sobre que proceso desea consultar los documentos?
-
-  utter_document_req_bicentenario:
-    text: Necesitas tu certificado de alumno regular, y 100.000 pesos en efectivo.
-
-  utter_document_inst_CAR:
-    text: Tienes que acceder al LOA, y hacer click en el apartado de documentos.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    - payload: /ask_process_pagare
+      title: Pagare
+    text: ¿Que proceso buscas?
+  utter_process_pagare:
+  - buttons:
+    - payload: /ask_process_date_pagare
+      title: Fecha
+    - payload: /ask_process_req_pagare
+      title: Requisitos
+    - payload: /ask_process_info_pagare
+      title: Informacion
+    text: ¿Que informacion buscas?
+  utter_date_pagare:
+  - text: La fecha limite para pagar el pagare es el 20/10
+  utter_req_pagare:
+  - text: Los requisitos para el pagar el pagare son los siguientes.
+  utter_info_pagare:
+  - text: El pagare consiste en un documento que pacta el compromiso de un pago.
+  utter_courses:
+  - buttons:
+    - payload: /ask_courses_calculo1
+      title: Calculo 1
+    text: ¿Sobre que curso?
+  utter_courses_calculo1:
+  - buttons:
+    - payload: /ask_date_pep1_calculo1
+      title: Fecha de PEP1
+    - payload: /ask_content_pep1_calculo1
+      title: Contenido PEP1
+    - payload: /ask_about_calculo1_derivative
+      title: Como derivar
+    text: ¿Que quieres saber sobre Calculo 1?
+  utter_date_pep1_calculo1:
+  - text: Es el 5 de Marzo del 2020
+  utter_content_pep1_calculo1:
+  - text: En la PEP1 de calculo 1 entra derivadas, suma y resta.
+  utter_about_calculo1_derivative:
+  - text: Para derivar tienes que seguir las siguientes instrucciones ...
   utter_cheer_up:
   - image: https://i.imgur.com/nGF1K8f.jpg
     text: 'Aquí tienes algo para animarte:'

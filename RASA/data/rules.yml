@@ -11,3 +11,8 @@ rules:
   steps:
   - intent: bot_challenge
   - action: utter_iamabot
+
+- rule: Cada vez que pregunte sobre integrales se debe responder
+  steps:
+  - intent: bot_challenge
+  - action: utter_iamabot  
