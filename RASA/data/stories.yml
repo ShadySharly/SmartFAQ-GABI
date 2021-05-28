@@ -8,21 +8,17 @@ stories:
   - action: utter_question
   - intent: ask_place
   - action: utter_place
-
-- story: ask the student how they can help about process Pagare
+  
+- story: ask the student how they can help about process
   steps:
   - intent: greet
   - action: utter_question
   - intent: ask_process
   - action: utter_process
-  - intent: ask_process_pagare
-  - action: utter_process_pagare  
 
-- story: ask the student how they can help about course Calculo 1
+- story: ask the student how they can help about course
   steps:
   - intent: greet
   - action: utter_question
   - intent: ask_courses
   - action: utter_courses
-  - intent: ask_courses_calculo1
-  - action: utter_courses_calculo1
