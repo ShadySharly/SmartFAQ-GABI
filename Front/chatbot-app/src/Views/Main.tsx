@@ -13,6 +13,23 @@ import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
+// @ts-ignore
+import Widget from 'rasa-webchat';
+
+
+
+function CustomWidget (){
+  return (
+    <Widget
+      initPayload={"/utter_question"}
+      socketUrl={"http://localhost:5005"}
+      socketPath={"/socket.io/"}
+      title={"Title"}
+      inputTextFieldHint={"Holasss"}
+      connectOn={"mount"}
+    />
+  )
+}
 
 function Copyright() {
   return (
@@ -116,6 +133,7 @@ export default function Main() {
             </Grid>
           ))}
         </Grid>
+        <CustomWidget />
       </Container>
     </React.Fragment>
   );

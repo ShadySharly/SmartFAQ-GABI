@@ -52,7 +52,8 @@ rules:
   - intent: bot_challenge
   - action: utter_iamabot
 
-- rule: ask the student how they can help about course Calculo 1
+- rule: Ask the student how they can help about course Calculo 1
+  steps:
   - intent: ask_courses_calculo1
   - action: utter_courses_calculo1
 
