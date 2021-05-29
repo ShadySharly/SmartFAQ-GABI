@@ -58,7 +58,12 @@ responses:
       title: Consulta de cursos
     text: ¡Hola! ¿En que puedo ayudarte?
   utter_place:
-  - text: ¿Que lugar buscas?
+  - buttons:
+    - payload: /ask_place_EAO
+      title: EAO
+    - payload: /ask_place_library
+      title: Biblioteca
+    text: ¿Que lugar buscas?
   utter_place_EAO:
   - text: La EAO se encuentra en la av ecuador 500.
   utter_place_library:

@@ -2,17 +2,62 @@ version: "2.0"
 
 rules:
 
-- rule: Say goodbye anytime the user says goodbye
+- rule: Indicate where the EAO is located  anytime the user ask
   steps:
-  - intent: goodbye
-  - action: utter_goodbye
+  - intent: ask_place_EAO
+  - action: utter_place_EAO
+
+- rule: Indicate where the Library is located anytime the user ask
+  steps:
+  - intent: ask_place_library
+  - action: utter_place_library
+
+- rule: Ask the student how they can help about process pagare
+  steps:
+  - intent: ask_process_pagare
+  - action: utter_process_pagare
+
+- rule: Indicates when you have to pay the Pagare anytime the user ask
+  steps:
+  - intent: ask_process_date_pagare
+  - action: utter_date_pagare
+
+- rule: Indicate what requirements you need to pay the Pagare anytime the user ask
+  steps:
+  - intent: ask_process_req_pagare
+  - action: utter_req_pagare
+
+- rule: Indicates general information about the Pagare anytime the user ask
+  steps:
+  - intent: ask_process_info_pagare
+  - action: utter_info_pagare
+
+- rule: Indicates the date of the test PEP1 of Calculo1 anytime the user ask
+  steps:
+  - intent: ask_date_pep1_calculo1
+  - action: utter_date_pep1_calculo1
+
+- rule: Indicates the content of the test PEP1 of Calculo1 anytime the user ask
+  steps:
+  - intent: ask_content_pep1_calculo1
+  - action: utter_content_pep1_calculo1
+
+- rule: Indicates information about "Derivadas" of Calculo1 anytime the user ask
+  steps:
+  - intent: ask_about_calculo1_derivative
+  - action: utter_about_calculo1_derivative
 
 - rule: Say 'I am a bot' anytime the user challenges
   steps:
   - intent: bot_challenge
   - action: utter_iamabot
 
+- rule: ask the student how they can help about course Calculo 1
+  - intent: ask_courses_calculo1
+  - action: utter_courses_calculo1
+
 - rule: Cada vez que pregunte sobre integrales se debe responder
   steps:
   - intent: bot_challenge
-  - action: utter_iamabot  
+  - action: utter_iamabot
+
