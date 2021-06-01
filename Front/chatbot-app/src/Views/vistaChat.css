@@ -1,0 +1,134 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;1,400&display=swap");
+/* GLOBAL */
+ li {
+   list-style-type: none;
+}
+ a {
+   text-decoration: none;
+}
+ @keyframes navLinksFade {
+   from {
+     opacity: 0;
+     margin-left: 0px;
+  }
+   to {
+     opacity: 1;
+     margin-left: 30px;
+  }
+}
+ body {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+   font-family: "Ubuntu", sans-serif;
+   background: #9b9b9b;
+}
+ body .header {
+   margin-top: 13px;
+   position: fixed;
+   left: 0;
+   right: 0;
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   background: #434b4d;
+   padding: 10px 5%;
+   z-index: 2;
+}
+ body .header .left-zone {
+   position: sticky;
+   display: flex;
+   align-items: center;
+}
+ body .header .left-zone .logo a {
+   padding-left: 10px;
+   font-size: 20px;
+   font-weight: 500;
+   color: white;
+}
+ body .header .left-zone .logo-img {
+   width: 75px;
+}
+ body .header .right-zone {
+   position: sticky;
+   display: flex;
+   align-items: center; 
+}
+ body .header .right-zone .nombre a {
+   padding-right: 10px;
+   font-size: 20px;
+   font-weight: 500;
+   color: white;
+}
+ body .header .right-zone .user-avatar .user-img {
+   width: 50px;
+   border-radius: 50%;
+}
+ body #side-nav {
+   padding: 10px;
+   width: 200px;
+   height: 100%;
+   overflow-y: scroll;
+   display: flex;
+   flex-direction: column;
+   position: fixed;
+   top: 0;
+   background: white;
+   transition: all 0.5s;
+   margin-top: 70px;
+   z-index: 1;
+}
+ body #side-nav::-webkit-scrollbar {
+   width: 10px;
+}
+ body #side-nav::-webkit-scrollbar-thumb {
+   background: grey;
+}
+ body #side-nav .nav-list .nav-sub {
+   display: flex;
+   align-items: center;
+   color: #828282;
+   font-size: 20px;
+   padding: 10px 0;
+}
+ body #side-nav .nav-list .nav-link {
+   border: 1px;
+   border-radius: 15px;
+   display: flex;
+   align-items: center;
+   color: #332F2C;
+   font-size: 20px;
+   padding: 10px 0;
+}
+ body #side-nav .nav-list .nav-link:hover {
+   background: #3E5F8A;
+}
+ body #side-nav .nav-list .nav-link i {
+   width: 50px;
+   font-size: 40px;
+   margin-left: 20px;
+}
+ body #side-nav .nav-list .nav-link span {
+   animation: navLinksFade 0.8s forwards;
+   margin-left: 30px;
+}
+ body #chat{
+   position: fixed;
+   display: flex;
+   margin-left: 300px;
+   margin-top: 100px;
+}
+ body #chat .cuadro{
+   position: fixed;
+   display: flex;
+   margin-top: 150px;
+   padding: 10px 5%;
+   width: 850px;
+   height: 100%;
+   /*overflow-y: scroll;*/
+   display: flex;
+   background: #CDCDCD;
+   flex-direction: column;
+   top: 0;
+   z-index: 1;
+}
