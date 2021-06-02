@@ -1,25 +1,25 @@
-import React from 'react';
+import * as React from 'react';
 import ReactDOM from 'react-dom';
 import Logo from './img/LogoGabiWhite.png';
-import './vistaChat.css';
+import './index.css';
 
 
 
 class BarraSuperior extends React.Component{
   render(){
     return(
-    <header class="header">
-      <div class="left-zone">
-        <div class="logo">
-          <img src= {Logo} class="logo-img"></img>
+    <header className="header">
+      <div className="left-zone">
+        <div className="logo">
+          <img src= {Logo} className="logo-img"></img>
         </div>
       </div>
-      <div class="right-zone">
-        <div class="nombre">
+      <div className="right-zone">
+        <div className="nombre">
           <a href="">Nombre Completo</a>
         </div>
-        <div class="user-avatar">
-          <img src="https://randomuser.me/api/portraits/women/79.jpg" alt="" class="user-img"></img>
+        <div className="user-avatar">
+          <img src="https://randomuser.me/api/portraits/women/79.jpg" alt="" className="user-img"></img>
         </div>
       </div>
     </header>
@@ -32,14 +32,14 @@ class MenuLateral extends React.Component{
   render(){
     return(
       <nav id="side-nav">
-        <div class="nav-list">
-          <a href="" class="nav-sub">Navegación</a>
-          <a href="" class="nav-link"><span>Inicio</span></a>
-          <a href="" class="nav-link"><span>Mis Cursos</span></a>
-          <a href="" class="nav-link"><span>Consultas</span></a>
-          <a href="" class="nav-sub">Instituciones</a>
-          <a href="" class="nav-link"><span>Universidad</span></a>
-          <a href="" class="nav-link"><span>Carrera</span></a>
+        <div className="nav-list">
+          <a href="" className="nav-sub">Navegación</a>
+          <a href="" className="nav-link"><span>Inicio</span></a>
+          <a href="" className="nav-link"><span>Mis Cursos</span></a>
+          <a href="" className="nav-link"><span>Consultas</span></a>
+          <a href="" className="nav-sub">Instituciones</a>
+          <a href="" className="nav-link"><span>Universidad</span></a>
+          <a href="" className="nav-link"><span>Carrera</span></a>
         </div>
       </nav>
     );
@@ -52,7 +52,7 @@ class ChatAsignatura extends React.Component{
       <div id="chat">
         <li>
           <h3> MIS CURSOS | Asignatura 1 </h3>
-          <div class="cuadro">
+          <div className="cuadro">
           
 
               
@@ -86,17 +86,17 @@ class VistaChat extends React.Component{
     return(
       <div className= "vistachat">
         <div className= "header">
-          <header class="header">
+          <header className="header">
             <BarraSuperior />
           </header>
         </div>
         <div className= "sidebar">
-          <div class="side-nav">
+          <div className="side-nav">
             <MenuLateral />
           </div>
         </div>
         <div className= "chatt">
-          <div class="chat">
+          <div className="chat">
             <ChatAsignatura />
           </div>
         </div>
