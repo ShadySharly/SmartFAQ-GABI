@@ -1,26 +1,25 @@
 //import Main from '../Views/Main'
 import './App.css';
-import ApolloClient from 'apollo-boost';
-import {ApolloProvider} from 'react-apollo';
-import { render } from '@testing-library/react';
+import {ApolloProvider, ApolloClient, InMemoryCache} from '@apollo/client';
 import Movies from '../movies';
 
+const cache = new InMemoryCache()
 
 const client = new ApolloClient({
+  cache: cache,
   uri: 'http://localhost:4000/graphql'
 })
 
 function App() {
   return (
-    <div className="App">
-      <Movies/>
-    </div>
+    <ApolloProvider client={client}>
+      <div className="App">
+        <Movies/>
+      </div>
+    </ApolloProvider>
   );
 }
 
-render(
-  <ApolloProvider client={client}>
-    </ApolloProvider>,
-);
 
-export default App;
+
+export default (App);
