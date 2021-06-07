@@ -1,10 +1,11 @@
-import Main from '../Views/Main'
+import Main from '../Views/Main';
+import VistaChat from '../Views/VistaChat';
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <Main/>
+      <VistaChat/>
     </div>
   );
 }

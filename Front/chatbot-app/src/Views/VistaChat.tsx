@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ReactDOM from 'react-dom';
 import Logo from './img/LogoGabiWhite.png';
-import './index.css';
+import './VistaChat.css';
 
 
 
@@ -63,24 +63,6 @@ class ChatAsignatura extends React.Component{
   }
 }
 
-class Container extends React.Component{
-  render(){
-    return( 
-      <div className="container">
-        {this.props.children}
-      </div>
-    );
-  }
-}
-
-class Heading2 extends React.Component{
-  render(){
-    return(
-      <li>{this.props.children}</li>
-    ); 
-  }
-}
-
 class VistaChat extends React.Component{
   render(){
     return(
@@ -108,3 +90,5 @@ class VistaChat extends React.Component{
 // ========================================
 
 ReactDOM.render(<VistaChat/>, document.getElementById("root"));
+
+export default VistaChat;
