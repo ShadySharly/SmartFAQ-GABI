@@ -1,4 +1,4 @@
-import React from 'react';
+
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
@@ -13,20 +13,36 @@ import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Box from '@material-ui/core/Box';
+import React, { useRef, useLayoutEffect } from 'react';
 // @ts-ignore
-import Widget from 'rasa-webchat';
+import RasaWebchat from 'rasa-webchat';
 
 
 
 function CustomWidget (){
+  sessionStorage.clear();
   return (
-    <Widget
-      initPayload={"/utter_question"}
-      socketUrl={"http://localhost:5005"}
-      socketPath={"/socket.io/"}
-      title={"Title"}
-      inputTextFieldHint={"Holasss"}
-      connectOn={"mount"}
+    <RasaWebchat
+    initPayload= {'/login{"userID"= "12345"}'}
+    socketUrl={"http://localhost:5005"}
+    socketPath={"/socket.io/"}
+    title={"GABI - General"}
+    inputTextFieldHint={"Escribe un mensaje"}
+    embedded={true}
+    customData= {{ language: "en" }}
+    showFullScreenButton={true}
+    displayUnreadCount={true}
+    connectOn={"mount"}
+    showMessageDate={true}
+    params = {{
+      storage: "session"
+    }}
+    //No se puede obtener el user_id desde aca.
+    //Solo se puede obtener informacion del mensaje de texto del bot
+    onSocketEvent={{
+      'bot_uttered': function(e:any) {console.log(e);},
+      'connect': () => console.log('connection established'),
+      }}
     />
   )
 }

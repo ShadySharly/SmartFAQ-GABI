@@ -15,9 +15,11 @@
     "graphql": "^15.5.0",
     "graphql-tag": "^2.12.4",
     "rasa-webchat": "^1.0.1",
+    "rasa-webchat-josh": "0.0.9",
     "react": "^17.0.2",
     "react-apollo": "^3.1.5",
     "react-dom": "^17.0.2",
+    "react-event-observer": "^0.5.11",
     "react-scripts": "4.0.3",
     "typescript": "^4.2.4",
     "web-vitals": "^1.1.2"

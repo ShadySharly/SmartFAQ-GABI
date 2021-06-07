@@ -2,6 +2,11 @@ version: "2.0"
 
 rules:
 
+- rule: Initiate login
+  steps:
+  - intent: login
+  - action: action_init_convertation
+
 - rule: Indicate where the EAO is located  anytime the user ask
   steps:
   - intent: ask_place_EAO
