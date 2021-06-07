@@ -35,5 +35,10 @@ export const SidebarData: SidebarItem[] = [
         title: 'Preguntas Generales',
         path: '/generalFAQ',
         icon: < RiQuestionAnswerFill/>,
-    }
+    },
+    {
+        title: 'Peliculas',
+        path: '/movies',
+        icon: < RiQuestionAnswerFill/>,
+    },
 ];

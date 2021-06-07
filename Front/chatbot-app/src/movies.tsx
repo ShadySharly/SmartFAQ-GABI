@@ -1,5 +1,6 @@
-import gql from 'graphql-tag';
-import { useQuery } from '@apollo/client';
+//import gql from 'graphql-tag';
+import { useQuery, gql } from '@apollo/client';
+import styled from 'styled-components';
 
 const MOVIES = gql`
     query getMovies {
@@ -10,18 +11,29 @@ const MOVIES = gql`
     }
 `;
 
+const Mov = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    color: #000000;
+    height: 5vh;
+`;
+
 type Movie = {id:number,title:string};
 
 function Movies(){
-    const { loading, error, data} = useQuery(MOVIES);
+    const {loading, error, data} = useQuery(MOVIES);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error :(</p>;
 
     return data.movies.map(({id, title}:Movie) => (
-        <div key={id}>
-            <p>{id}: {title}</p>    
-        </div>
+        <Mov>
+            <div key={id}>
+                <p>{id}: {title}</p>    
+            </div>
+        </Mov>
     ));
 }
 

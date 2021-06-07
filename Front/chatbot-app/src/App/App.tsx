@@ -21,6 +21,7 @@ const App: FC = () => {
           <Sidebar/>
           <Switch>
             <Route path="/overview" component={Overview} exact></Route>
+            <Route path="/movies" component={Movies} exact></Route>
           </Switch>
         </Router>
     </ApolloProvider>
