@@ -5,19 +5,25 @@ stories:
   steps:
   - intent: greet
   - action: utter_question
+  - action: action_save_message
   - intent: ask_place
   - action: utter_place
+  - action: action_save_message  
   
 - story: ask the student how they can help about process
   steps:
   - intent: greet
   - action: utter_question
+  - action: action_save_message  
   - intent: ask_process
   - action: utter_process
+  - action: action_save_message  
 
 - story: ask the student how they can help about course
   steps:
   - intent: greet
   - action: utter_question
+  - action: action_save_message  
   - intent: ask_courses
   - action: utter_courses
+  - action: action_save_message  

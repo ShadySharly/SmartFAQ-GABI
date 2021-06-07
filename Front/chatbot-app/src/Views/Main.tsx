@@ -23,13 +23,14 @@ function CustomWidget (){
   sessionStorage.clear();
   return (
     <RasaWebchat
-    initPayload= {'/login{"userID"= "12345"}'}
+    ///login @userID @chatbotID
+    initPayload= {'/login @1 @1'}
     socketUrl={"http://localhost:5005"}
     socketPath={"/socket.io/"}
     title={"GABI - General"}
     inputTextFieldHint={"Escribe un mensaje"}
     embedded={true}
-    customData= {{ language: "en" }}
+    customData= {{ language: "en"}}
     showFullScreenButton={true}
     displayUnreadCount={true}
     connectOn={"mount"}

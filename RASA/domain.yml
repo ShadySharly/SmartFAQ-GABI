@@ -25,10 +25,15 @@ intents:
 - ask_content_pep1_calculo1
 entities:
   - userID
+  - conversationID
+  - chatbotID
 slots:
   userID:
     type: unfeaturized
-
+  conversationID:
+    type: unfeaturized
+  chatbotID:
+    type: unfeaturized
 responses:
   utter_question:
   - buttons:
@@ -103,6 +108,7 @@ responses:
   - text: Soy un bot, Rasa es mi motor.
 actions:
   - action_init_convertation
+  - action_save_message
 forms: {}
 e2e_actions: []
 
