@@ -2,6 +2,10 @@
 import './App.css';
 import {ApolloProvider, ApolloClient, InMemoryCache} from '@apollo/client';
 import Movies from '../movies';
+import Sidebar from '../Components/Sidebar';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
+import Overview from '../Views/Overview';
+import { FC } from 'react';
 
 const cache = new InMemoryCache()
 
@@ -10,12 +14,15 @@ const client = new ApolloClient({
   uri: 'http://localhost:4000/graphql'
 })
 
-function App() {
+const App: FC = () => {
   return (
     <ApolloProvider client={client}>
-      <div className="App">
-        <Movies/>
-      </div>
+        <Router>
+          <Sidebar/>
+          <Switch>
+            <Route path="/overview" component={Overview} exact></Route>
+          </Switch>
+        </Router>
     </ApolloProvider>
   );
 }
