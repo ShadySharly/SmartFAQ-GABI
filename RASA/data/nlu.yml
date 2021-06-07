@@ -4,6 +4,9 @@ nlu:
   examples: |
     - login
     - register
+- intent: save
+  examples: |
+    - save    
 - intent: greet
   examples: |
     - hola

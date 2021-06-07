@@ -38,12 +38,6 @@ function CustomWidget (){
     params = {{
       storage: "session"
     }}
-    //No se puede obtener el user_id desde aca.
-    //Solo se puede obtener informacion del mensaje de texto del bot
-    onSocketEvent={{
-      'bot_uttered': function(e:any) {console.log(e);},
-      'connect': () => console.log('connection established'),
-      }}
     />
   )
 }

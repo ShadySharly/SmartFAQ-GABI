@@ -107,8 +107,8 @@ responses:
   utter_iamabot:
   - text: Soy un bot, Rasa es mi motor.
 actions:
-  - action_init_convertation
-  - action_save_message
+  - action_init_conversation
+  - action_save_conversation
 forms: {}
 e2e_actions: []
 

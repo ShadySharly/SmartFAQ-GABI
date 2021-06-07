@@ -20,30 +20,56 @@ from typing import Any, Text, Dict, List
 from rasa_sdk.events import UserUtteranceReverted
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
-import datetime
+from datetime import datetime
 from rasa_sdk.events import SlotSet
 
 import psycopg2
-import datetime
 
-def SaveConversation(dialogue_id, client_id, chatbot_id):
-    conn = psycopg2.connect( host="localhost", user="postgres", password="gabi123", dbname="gabidata" )
-    cur = conn.cursor()
-    start_dialogue = datetime.datetime.now()
-    end_dialogue = datetime.datetime.now()
+def createConnection():
+    return psycopg2.connect( host="localhost", user="postgres", password="gabi123", dbname="gabidata")
+
+def saveConversation(client_id, chatbot_id):
+    start_dialogue = datetime.now()
+    end_dialogue = datetime.now()
     clientscore = -1
-    
-    query = """INSERT INTO dialogue (dialogue_id, client_id, chatbot_id,start_dialogue,end_dialogue,client_score) VALUES (DEFAULT,%s,%s,%s,%s,%s)"""
+    query = """INSERT INTO dialogue (client_id, chatbot_id,start_dialogue,end_dialogue,client_score) VALUES (%s,%s,%s,%s,%s) RETURNING dialogue_id"""
     record = (client_id, chatbot_id,start_dialogue,end_dialogue,clientscore)
-    
+    conn = createConnection()
+    cur = conn.cursor()
+    cur.execute(query,record)   
+    dialogue_id = cur.fetchone()[0]
+    conn.commit()
+    return dialogue_id
+
+def getIntentID(intention_name):
+    query = """SELECT intention_id FROM intention WHERE intention_name = '{0}'""".format(intention_name)
+    conn = createConnection()
+    cur = conn.cursor()
+    try:
+        cur.execute(query)
+        intention_id = cur.fetchone()[0]
+        conn.commit()           
+    except:
+        intention_id = -1
+
+    return intention_id    
+
+
+
+def saveMessage(dialogue_id, intention_id, information,confidence,date_issue):
+    query = """INSERT INTO chatmessage (chatmessage_id, dialogue_id, intention_id,information,confidence,date_issue) VALUES (DEFAULT,%s,%s,%s,%s,%s)"""
+    record = (dialogue_id, intention_id, information,confidence,date_issue)
+    conn = createConnection()
+    cur = conn.cursor()
     cur.execute(query,record)   
     conn.commit()
+    return []
 
 
-class ActionInitConvertation(Action):
+class ActionInitConversation(Action):
 
     def name(self) -> Text:
-        return "action_init_convertation"
+        return "action_init_conversation"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
@@ -55,22 +81,42 @@ class ActionInitConvertation(Action):
         except:
             userID = tracker.get_slot('userID')
             chatbotID = tracker.get_slot('chatbotID')
-        conversationID = tracker.sender_id
 
-        SaveConversation(5, userID, chatbotID)
+        conversationID = saveConversation(userID, chatbotID)
 
         return [SlotSet('userID',userID),SlotSet('conversationID',conversationID),SlotSet('chatbotID',chatbotID)]
 
 
-class ActionSaveMessage(Action):
+class ActionSaveConversation(Action):
     def name(self) -> Text:
-        return "action_save_message"
+        return "action_save_conversation"
 
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         dispatcher.utter_message(text="Guardado!")
-        userMessage = tracker.latest_message['text']
-        userIntention = tracker.latest_message['intent']
+        events = tracker.events
+
+        conversationID = tracker.get_slot('conversationID')
+        userID = tracker.get_slot('userID')
+        chatbotID = tracker.get_slot('chatbotID')
+
+        for i in range(len(events)):
+            if(events[i]['event'] == 'user'):
+                dateIssue = datetime.fromtimestamp(events[i]['timestamp'])
+                userMessage = events[i]['text']
+                userIntent = events[i]['parse_data']['intent']
+                intentID = getIntentID(userIntent['name'])
+                intentConfidence = userIntent['confidence']
+                saveMessage(conversationID, intentID, userMessage,intentConfidence*100,dateIssue)
+
+            if(events[i]['event'] == 'bot'):    
+                dateIssue = datetime.fromtimestamp(events[i]['timestamp'])
+                botMessage = events[i]['text']
+                botIntent = events[i-1]
+                intentID = getIntentID(botIntent['name'])
+                intentConfidence = events[i-1]['confidence']
+                saveMessage(conversationID, intentID, botMessage,intentConfidence*100,dateIssue)
+
         return []    
 
