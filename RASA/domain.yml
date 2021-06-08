@@ -1,52 +1,39 @@
 version: '2.0'
 config:
   store_entities_as_slots: true
-session_config:
-  session_expiration_time: 60
-  carry_over_slots_to_new_session: true
 intents:
-- greet:
-    use_entities: true
-- goodbye:
-    use_entities: true
-- affirm:
-    use_entities: true
-- deny:
-    use_entities: true
-- mood_great:
-    use_entities: true
-- mood_unhappy:
-    use_entities: true
-- bot_challenge:
-    use_entities: true
-- ask_place:
-    use_entities: true
-- ask_process:
-    use_entities: true
-- ask_courses:
-    use_entities: true
-- ask_place_EAO:
-    use_entities: true
-- ask_place_library:
-    use_entities: true
-- ask_process_pagare:
-    use_entities: true
-- ask_process_date_pagare:
-    use_entities: true
-- ask_process_req_pagare:
-    use_entities: true
-- ask_process_info_pagare:
-    use_entities: true
-- ask_courses_calculo1:
-    use_entities: true
-- ask_date_pep1_calculo1:
-    use_entities: true
-- ask_about_calculo1_derivative:
-    use_entities: true
-- ask_content_pep1_calculo1:
-    use_entities: true
-entities: []
-slots: {}
+- login 
+- greet
+- goodbye
+- affirm
+- deny
+- mood_great
+- mood_unhappy
+- bot_challenge
+- ask_place
+- ask_process
+- ask_courses
+- ask_place_EAO
+- ask_place_library
+- ask_process_pagare
+- ask_process_date_pagare
+- ask_process_req_pagare
+- ask_process_info_pagare
+- ask_courses_calculo1
+- ask_date_pep1_calculo1
+- ask_about_calculo1_derivative
+- ask_content_pep1_calculo1
+entities:
+  - userID
+  - conversationID
+  - chatbotID
+slots:
+  userID:
+    type: unfeaturized
+  conversationID:
+    type: unfeaturized
+  chatbotID:
+    type: unfeaturized
 responses:
   utter_question:
   - buttons:
@@ -58,7 +45,12 @@ responses:
       title: Consulta de cursos
     text: ¡Hola! ¿En que puedo ayudarte?
   utter_place:
-  - text: ¿Que lugar buscas?
+  - buttons:
+    - payload: /ask_place_EAO
+      title: EAO
+    - payload: /ask_place_library
+      title: Biblioteca
+    text: ¿Que lugar buscas?
   utter_place_EAO:
   - text: La EAO se encuentra en la av ecuador 500.
   utter_place_library:
@@ -114,6 +106,12 @@ responses:
   - text: Adiós.
   utter_iamabot:
   - text: Soy un bot, Rasa es mi motor.
-actions: []
+actions:
+  - action_init_conversation
+  - action_save_conversation
 forms: {}
 e2e_actions: []
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true

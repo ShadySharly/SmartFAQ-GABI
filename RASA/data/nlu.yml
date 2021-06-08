@@ -1,5 +1,12 @@
 version: "2.0"
 nlu:
+- intent: login
+  examples: |
+    - login
+    - register
+- intent: save
+  examples: |
+    - save    
 - intent: greet
   examples: |
     - hola
@@ -90,13 +97,22 @@ nlu:
     - estoy hablando con una persona?
 - intent: ask_place
   examples: |
-    - null
+    - Que lugares puedo buscar
+    - Lugares que puedo buscar
+    - Dime los lugares
+    - Lugares
 - intent: ask_process
   examples: |
-    - null
+    - Que procesos puedo ver
+    - Dime sobre los procesos
+    - Hablame sobre los procesos
+    - Procesos
 - intent: ask_courses
   examples: |
-    - null
+    - Que cursos tienes
+    - Hablame de los cursos
+    - Cuentame sobre los ramos
+    - Que ramos tienes
 - intent: ask_place_EAO
   examples: |
     - Como llego a la EAO
@@ -109,14 +125,17 @@ nlu:
   examples: |
     - Como llego a la biblioteca
     - Donde esta la biblio
+    - Donde se encuentra la biblioteca
+    - Donde se encuentra la biblio
     - Biblioteca
     - biblio
     - viblioteca
-
-
 - intent: ask_process_pagare
   examples: |
-    - null
+    - Hablame del pagare
+    - Dime sobre el pagare
+    - Hablame sobre el pagare
+    - Cuentame sobre el pagare
 - intent: ask_process_date_pagare
   examples: |
     - cuando se paga el pagare
@@ -139,10 +158,12 @@ nlu:
     - en que consiste el pagare
     - que pagare
     - consiste pagare
-
 - intent: ask_courses_calculo1
   examples: |
-    - Calculo 1
+    - Dame informacion sobre Calculo 1
+    - Que sabes sobre calculo 1
+    - Dame informacion de calculo 1
+    - Dame info de calculo 1
 - intent: ask_date_pep1_calculo1
   examples: |
     - cuando es la pep1 de calculo 1
