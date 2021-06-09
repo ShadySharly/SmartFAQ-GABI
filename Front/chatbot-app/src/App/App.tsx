@@ -2,6 +2,7 @@
 import './App.css';
 import {ApolloProvider, ApolloClient, InMemoryCache} from '@apollo/client';
 import Movies from '../movies';
+import ChatbotData from '../chatbotData'
 import Chatbot from '../Views/Chatbot';
 import Sidebar from '../Components/Sidebar';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
@@ -12,7 +13,7 @@ const cache = new InMemoryCache()
 
 const client = new ApolloClient({
   cache: cache,
-  uri: 'http://localhost:4000/graphql'
+  uri: 'http://localhost:8000/graphql'
 })
 
 const App: FC = () => {
@@ -22,7 +23,7 @@ const App: FC = () => {
           <Sidebar/>
           <Switch>
             <Route path="/overview" component={Overview} exact></Route>
-            <Route path="/movies" component={Movies} exact></Route>
+            <Route path="/movies" component={ChatbotData} exact></Route>
             <Route path="/generalFAQ" component={Chatbot} exact></Route>
           </Switch>
         </Router>

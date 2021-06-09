@@ -1,40 +1,48 @@
 require('dotenv').config();
+const { gql } = require('apollo-server-core');
 const {makeExecutableSchema} = require('graphql-tools');
 const movies = require('../data.js');
-
-const typeDefs = `
-    type Movie {
-        id: Int!
-        title: String!
+const knex = require("knex")({
+    client:"pg",
+    connection:{
+        host:"localhost",
+        user:"postgres",
+        password:"gabi123",
+        database:"gabidata"
+    }
+});
+const typeDefs = gql`
+    type Permission {
+        permission_id: Int!
+        permission_name: String!
     }
 
     type Query {
-        movies: [Movie]
-        movie(id: Int!): Movie
+        permissions: [Permission]
+        permission(permission_id: Int!): Permission
     }
 
     type Mutation{
-        createMovie(title: String!): Boolean
+        createPermission(name: String!): Boolean
     }
 `;
 
 const resolvers = {
     Query: {
-        async movies(_, args){
-            return await movies;
+        async permissions(_, args){
+            return await knex("permission").select("*");
         },
-        async movie(_,{id}){
-            return await movies.find((movie)=> movie.id === id);
+        async permission(_,{id}){
+            return await knex("permission").whereIn("id_permission",id)
         },
     },
     
     Mutation: {
-        async createMovie(_,{title}){
-            let newMovie = {
-                id: movies.length,
-                title,
-            };
-            return await movies.push(newMovie); 
+        async createPermission(_,{name}){
+            const [permission] = await knex("permission")
+            .returning("*")
+            .insert({name});
+            return permission
         },
     },
 };
