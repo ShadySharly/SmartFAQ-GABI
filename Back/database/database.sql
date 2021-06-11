@@ -30,7 +30,7 @@ CREATE TABLE answer (
     video_url varchar(64),
     CONSTRAINT fk_intention
         FOREIGN KEY(intention_id) 
-        REFERENCES intention(intention_id)        
+        REFERENCES intention(intention_id) ON DELETE CASCADE        
 );
 
 CREATE TABLE chatbot(
@@ -41,7 +41,7 @@ CREATE TABLE chatbot(
     chatbot_version varchar(256),
     CONSTRAINT fk_topic
         FOREIGN KEY(topic_id) 
-        REFERENCES topic(topic_id)    
+        REFERENCES topic(topic_id) ON DELETE CASCADE    
 );
 
 CREATE TABLE client (
@@ -54,7 +54,7 @@ CREATE TABLE client (
     email varchar(128) NOT NULL,
     CONSTRAINT fk_duty 
         FOREIGN KEY(duty_id) 
-        REFERENCES duty(duty_id)
+        REFERENCES duty(duty_id) ON DELETE CASCADE
 );
 
 CREATE TABLE permission_duty (
@@ -63,10 +63,10 @@ CREATE TABLE permission_duty (
     permission_id int NOT NULL,
     CONSTRAINT fk_duty
         FOREIGN KEY(duty_id)
-        REFERENCES duty(duty_id),
+        REFERENCES duty(duty_id) ON DELETE CASCADE,
     CONSTRAINT fk_permission
         FOREIGN KEY(permission_id)
-        REFERENCES permission(permission_id)    
+        REFERENCES permission(permission_id) ON DELETE CASCADE   
 );
 
 CREATE TABLE dialogue(
@@ -78,10 +78,10 @@ CREATE TABLE dialogue(
     client_score int NOT NULL,
     CONSTRAINT fk_client
         FOREIGN KEY(client_id)
-        REFERENCES client(client_id),
+        REFERENCES client(client_id) ON DELETE CASCADE,
     CONSTRAINT fk_chatbot
         FOREIGN KEY(chatbot_id)
-        REFERENCES chatbot(chatbot_id)              
+        REFERENCES chatbot(chatbot_id) ON DELETE CASCADE             
 );
 
 CREATE TABLE chatMessage (
@@ -93,10 +93,10 @@ CREATE TABLE chatMessage (
     date_issue date,
     CONSTRAINT fk_dialogue
         FOREIGN KEY(dialogue_id)
-        REFERENCES dialogue(dialogue_id),
+        REFERENCES dialogue(dialogue_id) ON DELETE CASCADE,
     CONSTRAINT fk_intention
         FOREIGN KEY(intention_id)
-        REFERENCES intention(intention_id)
+        REFERENCES intention(intention_id) ON DELETE CASCADE
 );
 
 CREATE TABLE request (
@@ -105,7 +105,7 @@ CREATE TABLE request (
     information varchar(256),
     CONSTRAINT fk_intention
         FOREIGN KEY(intention_id)
-        REFERENCES intention(intention_id)
+        REFERENCES intention(intention_id) ON DELETE CASCADE
 );
 
 CREATE TABLE client_topic(
@@ -114,10 +114,10 @@ CREATE TABLE client_topic(
     topic_id int NOT NULL,
     CONSTRAINT fk_client
         FOREIGN KEY(client_id)
-        REFERENCES client(client_id),
+        REFERENCES client(client_id) ON DELETE CASCADE,
     CONSTRAINT fk_topic
         FOREIGN KEY(topic_id)
-        REFERENCES topic(topic_id) 
+        REFERENCES topic(topic_id) ON DELETE CASCADE 
 );
 
 CREATE TABLE userQuestion (
@@ -128,13 +128,13 @@ CREATE TABLE userQuestion (
     information varchar(256),
     CONSTRAINT fk_client
         FOREIGN KEY(client_id)
-        REFERENCES client(client_id),    
+        REFERENCES client(client_id) ON DELETE CASCADE,    
     CONSTRAINT fk_intention
         FOREIGN KEY(intention_id)
-        REFERENCES intention(intention_id),
+        REFERENCES intention(intention_id) ON DELETE CASCADE,
     CONSTRAINT fk_dialogue
         FOREIGN KEY(dialogue_id)
-        REFERENCES dialogue(dialogue_id)     
+        REFERENCES dialogue(dialogue_id) ON DELETE CASCADE
 );
 
 INSERT INTO topic VALUES (1, 'General', 'Codigo 1', 1);
