@@ -7,9 +7,6 @@ intents:
 - goodbye
 - affirm
 - deny
-- mood_great
-- mood_unhappy
-- bot_challenge
 - ask_place
 - ask_process
 - ask_courses
@@ -23,10 +20,15 @@ intents:
 - ask_date_pep1_calculo1
 - ask_about_calculo1_derivative
 - ask_content_pep1_calculo1
+- bad_evaluate
+- regular_evaluate
+- good_evaluate
 entities:
   - userID
   - conversationID
   - chatbotID
+  - user_evaluation
+
 slots:
   userID:
     type: unfeaturized
@@ -34,6 +36,7 @@ slots:
     type: unfeaturized
   chatbotID:
     type: unfeaturized
+
 responses:
   utter_question:
   - buttons:
@@ -43,7 +46,7 @@ responses:
       title: Consulta de procesos
     - payload: /ask_courses
       title: Consulta de cursos
-    text: ¡Hola! ¿En que puedo ayudarte?
+    text: ¿En que puedo ayudarte?
   utter_place:
   - buttons:
     - payload: /ask_place_EAO
@@ -106,9 +109,32 @@ responses:
   - text: Adiós.
   utter_iamabot:
   - text: Soy un bot, Rasa es mi motor.
+  utter_ending_question:
+  - buttons:
+    - payload: /affirm
+      title: Si  
+    - payload: /deny
+      title: No  
+    text: ¿Hay algo mas en lo que pueda ayudarte?
+  utter_evaluate:
+  - buttons:
+    - payload: /bad_evaluate
+      title: ⭐  
+    - payload: /regular_evaluate
+      title: ⭐⭐ 
+    - payload: /good_evaluate
+      title: ⭐⭐⭐             
+    text: ¿Que tan bien respondi?
+  utter_bad_evaluate:
+  - text: ¡Que mal!, seguire mejorando.
+  utter_moderate_evaluate:
+  - text: Me alegra ser de ayuda!.
+  utter_good_evaluate:
+  - text: ¡Exelente!, me alegra mucho  
 actions:
   - action_init_conversation
   - action_save_conversation
+  
 forms: {}
 e2e_actions: []
 

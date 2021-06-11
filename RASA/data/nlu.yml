@@ -54,47 +54,6 @@ nlu:
     - Claro que no
     - jamás
     - no no no
-- intent: mood_great
-  examples: |
-    - perfecto
-    - grandioso
-    - Increíble
-    - me siento como un rey
-    - maravilloso
-    - Me siento bien
-    - Estoy súper bien
-    - me encuentro increíble
-    - Voy a salvar al mundo
-    - emocionado
-    - extremadamente bien
-    - tan tan bien
-    - muy bien
-    - good
-    - bien
-- intent: mood_unhappy
-  examples: |
-    - mi día estuvo horrible
-    - estoy triste
-    - No me siento mu bien
-    - Estoy decepcionado
-    - super triste
-    - Estoy muy triste
-    - triste
-    - tan triste
-    - infeliz
-    - nada bien
-    - no muy bien
-    - extremadamente triste
-    - muuuy tristeee
-    - Muy triste
-    - mal
-- intent: bot_challenge
-  examples: |
-    - Eres un robot?
-    - ¿eres un bot?
-    - Eres humano?
-    - ¿estoy hablando con un bot?
-    - estoy hablando con una persona?
 - intent: ask_place
   examples: |
     - Que lugares puedo buscar
@@ -117,6 +76,8 @@ nlu:
   examples: |
     - Como llego a la EAO
     - Donde esta la EAO
+    - Donde se encuentra la eao
+    - Donde se encuentra la EAO
     - EAO
     - Escuela de artes y oficios
     - Donde estan los sapitos
@@ -184,3 +145,26 @@ nlu:
     - cuales son los pasos para derivar
     - como derivo
     - derivada
+
+- intent: bad_evaluate
+  examples: |
+    - pesimo
+    - malo
+    - muy mal
+    - no me gusto
+    - respondiste muy mal
+    - horrible
+
+- intent: regular_evaluate
+  examples: |
+    - regular
+    - mas o menos
+    - no tan bueno
+    - respondiste regular
+
+- intent: good_evaluate
+  examples: |
+    - bien
+    - buenisimo
+    - correcto
+    - muy bien

@@ -41,6 +41,16 @@ def saveConversation(client_id, chatbot_id):
     conn.commit()
     return dialogue_id
 
+def updateConversation(dialogue_id, client_score):
+    end_dialogue = datetime.now()
+    query = """UPDATE dialogue SET client_score = %s, end_dialogue = %s WHERE dialogue_id = %s"""
+    record = (client_score, end_dialogue ,dialogue_id)
+    conn = createConnection()
+    cur = conn.cursor()
+    cur.execute(query,record)   
+    conn.commit()
+    return []
+
 def getIntentID(intention_name):
     query = """SELECT intention_id FROM intention WHERE intention_name = '{0}'""".format(intention_name)
     conn = createConnection()
@@ -50,11 +60,8 @@ def getIntentID(intention_name):
         intention_id = cur.fetchone()[0]
         conn.commit()           
     except:
-        intention_id = -1
-
+        intention_id = 0
     return intention_id    
-
-
 
 def saveMessage(dialogue_id, intention_id, information,confidence,date_issue):
     query = """INSERT INTO chatmessage (chatmessage_id, dialogue_id, intention_id,information,confidence,date_issue) VALUES (DEFAULT,%s,%s,%s,%s,%s)"""
@@ -64,6 +71,15 @@ def saveMessage(dialogue_id, intention_id, information,confidence,date_issue):
     cur.execute(query,record)   
     conn.commit()
     return []
+
+def getUserEvaluation(userEvaluation):
+    switcher= { 
+        "/bad_evaluate" : 1,
+        "/regular_evaluate": 2,
+        "/good_evaluate": 3
+    }        
+    return switcher.get(userEvaluation,-1)
+
 
 
 class ActionInitConversation(Action):
@@ -94,13 +110,14 @@ class ActionSaveConversation(Action):
     def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        dispatcher.utter_message(text="Guardado!")
+        dispatcher.utter_message(text="Adios!")
         events = tracker.events
 
         conversationID = tracker.get_slot('conversationID')
         userID = tracker.get_slot('userID')
         chatbotID = tracker.get_slot('chatbotID')
-
+        userEvaluation = getUserEvaluation(tracker.latest_message['text'])
+        updateConversation(conversationID,userEvaluation)
         for i in range(len(events)):
             if(events[i]['event'] == 'user'):
                 dateIssue = datetime.fromtimestamp(events[i]['timestamp'])
