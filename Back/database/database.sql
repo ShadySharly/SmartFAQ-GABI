@@ -69,15 +69,6 @@ CREATE TABLE permission_duty (
         REFERENCES permission(permission_id)    
 );
 
-CREATE TABLE query (
-    query_id SERIAL PRIMARY KEY,
-    client_id int,
-    information varchar(256),
-    CONSTRAINT fk_client
-        FOREIGN KEY(client_id)
-        REFERENCES client(client_id)
-);
-
 CREATE TABLE dialogue(
     dialogue_id SERIAL PRIMARY KEY,
     client_id int NOT NULL,
@@ -108,8 +99,8 @@ CREATE TABLE chatMessage (
         REFERENCES intention(intention_id)
 );
 
-CREATE TABLE question (
-    question_id SERIAL PRIMARY KEY,
+CREATE TABLE request (
+    request_id SERIAL PRIMARY KEY,
     intention_id int,
     information varchar(256),
     CONSTRAINT fk_intention
@@ -129,6 +120,23 @@ CREATE TABLE client_topic(
         REFERENCES topic(topic_id) 
 );
 
+CREATE TABLE userQuestion (
+    userQuestion_id SERIAL PRIMARY KEY,
+    client_id int,
+    dialogue_id int,
+    intention_id int,
+    information varchar(256),
+    CONSTRAINT fk_client
+        FOREIGN KEY(client_id)
+        REFERENCES client(client_id),    
+    CONSTRAINT fk_intention
+        FOREIGN KEY(intention_id)
+        REFERENCES intention(intention_id),
+    CONSTRAINT fk_dialogue
+        FOREIGN KEY(dialogue_id)
+        REFERENCES dialogue(dialogue_id)     
+);
+
 INSERT INTO topic VALUES (1, 'General', 'Codigo 1', 1);
 INSERT INTO topic VALUES (2, 'Calculo 1', 'Codigo 3', 2);
 
@@ -140,6 +148,7 @@ INSERT INTO permission VALUES (1, 'Interactuar con el chatbot');
 INSERT INTO permission VALUES (2, 'Responder alumnos');
 INSERT INTO permission VALUES (3, 'Agregar profesores');
 
+INSERT INTO intention VALUES (0, 'Indeterminado');
 INSERT INTO intention VALUES (1, 'place_library');
 INSERT INTO intention VALUES (2, 'process_pagare_info');
 INSERT INTO intention VALUES (3, 'content_pep1_calculo1');
@@ -159,13 +168,11 @@ INSERT INTO permission_duty VALUES (1,1,1);
 INSERT INTO permission_duty VALUES (2,2,2);
 INSERT INTO permission_duty VALUES (3,3,3);
 
-
-INSERT INTO query VALUES (1,2,'¿Como puedo derivar?');
-INSERT INTO query VALUES (2,2,'¿Como puedo sumar?');
-INSERT INTO query VALUES (3,2,'¿Como puedo ir al toilet?');
-
 INSERT INTO dialogue VALUES (1,1,1,'2002-02-16 20:38:40','2002-02-16 20:50:40',3);
 INSERT INTO chatMessage VALUES (1,1,1,'¿Como puedo llegar a la libreria?',70,'2002-02-16 20:50:40');
-INSERT INTO question VALUES (1,1,'¿Donde esta la libreria?');
+INSERT INTO request VALUES (1,1,'¿Donde esta la libreria?');
 INSERT INTO client_topic VALUES (1,1,1);
 
+INSERT INTO userQuestion VALUES (1,1,1,0,'¿como puedo integrar?');
+INSERT INTO userQuestion VALUES (2,1,1,3,'dime como puedo integrar');
+INSERT INTO userQuestion VALUES (3,1,1,1,'¿como podia llegar al biblio?');
