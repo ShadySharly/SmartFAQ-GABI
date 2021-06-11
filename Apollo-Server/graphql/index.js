@@ -22,11 +22,19 @@ const typeDefs = gql`
         intention_name: String!
     }
 
+    type Userquestion {
+        userquestion_id: Int!
+        intention: Intention!
+        information: String!
+    }    
+
     type Query {
         permissions: [Permission]
         permission(permission_id: Int!): Permission
         intentions: [Intention]
         intention(intention_id: Int!): Intention
+        userquestions: [Userquestion]
+        userquestion(userquestion_id: Int!): Userquestion        
     }
 
     type Mutation{
@@ -34,6 +42,7 @@ const typeDefs = gql`
         createIntention(intention_name: String!): Boolean
         updateIntention(intention_id: Int!, intention_name: String!): Boolean
         removeIntention(intention_id: Int!): Boolean
+        updateUserquestion(userquestion_id: Int!, intention_id: Int!): Boolean
     }
 `;
 
@@ -50,6 +59,28 @@ const resolvers = {
         },
         async intention(_,{intention_id}){
             return await knex("intention").where('intention_id',intention_id).select("*").first()
+        },
+        async userquestions(_,args){ 
+            const userquestions = await knex("userquestion").select("*")
+            const intentionIds = Array.from(new Set(userquestions.map((t) => t.intention_id)))
+            const intentions = await knex('intention').whereIn('intention_id', intentionIds)
+            return userquestions.map((t) => {
+                return {
+                  ...t,
+                  intention: intentions.find((u) => u.intention_id === t.intention_id),
+                }
+              })
+        },
+        async userquestion(_,{userquestion_id}){
+            const userquestion = await knex("userquestion").where('userquestion_id',userquestion_id).select("*")
+            const intentionId = userquestion.map((t) => t.intention_id)
+            const intention = await knex('intention').whereIn('intention_id', intentionId).select("*")
+            return userquestion.map((t) => {
+                return {
+                  ...t,
+                  intention: intention.find((u) => u.intention_id === t.intention_id),
+                }
+              })[0]
         },
     },
     
@@ -75,7 +106,7 @@ const resolvers = {
                 console.log(error)
                 return false
             }
-
+            
         },
         async updateIntention(_,{intention_id, intention_name}){
             try {
@@ -103,8 +134,22 @@ const resolvers = {
                 console.log(error)
                 return false
             }
-
         },
+
+        async updateUserquestion(_,{userquestion_id,intention_id}){
+            try {
+                const [userquestion] = await knex("userquestion")
+                .returning("*")
+                .where({userquestion_id: userquestion_id})
+                .update({intention_id:intention_id}); 
+                if(userquestion==null){return false}
+                else{return true}          
+            } catch (error) {
+                console.log(error)
+                return false
+            }
+        },        
+
     },
 };
 
