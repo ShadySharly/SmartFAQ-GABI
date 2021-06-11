@@ -44,3 +44,11 @@ RASA/rasa.db
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+RASA/models/20210528-215156.tar.gz
+
+Front/package-lock.json
+
+RASA/config.yml
+
+RASA/models/
