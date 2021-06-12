@@ -1,13 +1,5 @@
-import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import { QueryAssignmentData } from '../Components/QueryAssignmentData';
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@material-ui/core'
 import { BiSend } from 'react-icons/bi';
 
 const useStyles = makeStyles({
@@ -16,9 +8,14 @@ const useStyles = makeStyles({
   },
 });
 
-
+/*
+const results = []
+const rowsExample = results.map(result => {
+  return {query:result.query ,intention: result.intention, answer: result.answer 'respuesta',send:'' }
+})
+*/
 const rows = [
-  QueryAssignmentData('consulta', 'intencion', 'respuesta', 1),
+  {query:'consulta',intention: 'intencion',answer: 'respuesta',send:'' },
 ];
 
 export default function QueryAssignment() {

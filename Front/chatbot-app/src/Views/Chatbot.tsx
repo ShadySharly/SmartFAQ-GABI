@@ -4,14 +4,7 @@ import React, { useRef, useLayoutEffect } from 'react';
 import { FC } from "react";
 import styled from 'styled-components';
 
-const ChatbotNav = styled.div`
-    width: 1250px;
-    height: 80vh;
-    margin-left: 250px;
-    background-color: #043C8B;
-    position: center;
-    top: 0;
-`;
+
 
 function ChatbotConversation (){
     sessionStorage.clear();
@@ -38,9 +31,7 @@ function ChatbotConversation (){
 
 const Chatbot: FC = () => {
     return <div className = "chatbot">
-        <ChatbotNav>
-            <ChatbotConversation />
-        </ChatbotNav>        
+            <ChatbotConversation />    
     </div>
 }
 

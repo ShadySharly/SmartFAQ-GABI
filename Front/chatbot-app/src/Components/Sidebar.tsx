@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react'; 
+import React from 'react'; 
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { IconContext } from 'react-icons';
@@ -7,15 +7,15 @@ import { SidebarData } from './SidebarData';
 import Submenu from './Submenu';
 
 
-const Nav = styled.div
+const Nav = styled.div`
     display:flex;
     jusfity-content: flex-start;
     align-items: center;
     height: 3rem;
     background-color: #394049;
-;
+`
 
-const SidebarNav = styled.div<{sidebar:boolean}>
+const SidebarNav = styled.div<{sidebar:boolean}>`
     width: 250px;
     height: 100vh;
     background-color: #043C8B;
@@ -23,15 +23,16 @@ const SidebarNav = styled.div<{sidebar:boolean}>
     top: 0;
     left: ${({sidebar}) => (sidebar ? '0' : '-100%')};
     transition: 350ms;
-;
+`
 
-const NavIcon = styled(Link) 
+const NavIcon = styled(Link)` 
     display:flex;
     jusfity-content: flex-start;
     align-items: center;
     height: 3rem;
     font-size: 2rem;
     margin-left: 2rem;
+`
 
 const SidebarWrap = styled.div ``;
 

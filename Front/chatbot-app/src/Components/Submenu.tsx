@@ -7,7 +7,7 @@ type SidebarLinkProps = {
     item: SidebarItem;
 };
 
-const SidebarLink = styled(Link) 
+const SidebarLink = styled(Link)`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -21,13 +21,13 @@ const SidebarLink = styled(Link)
         background-color: #7d766e;
         border-left: 4px solid #ccc;
     };
-;
+`
 
-const SidebarLabel = styled.span 
+const SidebarLabel = styled.span`
     margin-left: 1rem;
-;
+`
 
-const DropdownLink = styled(Link)
+const DropdownLink = styled(Link)`
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -41,7 +41,7 @@ const DropdownLink = styled(Link)
     &:hover{
         background-color: #EA7600;
     };
-;
+`
 
 const Submenu: FC<SidebarLinkProps> = ({item}) => {
     const [subnav, setSubnav] = useState(false);

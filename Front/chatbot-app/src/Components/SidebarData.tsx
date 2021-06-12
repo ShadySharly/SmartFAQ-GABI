@@ -37,8 +37,8 @@ export const SidebarData: SidebarItem[] = [
         icon: < RiQuestionAnswerFill/>,
     },
     {
-        title: 'Peliculas',
-        path: '/movies',
+        title: 'Asignacion de Consultas',
+        path: '/queryassignment',
         icon: < RiQuestionAnswerFill/>,
     },
 ];
