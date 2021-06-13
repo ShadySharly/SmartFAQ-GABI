@@ -41,4 +41,9 @@ export const SidebarData: SidebarItem[] = [
         path: '/queryassignment',
         icon: < RiQuestionAnswerFill/>,
     },
+    {
+        title: 'Administración de Intenciones',
+        path: '/intentindex',
+        icon: < RiQuestionAnswerFill/>,
+    },
 ];

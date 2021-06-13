@@ -9,12 +9,7 @@ const StyledContainer = styled.div<{isSidebarOpen:boolean}>`
     transition: 350ms;
     margin-left: ${({isSidebarOpen}) => (isSidebarOpen ? '250px' : '0')};
     transition: 350ms;
-<<<<<<< HEAD
 `
-=======
-    `
-;
->>>>>>> graphQL
 
 const SidebarWrap = styled.div ``;
 

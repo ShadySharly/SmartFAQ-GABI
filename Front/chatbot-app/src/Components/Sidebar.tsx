@@ -12,13 +12,8 @@ const Nav = styled.div`
     jusfity-content: flex-start;
     align-items: center;
     height: 3rem;
-<<<<<<< HEAD
     background-color: #394049;
 `
-=======
-    background-color: #394049;`
-;
->>>>>>> graphQL
 
 const SidebarNav = styled.div<{sidebar:boolean}>`
     width: 250px;
@@ -27,13 +22,8 @@ const SidebarNav = styled.div<{sidebar:boolean}>`
     position: fixed;
     top: 0;
     left: ${({sidebar}) => (sidebar ? '0' : '-100%')};
-<<<<<<< HEAD
     transition: 350ms;
 `
-=======
-    transition: 350ms;`
-;
->>>>>>> graphQL
 
 const NavIcon = styled(Link)` 
     display:flex;
@@ -42,12 +32,7 @@ const NavIcon = styled(Link)`
     height: 3rem;
     font-size: 2rem;
     margin-left: 2rem;
-<<<<<<< HEAD
 `
-=======
-    `
-;
->>>>>>> graphQL
 
 const SidebarWrap = styled.div ``;
 

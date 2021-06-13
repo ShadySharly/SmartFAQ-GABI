@@ -9,6 +9,7 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
 import Overview from '../Views/Overview';
 import { useState } from 'react';
 import QueryAssignment from '../Views/QueryAssignment';
+import IntentIndex from '../Views/IntentIndex';
 
 const cache = new InMemoryCache()
 
@@ -32,6 +33,7 @@ const App = () => {
                     <Route path="/movies" component={ChatbotData} exact></Route>
                     <Route path="/generalFAQ" component={Chatbot} exact></Route>
                     <Route path="/queryassignment" component={QueryAssignment} exact></Route>
+                    <Route path="/intentindex" component={IntentIndex} exact></Route>
                 </Switch>
             </Container>
         </Router>

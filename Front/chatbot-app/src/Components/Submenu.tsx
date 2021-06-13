@@ -7,11 +7,7 @@ type SidebarLinkProps = {
     item: SidebarItem;
 };
 
-<<<<<<< HEAD
 const SidebarLink = styled(Link)`
-=======
-const SidebarLink = styled(Link)` 
->>>>>>> graphQL
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -25,21 +21,11 @@ const SidebarLink = styled(Link)`
         background-color: #7d766e;
         border-left: 4px solid #ccc;
     };
-<<<<<<< HEAD
 `
 
 const SidebarLabel = styled.span`
     margin-left: 1rem;
 `
-=======
-    `
-;
-
-const SidebarLabel = styled.span` 
-    margin-left: 1rem;
-    `
-;
->>>>>>> graphQL
 
 const DropdownLink = styled(Link)`
     display: flex;
@@ -55,12 +41,7 @@ const DropdownLink = styled(Link)`
     &:hover{
         background-color: #EA7600;
     };
-<<<<<<< HEAD
 `
-=======
-    `
-;
->>>>>>> graphQL
 
 const Submenu: FC<SidebarLinkProps> = ({item}) => {
     const [subnav, setSubnav] = useState(false);
