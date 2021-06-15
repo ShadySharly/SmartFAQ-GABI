@@ -13,16 +13,6 @@ const useStyles = makeStyles({
   },
 });
 
-/*
-interface Consultas{
-  userquestion_id:number;
-  information:string;
-  intention:Intentions[];
-}
-*/
-
-//
-//type Consulta = {userquestion_id:number,information:string,intention:Intention};
 
 const INTENTIONS = gql`
   query consulta {
@@ -31,34 +21,10 @@ const INTENTIONS = gql`
     }
   }
 `;
-
-const USERQUESTIONS = gql`
-  query consulta {
-    userquestions{
-      userquestion_id
-      information
-      intention{
-        intention_id
-        intention_name
-      }
-    }
-  }
-`;
-
-
-/*
-interface Intention{
-  intention_name: string;
-};
-*/
-/*
-const intentions = [
-  {query:'consulta',userquestion_id:'1',information:'¿Como puedo derivar?',intention:null},
-  {query:'consulta',userquestion_id:'2',information:'¿Como puedo multiplicar matrices?',intention:null},
-  {query:'consulta',userquestion_id:'3',information:'¿Como puedo multiplicar matrices?',intention:null},
-];
-*/
-
+type Intention = {
+  intention_id: number,
+  intention_name: string
+}
 
 const rows = [
   {query:'consulta',userquestion_id:'1',information:'¿Como puedo derivar?'},
@@ -71,11 +37,12 @@ interface IntentionVars {
 }
 export default function QueryAssignment() {
   const classes = useStyles();
-  const {loading, error, data } = useQuery<IntentionVars>(INTENTIONS);
+  const {loading, error, data } = useQuery(INTENTIONS);
   const [dropdown, setDropdown] = useState(false);
   const dropdownIsOpen = () => setDropdown(!dropdown);
-  const IntentionVars = data
-  
+  var intencionElegida:any  = null
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
   return(
     <TableContainer component={Paper}>
       <Table className={classes.table} size="small" aria-label="a dense table">
@@ -92,7 +59,13 @@ export default function QueryAssignment() {
             <TableRow key={row.query}>
               <TableCell component="th" scope="row">{row.query}</TableCell>
               <TableCell align="right">{row.query}
-                <Dropdown options={intentionList} onChange={dropdownIsOpen} value={''} placeholder="Select an option" />;
+                <select name="intentionSelection" onChange={intencionElegida}>
+                  {data.intentions.map((intention:Intention) => (
+                    <option key={intention.intention_id} value={intention.intention_name}>
+                      {intention.intention_name}
+                    </option>
+                  ))}
+                </select>       
               </TableCell>
               <TableCell align="right"> <BiSend/> </TableCell>
             </TableRow>
