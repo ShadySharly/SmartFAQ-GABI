@@ -2,13 +2,15 @@ require('dotenv').config();
 const { gql } = require('apollo-server-core');
 const {makeExecutableSchema} = require('graphql-tools');
 const movies = require('../data.js');
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const knex = require("knex")({
     client:"pg",
     connection:{
-        host:"localhost",
-        user:"postgres",
-        password:"gabi123",
-        database:"gabidata"
+        host:"ec2-54-163-254-204.compute-1.amazonaws.com",
+        user:"nztcvlwuphyxdn",
+        password:"bfae001ab6a28f99ba644460cb696ee8476aec9e6df4d69befbc2baaaa8fbe5c",
+        database:"df0iofqaap79fh",
+        ssl: true
     }
 });
 const typeDefs = gql`

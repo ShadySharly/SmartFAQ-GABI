@@ -52,3 +52,7 @@ Front/package-lock.json
 RASA/config.yml
 
 RASA/models/
+
+Front/chatbot-app/.scannerwork/
+
+Apollo-Server/.scannerwork/
