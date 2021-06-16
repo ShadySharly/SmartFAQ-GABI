@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@material-ui/core'
+import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Select, IconButton, MenuItem} from '@material-ui/core'
 import { BiSend } from 'react-icons/bi';
 import { useQuery, gql , useMutation} from '@apollo/client';
-
-import Select from "react-dropdown-select";
 import 'react-dropdown/style.css';
-
-import SendButton from "../Components/SendButton";
-
+import styled from 'styled-components';
 
 
 const useStyles = makeStyles({
@@ -17,7 +13,9 @@ const useStyles = makeStyles({
   },
 });
 
-
+const StyledSelect = styled(Select)`
+  min-width: 120px;
+`
 
 const QUERY = gql`
   query consulta {
@@ -54,6 +52,7 @@ type Userquestion = {
   intention: Intention
 }
 
+type IntentionsList = string[]
 
 export default function QueryAssignment() {
 
@@ -61,10 +60,19 @@ export default function QueryAssignment() {
   const {loading, error, data } = useQuery(QUERY);
   const [updateUser] = useMutation(UPDATE_USER);
   const [dropdown, setDropdown] = useState(false);
-  const [newIntention, setNewIntention] = useState(0);
   const dropdownIsOpen = () => setDropdown(!dropdown);
+  const initialIntentions: IntentionsList = [];
+  const [selectedIntentions, setSelectedIntentions] = useState(initialIntentions);
+  
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
+
+  console.log(data);
+  const updateIntentions = (newIntention:string, index:number) => {
+    const updatedSelectedIntentions = [...selectedIntentions];
+    updatedSelectedIntentions[index] = newIntention;
+    setSelectedIntentions(updatedSelectedIntentions);
+  } 
     
   return(
     <TableContainer component={Paper}>
@@ -73,26 +81,26 @@ export default function QueryAssignment() {
           <TableRow>
             <TableCell>Sentencia</TableCell>
             <TableCell align="right">Intencion</TableCell>
-            <TableCell align="right">Respuesta</TableCell>
             <TableCell align="right">Enviar</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.userquestions.map((userquestion:Userquestion) => (
+          {data.userquestions.map((userquestion:Userquestion, id:number) => (
             <TableRow key={userquestion.userquestion_id}>
               <TableCell component="th" scope="row">{userquestion.information}</TableCell>
-              <TableCell align="right">{userquestion.userquestion_id}
-                <select name="intentionSelection"  onChange={e => setNewIntention(+e.target.value)}>
+              <TableCell align="right">
+                <StyledSelect id={id.toString()} value={selectedIntentions[id]} onChange={e => updateIntentions(e.target.value as string, id)}>
                   {data.intentions.map((intention:Intention) => (
-                    <option value={intention.intention_id} >
-                      {intention.intention_name}
-                    </option>
-                  ))}
-                </select>       
+                      <MenuItem value={intention.intention_id} >
+                        {intention.intention_name}
+                      </MenuItem>
+                    ))}
+                </StyledSelect>       
               </TableCell>
               <TableCell align="right">
-                {newIntention}
-                <button onClick={()=>updateUser({ variables: {userquestion_id:userquestion.userquestion_id ,intention_id:newIntention}})}/>
+                <IconButton onClick={()=>updateUser({ variables: {userquestion_id:userquestion.userquestion_id ,intention_id:selectedIntentions[id]}})}>
+                  <BiSend/>
+                </IconButton>
               </TableCell>
             </TableRow>
           ))}
