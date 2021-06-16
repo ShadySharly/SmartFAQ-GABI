@@ -1,23 +1,33 @@
 import React, { useState } from "react";
 import { IBaseIntent } from '../Models/Intent';
+import { gql, useMutation } from '@apollo/client';
+
+type Intention = { intention_id: number, intention_name: string }
+
+const CREATE_INTENT = gql`
+    mutation createIntention($intention_name: String!) {
+        addIntent(intention_name: $intention_name) {
+            intention_id
+            intention_name
+        } 
+    }
+`;
 
 interface IProps {
-    onAddIntent: (intent: IBaseIntent) => void;
+    onAddIntent: (intent: Intention) => void;
 }
-const initIntent = { name: "" };
+const initIntent: Intention = { intention_id: -1, intention_name: "" };
+
 const AddIntentForm: React.FunctionComponent<IProps> = props => {
+    const [addIntention] = useMutation(CREATE_INTENT);
+    console.log(addIntention);
     const [formValue, setFormValue] = useState(initIntent);
     const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        const rules = [
-            { key: "name", required: true, label: "Nombre" },
-            { key: "name", maxLength: 16, label: "Nombre" },
-            { key: "name", minLength: 4, label: "Nombre" },
-        ];
-
+        addIntention({ variables: { intention_name: formValue.intention_name } });
         props.onAddIntent(formValue);
         setFormValue(initIntent)
+        return false;
     };
 
     const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,8 +43,8 @@ const AddIntentForm: React.FunctionComponent<IProps> = props => {
                     <input
                         type="text"
                         placeholder="por favor ingrese un nombre"
-                        name="name"
-                        value={formValue.name}
+                        name="intention_name"
+                        value={formValue.intention_name}
                         onChange={onInputChange}
                     />
                 </div>

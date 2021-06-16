@@ -1,10 +1,12 @@
 import React from "react";
 import { IIntent } from '../Models/Intent';
 
+type Intention = { intention_id: number, intention_name: string }
+
 interface IProps {
-  intents: Array<IIntent>;
-  onEdit: (intent: IIntent) => void;
-  onDelete: (intent: IIntent) => void;
+  intents: Array<Intention>;
+  onEdit: (intent: Intention) => void;
+  onDelete: (intent: Intention) => void;
 }
 
 const IntentTable: React.FunctionComponent<IProps> = props => {
@@ -20,8 +22,8 @@ const IntentTable: React.FunctionComponent<IProps> = props => {
         <tbody>
           {props.intents.length > 0 ? (
             props.intents.map(i => (
-              <tr key={i.id}>
-                <td>{i["name"]}</td>
+              <tr key={i.intention_id}>
+                <td>{i["intention_name"]}</td>
                 <td>
                   <button onClick={() => props.onEdit(i)}>Editar</button>
                   <button onClick={() => props.onDelete(i)}>Eliminar</button>

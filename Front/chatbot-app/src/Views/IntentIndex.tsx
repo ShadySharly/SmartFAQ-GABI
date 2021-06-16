@@ -3,8 +3,11 @@ import AddIntentForm from '../Components/AddIntentForm';
 import EditIntentForm from '../Components/EditIntentForm';
 import IntentTable from '../Components/IntentTable';
 import { IIntent, IBaseIntent } from '../Models/Intent';
+import { ApolloClient } from '@apollo/client';
+import { useQuery, gql } from '@apollo/client';
 import '../styles.css';
 
+type Intention = { intention_id: number, intention_name: string }
 
 const defaultIntents: Array<IIntent> = [
     { id: 1, name: "Login" },
@@ -14,27 +17,41 @@ const defaultIntents: Array<IIntent> = [
     { id: 5, name: "Calculo 1" },
 ];
 
-const initCurrentIntent: IIntent = { id: 0, name: "" };
+const INTENTIONS = gql`
+  query consulta {
+    intentions{
+      intention_id
+      intention_name
+    }
+  }
+`;
+
+const initCurrentIntent: Intention = { intention_id: -1, intention_name: "" };
 
 function IntentIndex() {
-    const [intents, setIntents] = useState(defaultIntents);
+    const { loading, error, data } = useQuery(INTENTIONS);
+    const [intents, setIntents] = useState(data.intentions);
     const [editIntent, setEditIntent] = useState(initCurrentIntent);
     const [editing, setEdit] = useState(false);
-    const onAddIntent = (newIntent: IBaseIntent) => {
-        const id = intents.length + 1;
-        setIntents([...intents, { ...newIntent, id }]);
+    const onAddIntent = (newIntent: Intention) => {
+        console.log('Intencion ' + newIntent.intention_id + 'nombre' + newIntent.intention_name);
+        setIntents([...intents, { ...newIntent }]);
     };
-    const onCurrentIntent = (intent: IIntent) => {
+    const onCurrentIntent = (intent: Intention) => {
         setEditIntent(intent);
         setEdit(true);
     };
-    const onUpdateIntent = (id: number, newIntent: IIntent) => {
+    const onUpdateIntent = (id: number, newIntent: Intention) => {
         setEdit(false);
-        setIntents(intents.map(i => (i.id === id ? newIntent : i)));
+        setIntents(intents.map((i: Intention) => (i.intention_id === id ? newIntent : i)));
     };
-    const onDeleteIntent = (currentIntent: IIntent) => {
-        setIntents(intents.filter(i => i.id !== currentIntent.id));
+    const onDeleteIntent = (currentIntent: Intention) => {
+        setIntents(intents.filter((i: Intention) => i.intention_id !== currentIntent.intention_id));
     };
+
+    if (loading) return <p>loading...</p>;
+    if (error) return <p>ERROR</p>;
+    if (!data) return <p>Not found</p>;
     return (
         <div className="IntentIndex">
             <h1>Administración de Intenciones</h1>

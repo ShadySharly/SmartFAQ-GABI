@@ -1,9 +1,11 @@
 import React, { useState, useEffect} from 'react';
 import { IBaseIntent, IIntent } from '../Models/Intent';
 
+type Intention = { intention_id: number, intention_name: string }
+
 interface IProps {
-    intent: IIntent;
-    onUpdateIntent: (id: number, user: IIntent) => void;
+    intent: Intention;
+    onUpdateIntent: (id: number, intention: Intention) => void;
     setEdit: (bool: boolean) => void;
   }
   
@@ -12,11 +14,11 @@ interface IProps {
     useEffect(() => setIntent(props.intent), [props]);
     const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      if ( !intent.name) {
+      if ( !intent.intention_name) {
         console.log("em");
         return false;
       }
-      props.onUpdateIntent(intent.id, intent);
+      props.onUpdateIntent(intent.intention_id, intent);
     };
     const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
@@ -31,8 +33,7 @@ interface IProps {
             <input
               type="text"
               placeholder="por favor ingrese un nombre"
-              name="name"
-              value={intent.name}
+              value={intent.intention_name}
               onChange={onInputChange}
             />
             <div className="form-error">demasiado corto</div>
