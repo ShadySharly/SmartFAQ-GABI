@@ -6,6 +6,7 @@ import { useQuery, gql , useMutation} from '@apollo/client';
 import 'react-dropdown/style.css';
 import styled from 'styled-components';
 
+import {InputLabel} from "@material-ui/core";
 
 const useStyles = makeStyles({
   table: {
@@ -73,7 +74,8 @@ export default function QueryAssignment() {
     updatedSelectedIntentions[index] = newIntention;
     setSelectedIntentions(updatedSelectedIntentions);
   } 
-    
+
+  
   return(
     <TableContainer component={Paper}>
       <Table className={classes.table} size="small" aria-label="a dense table">
@@ -89,7 +91,16 @@ export default function QueryAssignment() {
             <TableRow key={userquestion.userquestion_id}>
               <TableCell component="th" scope="row">{userquestion.information}</TableCell>
               <TableCell align="right">
+                <InputLabel
+                    disableAnimation={false}
+                    htmlFor="searchCriteria"
+                  >
+                    {userquestion.intention.intention_name}
+                  </InputLabel>      
                 <StyledSelect id={id.toString()} value={selectedIntentions[id]} onChange={e => updateIntentions(e.target.value as string, id)}>
+                  <MenuItem selected disabled value="">
+                    <em>{userquestion.intention.intention_name}</em>
+                  </MenuItem>
                   {data.intentions.map((intention:Intention) => (
                       <MenuItem value={intention.intention_id} >
                         {intention.intention_name}

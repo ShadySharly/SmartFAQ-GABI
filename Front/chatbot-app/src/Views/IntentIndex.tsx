@@ -59,7 +59,7 @@ function IntentIndex() {
 
     if (loading) return <p>loading...</p>;
     if (error) return <p>ERROR</p>;
-    if (!data) return <p>Not found</p>;
+    if (!intents) return <p>Not found</p>;
     return (
         <div className="IntentIndex">
             <h1>Administración de Intenciones</h1>
