@@ -5,11 +5,8 @@ import { gql, useMutation } from '@apollo/client';
 type Intention = { intention_id: number, intention_name: string }
 
 const CREATE_INTENT = gql`
-    mutation createIntention($intention_name: String!) {
-        addIntent(intention_name: $intention_name) {
-            intention_id
-            intention_name
-        } 
+    mutation addIntent($intention_name: String!) {
+        createIntention(intention_name: $intention_name)
     }
 `;
 

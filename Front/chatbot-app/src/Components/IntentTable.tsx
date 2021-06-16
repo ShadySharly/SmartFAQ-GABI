@@ -1,5 +1,15 @@
 import React from "react";
 import { IIntent } from '../Models/Intent';
+import { gql, useMutation } from '@apollo/client';
+
+/*
+const DELETE_INTENT = gql`
+    mutation removeIntent($intention_id: Int!) {
+      removeIntention(intention_id: $intention_id)
+    }
+`;
+*/
+//  deleteIntention({ variables: { intention_id: i.intention_id} });
 
 type Intention = { intention_id: number, intention_name: string }
 
@@ -8,7 +18,7 @@ interface IProps {
   onEdit: (intent: Intention) => void;
   onDelete: (intent: Intention) => void;
 }
-
+//const [deleteIntention] = useMutation(DELETE_INTENT);
 const IntentTable: React.FunctionComponent<IProps> = props => {
   return (
     <div className="intent-table">

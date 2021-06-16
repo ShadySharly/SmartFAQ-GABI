@@ -4,7 +4,7 @@ import EditIntentForm from '../Components/EditIntentForm';
 import IntentTable from '../Components/IntentTable';
 import { IIntent, IBaseIntent } from '../Models/Intent';
 import { ApolloClient } from '@apollo/client';
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, gql , useMutation} from '@apollo/client';
 import '../styles.css';
 
 type Intention = { intention_id: number, intention_name: string }
@@ -26,11 +26,18 @@ const INTENTIONS = gql`
   }
 `;
 
+const DELETE_INTENT = gql`
+    mutation removeIntent($intention_id: Int!) {
+      removeIntention(intention_id: $intention_id)
+    }
+`;
+
 const initCurrentIntent: Intention = { intention_id: -1, intention_name: "" };
 
 function IntentIndex() {
+    const [deleteIntent] = useMutation(DELETE_INTENT)
     const { loading, error, data } = useQuery(INTENTIONS);
-    const [intents, setIntents] = useState(data.intentions);
+    const [intents, setIntents] = useState(data?.intentions);
     const [editIntent, setEditIntent] = useState(initCurrentIntent);
     const [editing, setEdit] = useState(false);
     const onAddIntent = (newIntent: Intention) => {
@@ -46,6 +53,7 @@ function IntentIndex() {
         setIntents(intents.map((i: Intention) => (i.intention_id === id ? newIntent : i)));
     };
     const onDeleteIntent = (currentIntent: Intention) => {
+        deleteIntent({ variables: { intention_id: currentIntent.intention_id } })
         setIntents(intents.filter((i: Intention) => i.intention_id !== currentIntent.intention_id));
     };
 
