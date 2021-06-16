@@ -2,10 +2,14 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper} from '@material-ui/core'
 import { BiSend } from 'react-icons/bi';
-import { useQuery, gql } from '@apollo/client';
+import { useQuery, gql , useMutation} from '@apollo/client';
+
 import Select from "react-dropdown-select";
-import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
+
+import SendButton from "../Components/SendButton";
+
+
 
 const useStyles = makeStyles({
   table: {
@@ -14,35 +18,54 @@ const useStyles = makeStyles({
 });
 
 
-const INTENTIONS = gql`
+
+const QUERY = gql`
   query consulta {
     intentions{
+      intention_id
       intention_name
     }
+    userquestions{
+      userquestion_id
+      information
+      intention{
+        intention_id
+        intention_name
+      }
+    }    
   }
 `;
+
+
+const UPDATE_USER = gql`
+  mutation update($userquestion_id: Int!, $intention_id: Int!) {
+    updateUserquestion(userquestion_id: $userquestion_id, intention_id: $intention_id )
+  }
+`;
+
 type Intention = {
   intention_id: number,
   intention_name: string
 }
 
-const rows = [
-  {query:'consulta',userquestion_id:'1',information:'¿Como puedo derivar?'},
-  {query:'consulta',userquestion_id:'2',information:'¿Como puedo multiplicar matrices?'},
-  {query:'consulta',userquestion_id:'3',information:'¿Como puedo multiplicar matrices?'},
-];
-
-interface IntentionVars {
-  intention_name: string;
+type Userquestion = {
+  userquestion_id: number,
+  information: string,
+  intention: Intention
 }
+
+
 export default function QueryAssignment() {
+
   const classes = useStyles();
-  const {loading, error, data } = useQuery(INTENTIONS);
+  const {loading, error, data } = useQuery(QUERY);
+  const [updateUser] = useMutation(UPDATE_USER);
   const [dropdown, setDropdown] = useState(false);
+  const [newIntention, setNewIntention] = useState(0);
   const dropdownIsOpen = () => setDropdown(!dropdown);
-  var intencionElegida:any  = null
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
+    
   return(
     <TableContainer component={Paper}>
       <Table className={classes.table} size="small" aria-label="a dense table">
@@ -55,19 +78,22 @@ export default function QueryAssignment() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.query}>
-              <TableCell component="th" scope="row">{row.query}</TableCell>
-              <TableCell align="right">{row.query}
-                <select name="intentionSelection" onChange={intencionElegida}>
+          {data.userquestions.map((userquestion:Userquestion) => (
+            <TableRow key={userquestion.userquestion_id}>
+              <TableCell component="th" scope="row">{userquestion.information}</TableCell>
+              <TableCell align="right">{userquestion.userquestion_id}
+                <select name="intentionSelection"  onChange={e => setNewIntention(+e.target.value)}>
                   {data.intentions.map((intention:Intention) => (
-                    <option key={intention.intention_id} value={intention.intention_name}>
+                    <option value={intention.intention_id} >
                       {intention.intention_name}
                     </option>
                   ))}
                 </select>       
               </TableCell>
-              <TableCell align="right"> <BiSend/> </TableCell>
+              <TableCell align="right">
+                {newIntention}
+                <button onClick={()=>updateUser({ variables: {userquestion_id:userquestion.userquestion_id ,intention_id:newIntention}})}/>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
