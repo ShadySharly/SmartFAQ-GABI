@@ -24,9 +24,8 @@ from datetime import datetime
 from rasa_sdk.events import SlotSet
 
 import psycopg2
-
 def createConnection():
-    return psycopg2.connect( host="ec2-54-163-254-204.compute-1.amazonaws.com", user="nztcvlwuphyxdn", password="bfae001ab6a28f99ba644460cb696ee8476aec9e6df4d69befbc2baaaa8fbe5c", dbname="df0iofqaap79fh")
+    return psycopg2.connect( host="localhost", user="postgres", password="gabi123", dbname="gabidata")
 
 def saveConversation(client_id, chatbot_id):
     start_dialogue = datetime.now()
