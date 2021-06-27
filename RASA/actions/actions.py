@@ -81,6 +81,21 @@ def getUserEvaluation(userEvaluation):
 
 
 
+def loadConvertation(convertationID, dispatcher):
+    try:
+        query = """select information from chatmessage where chatmessage.dialogue_id ='{0}'""".format(convertationID)
+        conn = createConnection()
+        cur = conn.cursor()        
+        cur.execute(query)
+        convertations = cur.fetchall()
+        dispatcher.utter_message("Cargando conversacion previa: ")
+        for i in range(2,len(convertations)):
+            conv = convertations[i]
+            dispatcher.utter_message(conv[0])
+        return True
+    except:
+        return False
+
 class ActionInitConversation(Action):
 
     def name(self) -> Text:
@@ -93,12 +108,20 @@ class ActionInitConversation(Action):
         try:
             userID = tracker.latest_message['text'].split('@')[1]
             chatbotID = tracker.latest_message['text'].split('@')[2]
+            conversationID = tracker.latest_message['text'].split('@')[3]
         except:
             userID = tracker.get_slot('userID')
             chatbotID = tracker.get_slot('chatbotID')
+        if(conversationID == 'null'):
+            conversationID = saveConversation(userID, chatbotID)
+        else:
+            loadConvertation(conversationID, dispatcher)
+            #
+        #print(dir(dispatcher))
+        #test = {'text': 'AHHHHH!', 'buttons': [], 'elements': [], 'custom': {}, 'template': None, 'response': None, 'image': None, 'attachment': None}
 
-        conversationID = saveConversation(userID, chatbotID)
-
+        #print("\n")
+        #print(dir(tracker))
         return [SlotSet('userID',userID),SlotSet('conversationID',conversationID),SlotSet('chatbotID',chatbotID)]
 
 
@@ -110,6 +133,7 @@ class ActionSaveConversation(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         dispatcher.utter_message(text="Adios!")
+        
         events = tracker.events
 
         conversationID = tracker.get_slot('conversationID')
@@ -117,6 +141,7 @@ class ActionSaveConversation(Action):
         chatbotID = tracker.get_slot('chatbotID')
         userEvaluation = getUserEvaluation(tracker.latest_message['text'])
         updateConversation(conversationID,userEvaluation)
+        
         for i in range(len(events)):
             if(events[i]['event'] == 'user'):
                 dateIssue = datetime.fromtimestamp(events[i]['timestamp'])
