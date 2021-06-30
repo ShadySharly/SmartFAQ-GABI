@@ -17,7 +17,6 @@ const initIntent: Intention = { intention_id: -1, intention_name: "" };
 
 const AddIntentForm: React.FunctionComponent<IProps> = props => {
     const [addIntention] = useMutation(CREATE_INTENT);
-    console.log(addIntention);
     const [formValue, setFormValue] = useState(initIntent);
     const onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

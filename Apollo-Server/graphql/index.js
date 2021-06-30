@@ -38,6 +38,14 @@ const typeDefs = gql`
         information: String!
     }    
 
+    type Answer {
+        answer_id: Int!
+        intention_id: Int!
+        information: String!
+        image_url: String!
+        video_url: String!
+    }
+
     type Query {
         permissions: [Permission]
         permission(permission_id: Int!): Permission
@@ -51,6 +59,7 @@ const typeDefs = gql`
     type Mutation{
         createPermission(permission_name: String!): Boolean
         createIntention(intention_name: String!): Boolean
+        createAnswer(intention_id: Int!, information: String!, image_url: String!, video_url: String!): Boolean
         updateIntention(intention_id: Int!, intention_name: String!): Boolean
         removeIntention(intention_id: Int!): Boolean
         updateUserquestion(userquestion_id: Int!, intention_id: Int!): Boolean
@@ -172,7 +181,19 @@ const resolvers = {
                 console.log(error)
                 return false
             }
-        },        
+        },
+        
+        async createAnswer(_, {intention_id, information, image_url, video_url}) {
+            try {
+                const [answer] = await knex("answer")
+                .returning("*")
+                .insert({intention_id, information, image_url, video_url});
+                return true                            
+            } catch (error) {
+                console.log(error)
+                return false
+            }
+        }
 
     },
 };

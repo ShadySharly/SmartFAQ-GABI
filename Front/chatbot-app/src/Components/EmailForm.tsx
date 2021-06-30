@@ -2,6 +2,7 @@ import React from "react";
 import * as emailjs from "emailjs-com";
 import { useQuery, gql, useMutation } from '@apollo/client';
 
+// Credenciales de Emailjs
 const SERVICE_ID = "email_gabi"
 const TEMPLATE_ID = "template_gabi"
 const USER_ID = "user_vV0bKQTzetKpbPwajilRT"
@@ -18,17 +19,37 @@ type Intention = {
   intention_id: number,
   intention_name: string
 }
-
 interface IProps {
   client: Client;
   intention: Intention;
   question: string;
 }
 
+const CREATE_ANSWER = gql`
+  mutation addAnswer ($intention_id: Int!, $information: String!, $image_url: String!, $video_url: String!) {
+    createAnswer (
+      intention_id: $intention_id
+      information: $information
+      image_url: $image_url
+      video_url: $video_url
+    )
+  }
+`;
+
 const EmailForm: React.FunctionComponent<IProps> = props => {
   const [answer, setAnswer] = React.useState("");
+  const [newAnswer] = useMutation(CREATE_ANSWER);
 
   function handleClick() {
+    newAnswer({
+      variables: {
+        intention_id: props.intention.intention_id,
+        information: answer,
+        image_url: "",
+        video_url: ""
+      }
+    });
+
     var info = {
       to_email: props.client.email,
       to_first_name: props.client.first_name,
