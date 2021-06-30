@@ -5,6 +5,7 @@ import { BiSend } from 'react-icons/bi';
 import { useQuery, gql , useMutation} from '@apollo/client';
 import 'react-dropdown/style.css';
 import styled from 'styled-components';
+import EmailForm from '../Components/EmailForm';
 
 import {InputLabel} from "@material-ui/core";
 
@@ -31,6 +32,12 @@ const QUERY = gql`
         intention_id
         intention_name
       }
+      client {
+        client_id
+        first_name
+        last_name
+        email
+      }
     }    
   }
 `;
@@ -47,10 +54,18 @@ type Intention = {
   intention_name: string
 }
 
+type Client = {
+  client_id: number
+  first_name: string
+  last_name: string
+  email: string
+}
+
 type Userquestion = {
   userquestion_id: number,
   information: string,
-  intention: Intention
+  intention: Intention,
+  client: Client
 }
 
 type IntentionsList = string[]
@@ -83,6 +98,7 @@ export default function QueryAssignment() {
           <TableRow>
             <TableCell>Sentencia</TableCell>
             <TableCell align="right">Intencion</TableCell>
+            <TableCell align="right">Respuesta</TableCell>
             <TableCell align="right">Enviar</TableCell>
           </TableRow>
         </TableHead>
@@ -108,6 +124,17 @@ export default function QueryAssignment() {
                     ))}
                 </StyledSelect>       
               </TableCell>
+
+              <TableCell>
+
+                <EmailForm
+                    client={userquestion.client}
+                    intention={userquestion.intention}
+                    question={userquestion.information}
+                />
+
+              </TableCell>
+
               <TableCell align="right">
                 <IconButton onClick={()=>updateUser({ variables: {userquestion_id:userquestion.userquestion_id ,intention_id:selectedIntentions[id]}})}>
                   <BiSend/>

@@ -24,8 +24,16 @@ const typeDefs = gql`
         intention_name: String!
     }
 
+    type Client {
+        client_id: Int!
+        first_name: String!
+        last_name: String!
+        email: String!
+    }
+
     type Userquestion {
         userquestion_id: Int!
+        client: Client!
         intention: Intention!
         information: String!
     }    
@@ -35,6 +43,7 @@ const typeDefs = gql`
         permission(permission_id: Int!): Permission
         intentions: [Intention]
         intention(intention_id: Int!): Intention
+        client(client_id: Int!): Client
         userquestions: [Userquestion]
         userquestion(userquestion_id: Int!): Userquestion        
     }
@@ -62,13 +71,21 @@ const resolvers = {
         async intention(_,{intention_id}){
             return await knex("intention").where('intention_id',intention_id).select("*").first()
         },
+        async client(_, {client_id}){
+            return await knex("client").where('client_id', client_id).select("*").first()
+        },
         async userquestions(_,args){ 
             const userquestions = await knex("userquestion").select("*")
             const intentionIds = Array.from(new Set(userquestions.map((t) => t.intention_id)))
-            const intentions = await knex('intention').whereIn('intention_id', intentionIds)
+            const intentions = await knex('intention').whereIn('intention_id', intentionIds)       
+            
+            const clientIds = Array.from(new Set(userquestions.map((t) => t.client_id)))
+            const clients = await knex('client').whereIn('client_id', clientIds)
+
             return userquestions.map((t) => {
                 return {
                   ...t,
+                  client: clients.find((u) => u.client_id === t.client_id),
                   intention: intentions.find((u) => u.intention_id === t.intention_id),
                 }
               })
@@ -77,9 +94,14 @@ const resolvers = {
             const userquestion = await knex("userquestion").where('userquestion_id',userquestion_id).select("*")
             const intentionId = userquestion.map((t) => t.intention_id)
             const intention = await knex('intention').whereIn('intention_id', intentionId).select("*")
+
+            const clientId = userquestion.map((t) => t.client_id)
+            const client = await knex('client').whereIn('client_id', clientId).select("*")
+
             return userquestion.map((t) => {
                 return {
                   ...t,
+                  client: client.find((u) => u.client_id === t.client_id),
                   intention: intention.find((u) => u.intention_id === t.intention_id),
                 }
               })[0]
