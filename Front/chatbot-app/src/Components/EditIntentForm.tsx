@@ -1,13 +1,13 @@
 import React, { useState, useEffect} from 'react';
 import { IBaseIntent, IIntent } from '../Models/Intent';
 import { gql, useMutation } from '@apollo/client';
+import styled from 'styled-components';
 
 const UPDATE_INTENT = gql`
     mutation updateIntent($intention_id: Int!,$intention_name: String!) {
         updateIntention(intention_id: $intention_id, intention_name: $intention_name)
     }
 `;
-
 
 type Intention = { intention_id: number, intention_name: string }
 
@@ -32,7 +32,7 @@ interface IProps {
     };
     return (
       <div className="user-form">
-        <h1>Editar Intención</h1>
+        <span>Editar Intención</span>
         <form className="form-edit" onSubmit={onFormSubmit}>
           <div className="form-row">
             <label>Nombre</label>

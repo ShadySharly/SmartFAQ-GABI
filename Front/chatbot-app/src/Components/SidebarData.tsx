@@ -6,44 +6,35 @@ import { SidebarItem } from "../Models/SidebarItem";
 
 export const SidebarData: SidebarItem[] = [
     {
-        title: 'Home',
-        path: '/overview',
-        icon: <AiFillHome />,
-        iconClosed: < AiFillCaretDown />,
-        iconOpened: < AiFillCaretUp />,
-        subnav: [
-            {
-                title: 'Perfil',
-                path: '/overview/profile',
-                icon: <AiOutlineUser/>,
+        title: 'Perfil',
+        path: '/profile',
+        icon: <AiOutlineUser style={{fill:"#394049"}}/>,
 
-            },
-            {
-                title: 'Asignaturas',
-                path: '/overview/subjects',
-                icon: <FaClipboardList/>,
+    },
+    {
+        title: 'Asignaturas',
+        path: 'subjects',
+        icon: <FaClipboardList style={{fill:"#394049"}}/>,
 
-            }
-        ]
     },
     {
         title: 'Mis cursos',
         path: '/courses',
-        icon: < BiBook/>,
+        icon: < BiBook style={{fill:"#394049"}}/>,
     },
     {
         title: 'Preguntas Generales',
         path: '/generalFAQ',
-        icon: < RiQuestionAnswerFill/>,
+        icon: < RiQuestionAnswerFill style={{fill:"#394049"}}/>,
     },
     {
         title: 'Asignacion de Consultas',
         path: '/queryassignment',
-        icon: < RiQuestionAnswerFill/>,
+        icon: < RiQuestionAnswerFill style={{fill:"#394049"}}/>,
     },
     {
         title: 'Administración de Intenciones',
         path: '/intentindex',
-        icon: < RiQuestionAnswerFill/>,
+        icon: < RiQuestionAnswerFill style={{fill:"#394049"}}/>,
     },
 ];

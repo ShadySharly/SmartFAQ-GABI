@@ -18,7 +18,7 @@ const Nav = styled.div`
 const SidebarNav = styled.div<{sidebar:boolean}>`
     width: 250px;
     height: 100vh;
-    background-color: #043C8B;
+    background-color: white;
     position: fixed;
     top: 0;
     left: ${({sidebar}) => (sidebar ? '0' : '-100%')};
@@ -48,14 +48,14 @@ const Sidebar = (props: SidebarProps) => {
                 </NavIcon>
             </Nav>
             <SidebarNav sidebar={isOpen}>
-                <SidebarWrap>
+                <div>
                     <NavIcon to="#" onClick={showSidebar}>
-                        <AiOutlineClose />
+                        <AiOutlineClose style={{fill:"#394049", fontSize:"20px"}}/>
                     </NavIcon>
                     {SidebarData.map((item,index) => {
                         return <Submenu item ={item} key={index}/>
                     })}
-                </SidebarWrap>
+                </div>
             </SidebarNav>
         </IconContext.Provider>
 

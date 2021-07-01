@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 const StyledContainer = styled.div<{isSidebarOpen:boolean}>`
     width: ${({isSidebarOpen}) => (isSidebarOpen ? 'calc(100% - 250px)' : '100%')};
-    height: 100%;
+    height: calc(100vh - 48px);
     transition: 350ms;
     margin-left: ${({isSidebarOpen}) => (isSidebarOpen ? '250px' : '0')};
     transition: 350ms;
