@@ -10,6 +10,7 @@ import Overview from '../Views/Overview';
 import { useState } from 'react';
 import QueryAssignment from '../Views/QueryAssignment';
 import IntentIndex from '../Views/IntentIndex';
+import FaqIndex from '../Views/FaqIndex';
 
 const cache = new InMemoryCache()
 
@@ -34,6 +35,7 @@ const App = () => {
                     <Route path="/generalFAQ" component={Chatbot} exact></Route>
                     <Route path="/queryassignment" component={QueryAssignment} exact></Route>
                     <Route path="/intentindex" component={IntentIndex} exact></Route>
+                    <Route path="/faqindex" component={FaqIndex} exact></Route>
                 </Switch>
             </Container>
         </Router>

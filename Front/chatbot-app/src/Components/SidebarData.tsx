@@ -46,4 +46,9 @@ export const SidebarData: SidebarItem[] = [
         path: '/intentindex',
         icon: < RiQuestionAnswerFill/>,
     },
+    {
+        title: 'FAQs',
+        path: '/faqindex',
+        icon: < RiQuestionAnswerFill/>,
+    },
 ];
