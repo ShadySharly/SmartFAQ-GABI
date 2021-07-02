@@ -3,7 +3,7 @@ const { gql } = require('apollo-server-core');
 const {makeExecutableSchema} = require('graphql-tools');
 const fs = require('fs');
 const { domain } = require('process');
-
+var shell = require('shelljs');
 
 function generateNLU (requests, chatbot_version){
     nlu_content = "version: \""+ chatbot_version +"\"\nnlu: \n";
@@ -158,7 +158,8 @@ const typeDefs = gql`
         updateIntention(intention_id: Int!, intention_name: String!): Boolean
         removeIntention(intention_id: Int!): Boolean
         updateUserquestion(userquestion_id: Int!, intention_id: Int!): Boolean
-        generateChatbotFiles: Boolean
+        generateChatbotFiles(chatbot_version: String!): Boolean
+        trainChatbot:Boolean
     }
 `;
 
@@ -265,13 +266,9 @@ const resolvers = {
                 return false
             }
         },
-        async generateChatbotFiles(_, args){
+        async generateChatbotFiles(_, {chatbot_version}){
             try {
                 //obtener version del chatbot mas actual
-                const [chatbot] = await knex('chatbot')
-                .orderBy('chatbot_id','desc')
-                .select("chatbot_version");
-                chatbot_version = chatbot['chatbot_version']
                 let nlu_content = "";
                 let rules_content = "";
                 let stories_content = "";
@@ -331,7 +328,30 @@ const resolvers = {
                 console.log(error)
                 return false
             }
-        }        
+        },
+        async trainChatbot(_,args){
+            try{
+                var root_path = __dirname.replace('/Apollo-Server/graphql','/RASA/')
+                fs.unlinkSync(root_path+'data/nlu.yml') 
+                fs.unlinkSync(root_path+'data/rules.yml')   
+                fs.unlinkSync(root_path+'data/stories.yml')   
+                fs.unlinkSync(root_path+'domain.yml')
+                fs.rename('nlu.yml',root_path+'data/nlu.yml',function(err){if(err) throw err})
+                fs.rename('rules.yml',root_path+'data/rules.yml',function(err){if(err) throw err})
+                fs.rename('stories.yml',root_path+'data/stories.yml',function(err){if(err) throw err})
+                fs.rename('domain.yml',root_path+'domain.yml',function(err){if(err) throw err})                
+                shell.exec('kill -9 $(lsof -t -i:5005)');
+                shell.exec('kill -9 $(lsof -t -i:5055)');
+                shell.cd(root_path);
+                shell.exec('rasa run -m models --enable-api --cors "*" --debug',{async:true});
+                shell.exec('rasa run actions',{async:true});
+                shell.cd(__dirname)
+                return true
+            }catch(err){
+                console.error(err)
+                return false
+            }
+        }      
     },
 };
 
