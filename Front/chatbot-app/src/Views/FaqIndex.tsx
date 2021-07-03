@@ -84,7 +84,7 @@ function FaqIndex() {
                 <Typography className={classes.heading}>{i.intention_name}</Typography>
               </div>
               <div className={classes.column}>
-                <Typography className={classes.secondaryHeading}>Select trip destination</Typography>
+                <Typography className={classes.secondaryHeading}>Preguntas asociadas</Typography>
               </div>
             </AccordionSummary>
             <FaqTable intent={i}/>

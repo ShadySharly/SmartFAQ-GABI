@@ -48,7 +48,6 @@ const typeDefs = gql`
 
     type Request {
         request_id: Int!
-        intention_id: Int!
         information: String!
     }
 
@@ -60,7 +59,7 @@ const typeDefs = gql`
         client(client_id: Int!): Client
         userquestions: [Userquestion]
         userquestion(userquestion_id: Int!): Userquestion    
-        requestByIntent(intention_id: Int!): Request
+        requestByIntent(intention_id: Int!): [Request]
     }
 
     type Mutation{

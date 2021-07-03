@@ -53,52 +53,56 @@ const REQUESTS_BY_INTENT = gql`
   query getRequests ($intention_id: Int!) {
     requestByIntent (intention_id: $intention_id) {
       request_id
-      intention_id
       information
     }
   }
 `;
 
+type Request = { request_id: number, information: string }
+type Intention = { intention_id: number, intention_name: string }
 interface IProps {
   intent: Intention
 }
 
-type Intention = { intention_id: number, intention_name: string }
-
 const FaqTable: React.FunctionComponent<IProps> = props => {
   const classes = useStyles();
 
-  const { loading, error, data } = useQuery(REQUESTS_BY_INTENT , {
+  const { loading, error, data } = useQuery(REQUESTS_BY_INTENT, {
     variables: { intention_id: props.intent.intention_id },
   });
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
-  
+  if (error) return <p>ERROR</p>;
+
   return (
-    <div>
-      <AccordionDetails className={classes.details}>
-        <div className={classes.column} />
-        <div className={classes.column}>
-          <Chip label="Pregunta" onDelete={() => { }} />
-        </div>
-        <div className={clsx(classes.column, classes.helper)}>
-          <Typography variant="caption">
-            Select your destination of choice
-            <br />
-            <a href="#secondary-heading-and-columns" className={classes.link}>
-              Learn more
-            </a>
-          </Typography>
-        </div>
-      </AccordionDetails>
-      <Divider />
-      <AccordionActions>
-        <Button size="small">Cancel</Button>
-        <Button size="small" color="primary">
-          Save
-        </Button>
-      </AccordionActions>
+    <div className={classes.root}>
+      {data.requestByIntent.length > 0 ? (
+        data.requestByIntent.map((r: Request) => (
+          <Accordion>
+            <AccordionDetails className={classes.details}>
+              <div className={classes.column}></div>
+              <div className={classes.column}>
+                <Chip label={r.information} onDelete={() => { }} />
+              </div>
+              <div className={clsx(classes.column, classes.helper)}>
+                <Typography variant="caption">
+                  <br />
+                  <Button size="small" color="primary">Editar</Button>
+                </Typography>
+              </div>
+            </AccordionDetails>
+            <Divider />
+            <AccordionActions>
+              <Button size="small">Cancel</Button>
+              <Button size="small" color="primary">Save</Button>
+            </AccordionActions>
+          </Accordion>
+        ))
+      ) : (
+        <tr>
+          <td colSpan={3}>No hay Preguntas Frecuentes aún</td>
+        </tr>
+      )}
     </div>
   )
 }
