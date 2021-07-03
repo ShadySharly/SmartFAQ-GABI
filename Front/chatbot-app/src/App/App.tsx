@@ -25,7 +25,7 @@ const App = () => {
     const [sidebarOpen, setSidebar] = useState(false);
     const showOpenSidebar = () => setSidebar(!sidebarOpen);
     return (
-        <ApolloProvider client={client}>
+      <ApolloProvider client={client}>
         <Router>
           <Sidebar isOpen={sidebarOpen} showSidebar={showOpenSidebar} />
             <Container isSidebarOpen={sidebarOpen}>
@@ -39,7 +39,7 @@ const App = () => {
                 </Switch>
             </Container>
         </Router>
-    </ApolloProvider>
+      </ApolloProvider>
   );
 }
 

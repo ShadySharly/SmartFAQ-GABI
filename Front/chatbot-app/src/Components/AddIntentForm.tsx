@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { IBaseIntent } from '../Models/Intent';
 import { gql, useMutation } from '@apollo/client';
+import styled from "styled-components";
 
 type Intention = { intention_id: number, intention_name: string }
 

@@ -6,6 +6,7 @@ import { IIntent, IBaseIntent } from '../Models/Intent';
 import { ApolloClient } from '@apollo/client';
 import { useQuery, gql , useMutation} from '@apollo/client';
 import '../styles.css';
+import styled from 'styled-components';
 
 type Intention = { intention_id: number, intention_name: string }
 
@@ -31,6 +32,63 @@ const DELETE_INTENT = gql`
       removeIntention(intention_id: $intention_id)
     }
 `;
+
+const StyledDiv = styled.div `
+    padding:20px;
+    span.page-title{
+        color: #EA7600;
+        font-size: 30px;
+        padding-bottom:10px;
+    };
+    .intent-flex-wrapper {
+        margin-top:20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    };
+    .intent-form{
+        margin-top:20px;
+        margin-left:20px;
+    };
+    .intent-table {
+        flex: 1;
+        width: 50%;
+        margin-top:20px;
+        margin-left:200px;
+    };
+    .user-form{
+        margin-top:20px;
+        margin-left:20px;
+        span{
+            font-size:30px;
+            font-weight:bold;
+        }
+    };
+    .form-row {
+        margin-bottom: 10px;
+        margin-top:10px;
+        span{
+            font-weight:bold;
+        };
+        label{
+            font-weight:bold;
+        };
+    };
+    .form-error {
+        color: red;
+        font-size: 14px;
+        line-height: 26px;
+    }
+`
+
+const StyledForm = styled.div `
+    color: #394049;
+    background-color: #D9D9D9;
+    margin-top: 8px;
+    margin-left: 12px;
+    margin-right: 12px;
+    border-radius: 10px;
+`
 
 const initCurrentIntent: Intention = { intention_id: -1, intention_name: "" };
 
@@ -61,8 +119,9 @@ function IntentIndex() {
     if (error) return <p>ERROR</p>;
     if (!intents) return <p>Not found</p>;
     return (
-        <div className="IntentIndex">
-            <h1>Administración de Intenciones</h1>
+        <StyledDiv>
+            <span className="page-title">Administración de Intenciones</span>
+            <StyledForm>
             <div className="intent-flex-wrapper">
                 {editing ? (
                     <EditIntentForm
@@ -79,7 +138,8 @@ function IntentIndex() {
                     onDelete={onDeleteIntent}
                 />
             </div>
-        </div>
+            </StyledForm>
+        </StyledDiv>
     );
 }
 

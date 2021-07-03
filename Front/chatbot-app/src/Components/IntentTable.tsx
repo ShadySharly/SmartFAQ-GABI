@@ -1,6 +1,7 @@
 import React from "react";
 import { IIntent } from '../Models/Intent';
 import { gql, useMutation } from '@apollo/client';
+import styled from "styled-components";
 
 /*
 const DELETE_INTENT = gql`
@@ -10,6 +11,8 @@ const DELETE_INTENT = gql`
 `;
 */
 //  deleteIntention({ variables: { intention_id: i.intention_id} });
+
+
 
 type Intention = { intention_id: number, intention_name: string }
 

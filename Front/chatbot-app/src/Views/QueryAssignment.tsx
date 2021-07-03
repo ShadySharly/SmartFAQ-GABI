@@ -49,6 +49,23 @@ const UPDATE_USER = gql`
   }
 `;
 
+const StyledDiv = styled.div`
+  padding: 20px;
+  span{
+    color: #EA7600;
+    margin-bottom:20px;
+    font-size:30px; 
+  };
+  .MuiPaper-root{
+    margin-top:20px;
+  };
+  .MuiTableHead-root .MuiTableCell-root{
+    font-size:20px;
+    background-color:#394049;
+    color: white;
+  }
+`
+
 type Intention = {
   intention_id: number,
   intention_name: string
@@ -92,6 +109,8 @@ export default function QueryAssignment() {
 
   
   return(
+    <StyledDiv>
+    <span>Preguntas Pendientes</span>
     <TableContainer component={Paper}>
       <Table className={classes.table} size="small" aria-label="a dense table">
         <TableHead>
@@ -145,5 +164,6 @@ export default function QueryAssignment() {
         </TableBody>
       </Table>
     </TableContainer>
+    </StyledDiv>
   );
 }
