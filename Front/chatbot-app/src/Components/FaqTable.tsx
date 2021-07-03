@@ -11,7 +11,6 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
-import FaqTable from '../Components/FaqTable';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,54 +49,58 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const INTENTIONS = gql`
-  query consulta {
-    intentions{
+const REQUESTS_BY_INTENT = gql`
+  query getRequests ($intention_id: Int!) {
+    requestByIntent (intention_id: $intention_id) {
+      request_id
       intention_id
-      intention_name
+      information
     }
   }
 `;
 
+interface IProps {
+  intent: Intention
+}
+
 type Intention = { intention_id: number, intention_name: string }
 
-function FaqIndex() {
+const FaqTable: React.FunctionComponent<IProps> = props => {
   const classes = useStyles();
-  const { loading, error, data } = useQuery(INTENTIONS);
+
+  const { loading, error, data } = useQuery(REQUESTS_BY_INTENT , {
+    variables: { intention_id: props.intent.intention_id },
+  });
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
-
+  
   return (
-    <div className={classes.root}>
-
-
-      {data.intentions.length > 0 ? (
-        data.intentions.map((i: Intention) => (
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1c-content"
-              id="panel1c-header"
-            >
-              <div className={classes.column}>
-                <Typography className={classes.heading}>{i.intention_name}</Typography>
-              </div>
-              <div className={classes.column}>
-                <Typography className={classes.secondaryHeading}>Select trip destination</Typography>
-              </div>
-            </AccordionSummary>
-            <FaqTable intent={i}/>
-          </Accordion>
-
-        ))
-      ) : (
-        <tr>
-          <td colSpan={3}>No hay intenciones</td>
-        </tr>
-      )}
+    <div>
+      <AccordionDetails className={classes.details}>
+        <div className={classes.column} />
+        <div className={classes.column}>
+          <Chip label="Pregunta" onDelete={() => { }} />
+        </div>
+        <div className={clsx(classes.column, classes.helper)}>
+          <Typography variant="caption">
+            Select your destination of choice
+            <br />
+            <a href="#secondary-heading-and-columns" className={classes.link}>
+              Learn more
+            </a>
+          </Typography>
+        </div>
+      </AccordionDetails>
+      <Divider />
+      <AccordionActions>
+        <Button size="small">Cancel</Button>
+        <Button size="small" color="primary">
+          Save
+        </Button>
+      </AccordionActions>
     </div>
-  );
+  )
 }
 
-export default FaqIndex;
+export default FaqTable;

@@ -46,6 +46,12 @@ const typeDefs = gql`
         video_url: String!
     }
 
+    type Request {
+        request_id: Int!
+        intention_id: Int!
+        information: String!
+    }
+
     type Query {
         permissions: [Permission]
         permission(permission_id: Int!): Permission
@@ -53,7 +59,8 @@ const typeDefs = gql`
         intention(intention_id: Int!): Intention
         client(client_id: Int!): Client
         userquestions: [Userquestion]
-        userquestion(userquestion_id: Int!): Userquestion        
+        userquestion(userquestion_id: Int!): Userquestion    
+        requestByIntent(intention_id: Int!): Request
     }
 
     type Mutation{
@@ -115,6 +122,9 @@ const resolvers = {
                 }
               })[0]
         },
+        async requestByIntent(_,{intention_id}) {
+            return await knex("request").where('intention_id', intention_id).select("*")
+        }
     },
     
     Mutation: {
