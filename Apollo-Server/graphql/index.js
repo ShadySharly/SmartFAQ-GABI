@@ -132,10 +132,16 @@ const typeDefs = gql`
         permission_name: String!
     }
 
+    type Request{
+        request_id: Int!
+        intention: Intention!
+        information: String!
+    }
+
     type Intention {
         intention_id: Int!
         intention_name: String!
-    }
+    }  
 
     type Userquestion {
         userquestion_id: Int!
@@ -149,7 +155,7 @@ const typeDefs = gql`
         intentions: [Intention]
         intention(intention_id: Int!): Intention
         userquestions: [Userquestion]
-        userquestion(userquestion_id: Int!): Userquestion        
+        userquestion(userquestion_id: Int!): Userquestion    
     }
 
     type Mutation{
@@ -158,6 +164,9 @@ const typeDefs = gql`
         updateIntention(intention_id: Int!, intention_name: String!): Boolean
         removeIntention(intention_id: Int!): Boolean
         updateUserquestion(userquestion_id: Int!, intention_id: Int!): Boolean
+        createRequest(intention_id: Int!, information: String!): Boolean
+        updateRequest(request_id: Int!, intention_id: Int!, information: String!): Boolean
+        removeRequest(request_id: Int!): Boolean
         generateChatbotFiles(chatbot_version: String!): Boolean
         trainChatbot:Boolean
     }
@@ -215,9 +224,12 @@ const resolvers = {
         },
         async createIntention(_,{intention_name}){
             try {
+                const [aux] = await knex("intention")
+                .max('intention_id')
+                let current_id = aux['max']+1
                 const [intention] = await knex("intention")
                 .returning("*")
-                .insert({intention_name});
+                .insert({intention_id:current_id,intention_name: intention_name});
                 return true                            
             } catch (error) {
                 console.log(error)
@@ -266,9 +278,61 @@ const resolvers = {
                 return false
             }
         },
+        async createRequest(_,{intention_id,information}){
+            try {
+                //insert into request (request_id, information,intention_id) values ((select MAX(request_id) from request)+1,'dd',2)
+                const [intention] = await knex("intention")
+                .returning("*")
+                .where({intention_id: intention_id})
+                if(intention==null){return false}
+                else{
+                    const [aux] = await knex("request")
+                    .max('request_id')
+                    let current_id = aux['max']+1
+                    const [request] = await knex("request")
+                    .returning("*")
+                    .insert({request_id:current_id,information: information, intention_id: intention_id});
+                    return true
+                }                        
+            } catch (error) {
+                console.log(error)
+                return false
+            }
+        },
+        async updateRequest(_,{request_id,intention_id,information}){
+            try {
+                const [intention] = await knex("intention")
+                .returning("*")
+                .where({intention_id: intention_id})
+                if(intention==null){return false}
+                else{                
+                    const [request] = await knex("request")
+                    .returning("*")
+                    .where({request_id: request_id})
+                    .update({intention_id:intention_id, information:information}); 
+                    if(request==null){return false}
+                    else{return true}  
+                }        
+            } catch (error) {
+                console.log(error)
+                return false
+            }
+        },
+        async removeRequest(_,{request_id}){
+            try {
+                const [request] = await knex("request")
+                .returning("*")
+                .where({request_id: request_id})
+                .del(['request_id', 'request_id'], { includeTriggerModifications: true })
+                if(request==null){return false}
+                else{return true}          
+            } catch (error) {
+                console.log(error)
+                return false
+            }
+        },
         async generateChatbotFiles(_, {chatbot_version}){
             try {
-                //obtener version del chatbot mas actual
                 let nlu_content = "";
                 let rules_content = "";
                 let stories_content = "";
@@ -282,14 +346,11 @@ const resolvers = {
                 for (let i = 0; i < intentions.length ; i++){
                     lista.push(intentions[i]['intention_id'])
                 }
-
-                ////////////////////////////NLU/////////////////////////
                 const requests = await knex("request")
                 .innerJoin('intention','request.intention_id',"=","intention.intention_id")
                 .select("information","intention_name");
                 nlu_content = generateNLU(requests,chatbot_version)
                 
-                ////////////////////////////RULES AND STORIES////////////////////////
                 const routine_intention = await knex("routine_intention")
                 .innerJoin('intention','routine_intention.intention_id',"=","intention.intention_id")
                 .innerJoin('routine','routine_intention.routine_id',"=","routine.routine_id")
@@ -297,7 +358,6 @@ const resolvers = {
                 rules_content = generateRules(routine_intention, chatbot_version)
                 stories_content = generateStories(routine_intention, chatbot_version)
 
-                ////////////////////////////DOMAIN////////////////////////
                 const slots = await knex("slot")
                 .select("*")
                 const answer_withButtons = await knex("answer")
