@@ -133,7 +133,7 @@ const resolvers = {
               })[0]
         },
         async requestByIntent(_,{intention_id}) {
-            return await knex("request").where('intention_id', intention_id).select("*")
+            return await knex("request").innerJoin("intention","request.intention_id","=","intention.intention_id").where("intention.intention_name","not like","utter%").select("request_id","information")
         }
     },
     
