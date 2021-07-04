@@ -2,32 +2,31 @@ version: '2.0'
 config:
   store_entities_as_slots: true
 intents:
-- login 
-- greet
-- goodbye
-- affirm
-- deny
-- ask_place
-- ask_process
-- ask_courses
-- ask_place_EAO
-- ask_place_library
-- ask_process_pagare
-- ask_process_date_pagare
-- ask_process_req_pagare
-- ask_process_info_pagare
-- ask_courses_calculo1
-- ask_date_pep1_calculo1
-- ask_about_calculo1_derivative
-- ask_content_pep1_calculo1
-- bad_evaluate
-- regular_evaluate
-- good_evaluate
+  - login 
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - ask_place
+  - ask_process
+  - ask_courses
+  - ask_place_EAO
+  - ask_place_library
+  - ask_process_pagare
+  - ask_process_date_pagare
+  - ask_process_req_pagare
+  - ask_process_info_pagare
+  - ask_courses_calculo1
+  - ask_date_pep1_calculo1
+  - ask_about_calculo1_derivative
+  - ask_content_pep1_calculo1
+  - bad_evaluate
+  - regular_evaluate
+  - good_evaluate
 entities:
   - userID
   - conversationID
   - chatbotID
-  - user_evaluation
 
 slots:
   userID:
