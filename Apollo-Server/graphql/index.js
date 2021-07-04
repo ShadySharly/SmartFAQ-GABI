@@ -61,6 +61,7 @@ const typeDefs = gql`
         permissions: [Permission]
         permission(permission_id: Int!): Permission
         intentions: [Intention]
+        intentionsOfRequest:[Intention]
         intention(intention_id: Int!): Intention
         client(client_id: Int!): Client
         userquestions: [Userquestion]
@@ -93,6 +94,9 @@ const resolvers = {
         },
         async intentions(_, args){
             return await knex("intention").select("*");
+        },
+        async intentionsOfRequest(_, args){
+            return await knex("intention").where("intention.intention_name","not like","utter%").select("*");
         },
         async intention(_,{intention_id}){
             return await knex("intention").where('intention_id',intention_id).select("*").first()
@@ -133,7 +137,7 @@ const resolvers = {
               })[0]
         },
         async requestByIntent(_,{intention_id}) {
-            return await knex("request").innerJoin("intention","request.intention_id","=","intention.intention_id").where("intention.intention_name","not like","utter%").select("request_id","information")
+            return await knex("request").where({intention_id:intention_id}).select("*")
         }
     },
     
