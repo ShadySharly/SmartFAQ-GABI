@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery, gql, useMutation } from '@apollo/client';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles';
+import { Theme, createStyles, makeStyles} from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -12,6 +12,7 @@ import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import FaqTable from '../Components/FaqTable';
+import styled from 'styled-components';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,6 +51,14 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
+const StyledDiv = styled.div`
+  padding: 20px;
+  span{
+    color: #EA7600;
+    font-size:30px;
+  };
+`
+
 const INTENTIONS = gql`
   query consulta {
     intentions{
@@ -69,9 +78,9 @@ function FaqIndex() {
   if (error) return <p>Error :(</p>;
 
   return (
+    <StyledDiv>
+      <span>Preguntas Frecuentes</span>
     <div className={classes.root}>
-
-
       {data.intentions.length > 0 ? (
         data.intentions.map((i: Intention) => (
           <Accordion>
@@ -97,6 +106,7 @@ function FaqIndex() {
         </tr>
       )}
     </div>
+    </StyledDiv>
   );
 }
 
