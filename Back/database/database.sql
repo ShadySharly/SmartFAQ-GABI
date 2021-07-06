@@ -264,7 +264,7 @@ INSERT INTO answer VALUES (11,32,'¿Que quieres saber sobre Calculo 1?','URL ima
 INSERT INTO answer VALUES (12,33,'Es el 5 de Marzo del 2020','URL imagen','URL video');
 INSERT INTO answer VALUES (13,34,'En la PEP1 de calculo 1 entra derivadas, suma y resta.','URL imagen','URL video');
 INSERT INTO answer VALUES (14,35,'Para derivar tienes que seguir las siguientes instrucciones ...','URL imagen','URL video');
-INSERT INTO answer VALUES (15,36,'Aquí tienes algo para animarte:','URL imagen','URL video');
+INSERT INTO answer VALUES (15,36,'Aquí tienes algo para animarte','URL imagen','URL video');
 INSERT INTO answer VALUES (16,37,'¿Ha sido de ayuda?','URL imagen','URL video');
 INSERT INTO answer VALUES (17,38,'¡Genial! ¡Sigue adelante!','URL imagen','URL video');
 INSERT INTO answer VALUES (18,39,'Adiós','URL imagen','URL video');
@@ -800,8 +800,8 @@ INSERT INTO routine_intention VALUES (6,3,12,1,'intent');
 INSERT INTO routine_intention VALUES (7,3,24,2,'action');
 INSERT INTO routine_intention VALUES (8,3,41,3,'action');
 
-INSERT INTO routine_intention VALUES (9,4,13,3,'intent');
-INSERT INTO routine_intention VALUES (10,4,25,3,'action');
+INSERT INTO routine_intention VALUES (9,4,13,1,'intent');
+INSERT INTO routine_intention VALUES (10,4,25,2,'action');
 INSERT INTO routine_intention VALUES (11,4,41,3,'action');
 
 INSERT INTO routine_intention VALUES (12,5,14,1,'intent');
@@ -809,30 +809,30 @@ INSERT INTO routine_intention VALUES (13,5,27,2,'action');
 
 INSERT INTO routine_intention VALUES (14,6,15,1,'intent');
 INSERT INTO routine_intention VALUES (15,6,28,2,'action');
-INSERT INTO routine_intention VALUES (16,6,27,3,'action');
+INSERT INTO routine_intention VALUES (16,6,41,3,'action');
 
 INSERT INTO routine_intention VALUES (17,7,16,1,'intent');
 INSERT INTO routine_intention VALUES (18,7,29,2,'action');
-INSERT INTO routine_intention VALUES (19,7,27,3,'action');
+INSERT INTO routine_intention VALUES (19,7,41,3,'action');
 
 INSERT INTO routine_intention VALUES (20,8,17,1,'intent');
 INSERT INTO routine_intention VALUES (21,8,30,2,'action');
-INSERT INTO routine_intention VALUES (22,8,27,3,'action');
+INSERT INTO routine_intention VALUES (22,8,41,3,'action');
 
-INSERT INTO routine_intention VALUES (23,9,18,2,'intent');
-INSERT INTO routine_intention VALUES (24,9,27,2,'action');
+INSERT INTO routine_intention VALUES (23,9,18,1,'intent');
+INSERT INTO routine_intention VALUES (24,9,32,2,'action');
 
 INSERT INTO routine_intention VALUES (25,10,19,1,'intent');
 INSERT INTO routine_intention VALUES (26,10,33,2,'action');
-INSERT INTO routine_intention VALUES (27,10,27,3,'action');
+INSERT INTO routine_intention VALUES (27,10,41,3,'action');
 
 INSERT INTO routine_intention VALUES (28,11,21,1,'intent');
 INSERT INTO routine_intention VALUES (29,11,34,2,'action');
-INSERT INTO routine_intention VALUES (30,11,27,3,'action');
+INSERT INTO routine_intention VALUES (30,11,41,3,'action');
 
 INSERT INTO routine_intention VALUES (31,12,20,1,'intent');
 INSERT INTO routine_intention VALUES (32,12,35,2,'action');
-INSERT INTO routine_intention VALUES (33,12,27,3,'action');
+INSERT INTO routine_intention VALUES (33,12,41,3,'action');
 
 INSERT INTO routine_intention VALUES (34,13,43,1,'intent');
 INSERT INTO routine_intention VALUES (35,13,46,2,'action');
