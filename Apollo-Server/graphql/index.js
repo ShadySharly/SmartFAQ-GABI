@@ -2,6 +2,7 @@ require('dotenv').config();
 const chatbot_funct = require('./chatbotfunctions');
 const { gql } = require('apollo-server-core');
 const {makeExecutableSchema} = require('graphql-tools');
+const { GraphQLDateTime } = require("graphql-iso-date");
 const fs = require('fs');
 const { domain } = require('process');
 var shell = require('shelljs');
@@ -18,7 +19,14 @@ const knex = require("knex")({
         ssl: true
     }
 });
+
+const customScalarResolver = {
+    Date: GraphQLDateTime
+};
+
 const typeDefs = gql`
+    scalar Date
+
     type Permission {
         permission_id: Int!
         permission_name: String!
@@ -57,16 +65,43 @@ const typeDefs = gql`
         video_url: String!
     }
 
+    type Chatbot{
+        chatbot_id: Int!
+        training_date: Date!
+        confidence: Int!
+        chatbot_version: String!
+    }
+
+    type Dialogue{
+        dialogue_id: Int!
+        client: Client!
+        chatbot: Chatbot!
+        start_dialog: Date!
+        end_dialog: Date!
+        client_score: Int!
+    }
+
+    type Chatmessage{
+        chatmessage_id: Int!
+        dialogue: Dialogue!
+        intention: Intention!
+        information: String!
+        confidence: Int!
+        date_issue: Date!
+    }
+
     type Query {
         permissions: [Permission]
         permission(permission_id: Int!): Permission
         intentions: [Intention]
         intentionsOfRequest:[Intention]
+        intentionByName(intention_name: String): Intention
         intention(intention_id: Int!): Intention
         client(client_id: Int!): Client
         userquestions: [Userquestion]
         userquestion(userquestion_id: Int!): Userquestion    
         requestByIntent(intention_id: Int!): [Request]
+        chatmessagesByDialogue(dialogue_id: Int!): [Chatmessage]
     }
 
     type Mutation{
@@ -79,8 +114,12 @@ const typeDefs = gql`
         createRequest(intention_id: Int!, information: String!): Boolean
         updateRequest(request_id: Int!, intention_id: Int!, information: String!): Boolean
         removeRequest(request_id: Int!): Boolean
+        createDialogue(client_id: Int!, chatbot_id: Int!): Int
+        createChatmessage(dialogue_id: Int!, intention_id: Int!, information: String!, confidence: Int!): Boolean
+        updateDialogue(dialogue_id: Int!,client_score: Int!): Boolean
         generateChatbotFiles(chatbot_version: String!): Boolean
-        trainChatbot:Boolean
+        trainChatbot: Boolean
+        deployChatbot: Boolean
     }
 `;
 
@@ -100,6 +139,9 @@ const resolvers = {
         },
         async intention(_,{intention_id}){
             return await knex("intention").where('intention_id',intention_id).select("*").first()
+        },
+        async intentionByName(_,{intention_name}){
+            return await knex("intention").where('intention_name',intention_name).select("*").first()
         },
         async client(_, {client_id}){
             return await knex("client").where('client_id', client_id).select("*").first()
@@ -138,7 +180,10 @@ const resolvers = {
         },
         async requestByIntent(_,{intention_id}) {
             return await knex("request").where({intention_id:intention_id}).select("*")
-        }
+        },
+        async chatmessagesByDialogue(_,{dialogue_id}) {
+            return await knex("chatmessage").where({dialogue_id:dialogue_id}).select("*")
+        }        
     },
     
     Mutation: {
@@ -155,18 +200,14 @@ const resolvers = {
         },
         async createIntention(_,{intention_name}){
             try {
-                const [aux] = await knex("intention")
-                .max('intention_id')
-                let current_id = aux['max']+1
                 const [intention] = await knex("intention")
                 .returning("*")
-                .insert({intention_id:current_id,intention_name: intention_name});
+                .insert({intention_name: intention_name});
                 return true                            
             } catch (error) {
                 console.log(error)
                 return false
             }
-            
         },
         async updateIntention(_,{intention_id, intention_name}){
             try {
@@ -180,7 +221,6 @@ const resolvers = {
                 console.log(error)
                 return false
             }
-
         },
         async removeIntention(_,{intention_id}){
             try {
@@ -195,7 +235,6 @@ const resolvers = {
                 return false
             }
         },
-
         async updateUserquestion(_,{userquestion_id,intention_id}){
             try {
                 const [userquestion] = await knex("userquestion")
@@ -209,7 +248,6 @@ const resolvers = {
                 return false
             }
         },
-        
         async createAnswer(_, {intention_id, information, image_url, video_url}) {
             try {
                 const [answer] = await knex("answer")
@@ -228,12 +266,9 @@ const resolvers = {
                 .where({intention_id: intention_id})
                 if(intention==null){return false}
                 else{
-                    const [aux] = await knex("request")
-                    .max('request_id')
-                    let current_id = aux['max']+1
                     const [request] = await knex("request")
                     .returning("*")
-                    .insert({request_id:current_id,information: information, intention_id: intention_id});
+                    .insert({information: information, intention_id: intention_id});
                     return true
                 }                        
             } catch (error) {
@@ -341,23 +376,76 @@ const resolvers = {
                 fs.rename('nlu.yml',root_path+'data/nlu.yml',function(err){if(err) throw err})
                 fs.rename('rules.yml',root_path+'data/rules.yml',function(err){if(err) throw err})
                 fs.rename('stories.yml',root_path+'data/stories.yml',function(err){if(err) throw err})
-                fs.rename('domain.yml',root_path+'domain.yml',function(err){if(err) throw err})                
-                shell.exec('kill -9 $(lsof -t -i:5005)');
-                shell.exec('kill -9 $(lsof -t -i:5055)');
-                shell.cd(root_path);
-                shell.exec('rasa run -m models --enable-api --cors "*" --debug',{async:true});
-                shell.exec('rasa run actions',{async:true});
+                fs.rename('domain.yml',root_path+'domain.yml',function(err){if(err) throw err})     
+                shell.cd(root_path);                
+                shell.exec('rasa train');
                 shell.cd(__dirname)
                 return true
             }catch(err){
                 console.error(err)
                 return false
             }
-        }      
+        },
+        async deployChatbot(_,args){
+            try{
+                var root_path = __dirname.replace('/Apollo-Server/graphql','/RASA/')
+                shell.cd(root_path)
+                shell.exec('kill -9 $(lsof -t -i:5005)');
+                shell.exec('kill -9 $(lsof -t -i:5055)');
+                shell.exec('rasa run -m models --enable-api --cors "*" --debug',{async:true});
+                shell.exec('rasa run actions',{async:true});   
+                shell.cd(__dirname)          
+                return true
+            }catch(err){
+                console.error(err)
+                return false
+            }
+        },
+        async createDialogue(_, {client_id, chatbot_id}) {
+            try {
+                var client_score = -1
+                var start_dialogue = new Date();
+                var end_dialogue = new Date();
+                const [dialogue] = await knex("dialogue")
+                .returning("*")
+                .insert({client_id, chatbot_id, start_dialogue, end_dialogue,client_score});
+                return dialogue['dialogue_id']                            
+            } catch (error) {
+                console.log(error)
+                return -1
+            }
+        },
+        async updateDialogue(_,{dialogue_id,client_score}){
+            try {
+                var end_dialogue = new Date();
+                const [dialogue] = await knex("dialogue")
+                .returning("*")
+                .where({dialogue_id: dialogue_id})
+                .update({client_score, end_dialogue}); 
+                if(dialogue==null){return false}
+                else{return true}          
+            } catch (error) {
+                console.log(error)
+                return false
+            }
+        },
+        async createChatmessage(_, {dialogue_id, intention_id, information, confidence}) {
+            try {
+                var date_issue = new Date();
+                const [dialogue] = await knex("chatmessage")
+                .returning("*")
+                .insert({dialogue_id, intention_id, information, confidence,date_issue});
+                return true                            
+            } catch (error) {
+                console.log(error)
+                return false
+            }
+        },                
     },
 };
 
 const schema = makeExecutableSchema({
+    customScalarResolver,
     typeDefs,
     resolvers,
 });
