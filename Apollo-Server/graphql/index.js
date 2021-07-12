@@ -118,6 +118,7 @@ const typeDefs = gql`
         createChatmessage(dialogue_id: Int!, intention_id: Int!, information: String!, confidence: Int!): Boolean
         updateDialogue(dialogue_id: Int!,client_score: Int!): Boolean
         generateChatbotFiles(chatbot_version: String!): Boolean
+        generatePLNFiles: Boolean
         trainChatbot: Boolean
         deployChatbot: Boolean
     }
@@ -363,6 +364,50 @@ const resolvers = {
                 return true
             } catch (error) {
                 console.log(error)
+                return false
+            }
+        },
+        async generatePLNFiles(_, args){
+            try{
+                const aux = await knex("chatmessage")
+                .innerJoin('intention','chatmessage.intention_id',"=","intention.intention_id")
+                .where("intention_name","like","ask_%")
+                .select("chatmessage_id")
+
+                let lista_ids = new Array();
+                for (let i = 0; i < aux.length ; i++){
+                    lista_ids.push(aux[i]['chatmessage_id'])
+                    lista_ids.push(aux[i]['chatmessage_id']+1)
+                }
+                const chatmessage = await knex("chatmessage")
+                .whereIn("chatmessage_id", lista_ids)
+                .select("information")
+
+                var data = []
+                var csv = 'Pregunta,Respuesta\n'
+                for(let i = 0; i < chatmessage.length;i=i+2){
+                    data[i] = new Array ();
+                    data[i].push(chatmessage[i]['information'])
+                    data[i].push(chatmessage[i+1]['information'])
+                }
+                data.forEach(function(row){
+                    csv += row.join(',');
+                    csv += "\n";
+                })
+                console.log(csv);
+                chatbot_funct.generateFiles('information.csv', csv)
+                
+                return true
+
+                //select chatmessage_id as next_chatmessage from chatmessage inner join intention on chatmessage.intention_id = intention.intention_id where intention_name like 'ask_%'
+                //archivo con par pregunta / respuesta
+                // Buscar rutina que tenga intencion que empieze con ask_
+                // Agregar contenido de la intencion de ask_ [Pregunta]
+                // Buscar siguiente paso de la ruttina
+                // Agregar contenido de la intencion de utter_ [Respuesta]
+                //  formato csv
+            }catch(err){
+                console.error(err)
                 return false
             }
         },
