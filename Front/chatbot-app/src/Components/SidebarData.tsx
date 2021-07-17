@@ -42,4 +42,9 @@ export const SidebarData: SidebarItem[] = [
         path: '/faqindex',
         icon: < RiQuestionAnswerFill/>,
     },
+    {
+        title: 'Agrupacion de Consultas',
+        path: '/groupintention',
+        icon: < RiQuestionAnswerFill/>,
+    },
 ];
