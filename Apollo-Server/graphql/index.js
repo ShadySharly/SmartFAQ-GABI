@@ -311,56 +311,14 @@ const resolvers = {
         },
         async generateChatbotFiles(_, {chatbot_version}){
             try {
-                let nlu_content = "";
-                let rules_content = "";
-                let stories_content = "";
-                let domain_content = "";
-
-                const intentions = await knex("intention")
-                .where("intention_name","not like","utter%")
-                .andWhere("intention_name","not like","action%")
-                .select("*");
-                let lista = new Array();
-                for (let i = 0; i < intentions.length ; i++){
-                    lista.push(intentions[i]['intention_id'])
-                }
-                const requests = await knex("request")
-                .innerJoin('intention','request.intention_id',"=","intention.intention_id")
-                .select("information","intention_name");
-                nlu_content = chatbot_funct.generateNLU(requests,chatbot_version)
-                
-                const routine_intention = await knex("routine_intention")
-                .innerJoin('intention','routine_intention.intention_id',"=","intention.intention_id")
-                .innerJoin('routine','routine_intention.routine_id',"=","routine.routine_id")
-                .select("step_labbel","step_order","intention_name","title","type");                
-                rules_content = chatbot_funct.generateRules(routine_intention, chatbot_version)
-                stories_content = chatbot_funct.generateStories(routine_intention, chatbot_version)
-
-                const slots = await knex("slot")
-                .select("*")
-                const answer_withButtons = await knex("answer")
-                .innerJoin('button','answer.answer_id',"=","button.answer_id")
-                .innerJoin('intention','answer.intention_id',"=","intention.intention_id")
-                .select("payload","title","information","intention_name")
-                const answer_withoutButtons = await knex("answer")
-                .leftJoin('button','answer.answer_id',"=","button.answer_id")
-                .innerJoin('intention','answer.intention_id',"=","intention.intention_id")
-                .whereNull("button.answer_id")
-                .select("intention_name","information")
-                const actions = await knex("intention")
-                .where("intention_name","like","action%")
-                .select("*")
-                domain_content = chatbot_funct.generateDomain_addIntention(intentions, chatbot_version)
-                domain_content = chatbot_funct.generateDomain_addslots(slots,domain_content)
-                domain_content = chatbot_funct.generateDomain_addRWithB(answer_withButtons, domain_content)
-                domain_content = chatbot_funct.generateDomain_addRWithoutB(answer_withoutButtons, domain_content)
-                domain_content = chatbot_funct.generateDomain_addActions(actions, domain_content)
-
-                chatbot_funct.generateFiles('rules.yml', rules_content)
-                chatbot_funct.generateFiles('stories.yml', stories_content)
-                chatbot_funct.generateFiles('nlu.yml', nlu_content)
-                chatbot_funct.generateFiles('domain.yml', domain_content)
-
+                let nlu_content = await chatbot_funct.generateNLU(knex,chatbot_version)             
+                let rules_content = await chatbot_funct.generateRules(knex, chatbot_version)
+                let stories_content = await chatbot_funct.generateStories(knex, chatbot_version)
+                let domain_content = await chatbot_funct.generateDomain(knex, chatbot_version)
+                await chatbot_funct.generateFiles('rules.yml', rules_content)
+                await chatbot_funct.generateFiles('stories.yml', stories_content)
+                await chatbot_funct.generateFiles('nlu.yml', nlu_content)
+                await chatbot_funct.generateFiles('domain.yml', domain_content)
                 return true
             } catch (error) {
                 console.log(error)
@@ -369,43 +327,9 @@ const resolvers = {
         },
         async generatePLNFiles(_, args){
             try{
-                const aux = await knex("chatmessage")
-                .innerJoin('intention','chatmessage.intention_id',"=","intention.intention_id")
-                .where("intention_name","like","ask_%")
-                .select("chatmessage_id")
-
-                let lista_ids = new Array();
-                for (let i = 0; i < aux.length ; i++){
-                    lista_ids.push(aux[i]['chatmessage_id'])
-                    lista_ids.push(aux[i]['chatmessage_id']+1)
-                }
-                const chatmessage = await knex("chatmessage")
-                .whereIn("chatmessage_id", lista_ids)
-                .select("information")
-
-                var data = []
-                var csv = 'Pregunta,Respuesta\n'
-                for(let i = 0; i < chatmessage.length;i=i+2){
-                    data[i] = new Array ();
-                    data[i].push(chatmessage[i]['information'])
-                    data[i].push(chatmessage[i+1]['information'])
-                }
-                data.forEach(function(row){
-                    csv += row.join(',');
-                    csv += "\n";
-                })
-                console.log(csv);
-                chatbot_funct.generateFiles('information.csv', csv)
-                
+                let pln_contenct = await chatbot_funct.generatePLNFiles(knex)
+                await chatbot_funct.generateFiles('information.csv', pln_contenct)
                 return true
-
-                //select chatmessage_id as next_chatmessage from chatmessage inner join intention on chatmessage.intention_id = intention.intention_id where intention_name like 'ask_%'
-                //archivo con par pregunta / respuesta
-                // Buscar rutina que tenga intencion que empieze con ask_
-                // Agregar contenido de la intencion de ask_ [Pregunta]
-                // Buscar siguiente paso de la ruttina
-                // Agregar contenido de la intencion de utter_ [Respuesta]
-                //  formato csv
             }catch(err){
                 console.error(err)
                 return false
