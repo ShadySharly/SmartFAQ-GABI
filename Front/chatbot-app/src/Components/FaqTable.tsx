@@ -11,6 +11,11 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+import EditRequestForm from './EditRequestForm';
+import AddRequestForm from './AddRequestForm';
+import AddIcon from '@material-ui/icons/Add';
+import DoneIcon from '@material-ui/icons/Done';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -58,6 +63,14 @@ const REQUESTS_BY_INTENT = gql`
   }
 `;
 
+const DELETE_REQUEST = gql`
+  mutation deleteRequest($request_id: Int!) {
+    removeRequest(request_id: $request_id)
+  }
+`;
+
+
+
 type Request = { request_id: number, information: string }
 type Intention = { intention_id: number, intention_name: string }
 interface IProps {
@@ -66,23 +79,54 @@ interface IProps {
 
 const FaqTable: React.FunctionComponent<IProps> = props => {
   const classes = useStyles();
-
+  const [deleteRequest] = useMutation(DELETE_REQUEST)
   const { loading, error, data } = useQuery(REQUESTS_BY_INTENT, {
-    variables: { intention_id: props.intent.intention_id },
+    variables: { intention_id: props.intent.intention_id }, pollInterval: 500,
   });
+
+  const onDeleteRequest = (currentRequest: Request) => {
+    deleteRequest({ variables: { request_id: currentRequest.request_id } })
+  }
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>ERROR</p>;
 
   return (
     <div className={classes.root}>
+
+      <Accordion>
+        <AccordionDetails className={classes.details}>
+          <div className={classes.column}></div>
+          <div className={classes.column}>
+            <Chip label={<AddRequestForm intentId={props.intent.intention_id} />}
+              color="primary"
+              variant="default"
+              deleteIcon={<DoneIcon />}
+            />
+          </div>
+          <div className={clsx(classes.column, classes.helper)}>
+            <Typography variant="caption">
+              <br />
+              <Button size="small" color="primary">Editar</Button>
+            </Typography>
+          </div>
+        </AccordionDetails>
+      </Accordion>
+
       {data.requestByIntent.length > 0 ? (
         data.requestByIntent.map((r: Request) => (
           <Accordion>
             <AccordionDetails className={classes.details}>
               <div className={classes.column}></div>
               <div className={classes.column}>
-                <Chip label={r.information} onDelete={() => { }} />
+                <Chip
+                  label={<EditRequestForm
+                    request={r}
+                    intention={props.intent}
+                  />}
+                  onDelete={() => { onDeleteRequest(r) }}
+                  color="secondary" variant="default"
+                />
               </div>
               <div className={clsx(classes.column, classes.helper)}>
                 <Typography variant="caption">

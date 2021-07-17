@@ -94,13 +94,12 @@ const initCurrentIntent: Intention = { intention_id: -1, intention_name: "" };
 
 function IntentIndex() {
     const [deleteIntent] = useMutation(DELETE_INTENT)
-    const { loading, error, data } = useQuery(INTENTIONS);
-    const [intents, setIntents] = useState(data?.intentions);
+    const { loading, error, data } = useQuery(INTENTIONS, { pollInterval: 500,});
     const [editIntent, setEditIntent] = useState(initCurrentIntent);
     const [editing, setEdit] = useState(false);
     const onAddIntent = (newIntent: Intention) => {
         console.log('Intencion ' + newIntent.intention_id + 'nombre' + newIntent.intention_name);
-        setIntents([...intents, { ...newIntent }]);
+
     };
     const onCurrentIntent = (intent: Intention) => {
         setEditIntent(intent);
@@ -108,16 +107,13 @@ function IntentIndex() {
     };
     const onUpdateIntent = (id: number, newIntent: Intention) => {
         setEdit(false);
-        setIntents(intents.map((i: Intention) => (i.intention_id === id ? newIntent : i)));
     };
     const onDeleteIntent = (currentIntent: Intention) => {
         deleteIntent({ variables: { intention_id: currentIntent.intention_id } })
-        setIntents(intents.filter((i: Intention) => i.intention_id !== currentIntent.intention_id));
     };
 
     if (loading) return <p>loading...</p>;
     if (error) return <p>ERROR</p>;
-    if (!intents) return <p>Not found</p>;
     return (
         <StyledDiv>
             <span className="page-title">Administración de Intenciones</span>
@@ -133,7 +129,7 @@ function IntentIndex() {
                     <AddIntentForm onAddIntent={onAddIntent} />
                 )}
                 <IntentTable
-                    intents={intents}
+                    intents={data.intentions}
                     onEdit={onCurrentIntent}
                     onDelete={onDeleteIntent}
                 />
