@@ -18,6 +18,17 @@ async function generateNLU (knex, chatbot_version){
     return nlu_content
 }
 
+function customSort(a,b){
+    if(a['step_order'] > b['step_order']){
+        return 1;
+    }
+    if(a['step_order'] < b['step_order']){
+        return -1;
+    }else{
+        return 0;
+    }
+}
+
 async function generateRules (knex, chatbot_version){
     const routine_intention = await knex("routine_intention")
     .innerJoin('intention','routine_intention.intention_id',"=","intention.intention_id")
@@ -30,19 +41,9 @@ async function generateRules (knex, chatbot_version){
         if(routine_intention[i]['type'] == 'rule'){
             if(routine_intention[i]['title'] == auxTitle){
                 auxValues.push(routine_intention[i])
-                //rules_content = rules_content + "  - "+routine_intention[i]['step_labbel']+": "+routine_intention[i]['intention_name']+"\n"
             }else{
                 if(auxValues!=null){
-                    auxValues.sort(function(a,b){
-                        if(a['step_order'] > b['step_order']){
-                            return 1;
-                        }
-                        if(a['step_order'] < b['step_order']){
-                            return -1;
-                        }else{
-                            return 0;
-                        }
-                    })
+                    auxValues.sort(customSort)
                     for(let j = 0; j < auxValues.length;j++){
                         rules_content = rules_content + "  - "+auxValues[j]['step_labbel']+": "+auxValues[j]['intention_name']+"\n"
                     }
@@ -53,7 +54,6 @@ async function generateRules (knex, chatbot_version){
                 auxTitle = routine_intention[i]['title']
                 rules_content = rules_content + "- rule: "+auxTitle+"\n  steps:\n"
                 i = i - 1
-                //Procerso que guarda los pasos
             }  
         } 
     }
@@ -77,16 +77,7 @@ async function generateStories(knex,chatbot_version){
                 auxValues.push(routine_intention[i])
             }else{
                 if(auxValues!=null){
-                    auxValues.sort(function(a,b){
-                        if(a['step_order'] > b['step_order']){
-                            return 1;
-                        }
-                        if(a['step_order'] < b['step_order']){
-                            return -1;
-                        }else{
-                            return 0;
-                        }
-                    })
+                    auxValues.sort(customSort)
                     for(let j = 0; j < auxValues.length;j++){
                         stories_content = stories_content + "  - "+auxValues[j]['step_labbel']+": "+auxValues[j]['intention_name']+"\n"
                     }
