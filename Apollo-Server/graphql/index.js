@@ -7,7 +7,6 @@ const fs = require('fs');
 const { domain } = require('process');
 var shell = require('shelljs');
 
-//process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const knex = require("knex")({
     client:"pg",
@@ -111,6 +110,7 @@ const typeDefs = gql`
         updateIntention(intention_id: Int!, intention_name: String!): Boolean
         removeIntention(intention_id: Int!): Boolean
         updateUserquestion(userquestion_id: Int!, intention_id: Int!): Boolean
+        removeUserquestion(userquestion_id: Int!): Boolean
         createRequest(intention_id: Int!, information: String!): Boolean
         updateRequest(request_id: Int!, intention_id: Int!, information: String!): Boolean
         removeRequest(request_id: Int!): Boolean
@@ -242,6 +242,19 @@ const resolvers = {
                 .returning("*")
                 .where({userquestion_id: userquestion_id})
                 .update({intention_id:intention_id}); 
+                if(userquestion==null){return false}
+                else{return true}          
+            } catch (error) {
+                console.log(error)
+                return false
+            }
+        },
+        async removeUserquestion(_,{userquestion_id}){
+            try {
+                const [userquestion] = await knex("userquestion")
+                .returning("*")
+                .where({userquestion_id: userquestion_id})
+                .del(['userquestion_id', 'userquestion_id'], { includeTriggerModifications: true })
                 if(userquestion==null){return false}
                 else{return true}          
             } catch (error) {
