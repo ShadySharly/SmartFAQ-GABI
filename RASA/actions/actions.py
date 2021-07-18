@@ -1,75 +1,80 @@
-# This files contains your custom actions which can be used to run
-# custom Python code.
-#
-# See this guide on how to implement these action:
-# https://rasa.com/docs/rasa/custom-actions
-
-
-# This is a simple example for a custom action which utters "Hello World!"
-
-# from typing import Any, Text, Dict, List
-#
-# from rasa_sdk import Action, Tracker
-# from rasa_sdk.executor import CollectingDispatcher
-
-#Dependencias para conectar con mysql
-#pip install mysql-connector-python-rf
-#https://stackoverflow.com/questions/7475223/mysql-config-not-found-when-installing-mysqldb-python-interface
-
 from typing import Any, Text, Dict, List
 from rasa_sdk.events import UserUtteranceReverted
 from rasa_sdk import Action, Tracker
 from rasa_sdk.executor import CollectingDispatcher
 from datetime import datetime
 from rasa_sdk.events import SlotSet
+from gql import gql, Client
+from gql.transport.aiohttp import AIOHTTPTransport
 
-import psycopg2
-def createConnection():
-    return psycopg2.connect( host="localhost", user="postgres", password="gabi123", dbname="gabidata")
+transport = AIOHTTPTransport(url="http://localhost:4000/graphql")
+client = Client(transport=transport, fetch_schema_from_transport=True)
 
-def saveConversation(client_id, chatbot_id):
-    start_dialogue = datetime.now()
-    end_dialogue = datetime.now()
-    clientscore = -1
-    query = """INSERT INTO dialogue (client_id, chatbot_id,start_dialogue,end_dialogue,client_score) VALUES (%s,%s,%s,%s,%s) RETURNING dialogue_id"""
-    record = (client_id, chatbot_id,start_dialogue,end_dialogue,clientscore)
-    conn = createConnection()
-    cur = conn.cursor()
-    cur.execute(query,record)   
-    dialogue_id = cur.fetchone()[0]
-    conn.commit()
-    return dialogue_id
 
-def updateConversation(dialogue_id, client_score):
-    end_dialogue = datetime.now()
-    query = """UPDATE dialogue SET client_score = %s, end_dialogue = %s WHERE dialogue_id = %s"""
-    record = (client_score, end_dialogue ,dialogue_id)
-    conn = createConnection()
-    cur = conn.cursor()
-    cur.execute(query,record)   
-    conn.commit()
-    return []
+query1 = gql(
+    """
+        query q1($dialogue_id: Int!){
+            chatmessagesByDialogue(dialogue_id: $dialogue_id){
+                information
+            }
+        }
+"""
+)
 
-def getIntentID(intention_name):
-    query = """SELECT intention_id FROM intention WHERE intention_name = '{0}'""".format(intention_name)
-    conn = createConnection()
-    cur = conn.cursor()
-    try:
-        cur.execute(query)
-        intention_id = cur.fetchone()[0]
-        conn.commit()           
-    except:
-        intention_id = 0
-    return intention_id    
+query2 = gql(
+    """
+        query q2($intention_name: String!){
+            intentionByName(intention_name: $intention_name){
+                intention_id
+            }
+        }
+"""
+)
 
-def saveMessage(dialogue_id, intention_id, information,confidence,date_issue):
-    query = """INSERT INTO chatmessage (chatmessage_id, dialogue_id, intention_id,information,confidence,date_issue) VALUES (DEFAULT,%s,%s,%s,%s,%s)"""
-    record = (dialogue_id, intention_id, information,confidence,date_issue)
-    conn = createConnection()
-    cur = conn.cursor()
-    cur.execute(query,record)   
-    conn.commit()
-    return []
+mutation1 = gql(
+    """
+        mutation m1($client_id: Int!, $chatbot_id: Int!){
+            createDialogue(client_id:$client_id, chatbot_id:$chatbot_id)
+        }
+"""
+)
+
+mutation2 = gql(
+    """
+        mutation m2($dialogue_id: Int!, $client_score: Int!){
+            updateDialogue(dialogue_id:$dialogue_id, client_score:$client_score)
+        }
+"""
+)
+
+mutation3 = gql(
+    """
+        mutation m3($dialogue_id: Int!, $intention_id: Int!,$information: String!,$confidence: Int!){
+            createChatmessage(dialogue_id:$dialogue_id, intention_id:$intention_id,information:$information,confidence:$confidence)
+        }
+"""
+)
+
+
+async def createDialogue(client_id, chatbot_id):
+    params = {"client_id":int(client_id), "chatbot_id":int(chatbot_id)}
+    return await client.execute_async(mutation1,variable_values=params)
+
+async def getChatmessagesByDialogue(dialogue_id):
+    params = {"dialogue_id":int(dialogue_id)}
+    return await client.execute_async(query1,variable_values=params)
+
+async def updateDialogue(dialogue_id,client_score):
+    params = {"dialogue_id":int(dialogue_id),"client_score":int(client_score)}
+    return await client.execute_async(mutation2,variable_values=params)
+
+async def intentionByName(intention_name):
+    params = {"intention_name":intention_name}
+    return await client.execute_async(query2,variable_values=params)
+ 
+async def createChatmessage(dialogue_id,intention_id,information,confidence):
+    params = {"dialogue_id":int(dialogue_id),"intention_id":int(intention_id),"information":information,"confidence":int(confidence)}
+    return await client.execute_async(mutation3,variable_values=params)
 
 def getUserEvaluation(userEvaluation):
     switcher= { 
@@ -80,28 +85,12 @@ def getUserEvaluation(userEvaluation):
     return switcher.get(userEvaluation,-1)
 
 
-
-def loadConvertation(convertationID, dispatcher):
-    try:
-        query = """select information from chatmessage where chatmessage.dialogue_id ='{0}'""".format(convertationID)
-        conn = createConnection()
-        cur = conn.cursor()        
-        cur.execute(query)
-        convertations = cur.fetchall()
-        dispatcher.utter_message("Cargando conversacion previa: ")
-        for i in range(2,len(convertations)):
-            conv = convertations[i]
-            dispatcher.utter_message(conv[0])
-        return True
-    except:
-        return False
-
 class ActionInitConversation(Action):
 
     def name(self) -> Text:
         return "action_init_conversation"
 
-    def run(self, dispatcher: CollectingDispatcher,
+    async def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         dispatcher.utter_message(text="Contectado!")
@@ -113,15 +102,14 @@ class ActionInitConversation(Action):
             userID = tracker.get_slot('userID')
             chatbotID = tracker.get_slot('chatbotID')
         if(conversationID == 'null'):
-            conversationID = saveConversation(userID, chatbotID)
+            aux = await createDialogue(userID, chatbotID)
+            conversationID = aux['createDialogue']
         else:
-            loadConvertation(conversationID, dispatcher)
-            #
-        #print(dir(dispatcher))
-        #test = {'text': 'AHHHHH!', 'buttons': [], 'elements': [], 'custom': {}, 'template': None, 'response': None, 'image': None, 'attachment': None}
-
-        #print("\n")
-        #print(dir(tracker))
+            aux = await getChatmessagesByDialogue(conversationID)
+            old_messages = aux['chatmessagesByDialogue']
+            dispatcher.utter_message("Cargando conversacion previa: ")
+            for i in range(1,len(old_messages)):
+                dispatcher.utter_message(old_messages[i]['information'])            
         return [SlotSet('userID',userID),SlotSet('conversationID',conversationID),SlotSet('chatbotID',chatbotID)]
 
 
@@ -129,7 +117,7 @@ class ActionSaveConversation(Action):
     def name(self) -> Text:
         return "action_save_conversation"
 
-    def run(self, dispatcher: CollectingDispatcher,
+    async def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         dispatcher.utter_message(text="Adios!")
@@ -140,24 +128,33 @@ class ActionSaveConversation(Action):
         userID = tracker.get_slot('userID')
         chatbotID = tracker.get_slot('chatbotID')
         userEvaluation = getUserEvaluation(tracker.latest_message['text'])
-        updateConversation(conversationID,userEvaluation)
+        await updateDialogue(conversationID,userEvaluation)
+        intentID = -1
         
         for i in range(len(events)):
             if(events[i]['event'] == 'user'):
                 dateIssue = datetime.fromtimestamp(events[i]['timestamp'])
                 userMessage = events[i]['text']
                 userIntent = events[i]['parse_data']['intent']
-                intentID = getIntentID(userIntent['name'])
+                aux = await intentionByName(userIntent['name'])
+                try:
+                    intentID = aux['intentionByName']['intention_id']
+                except:
+                    intentID = 0
                 intentConfidence = userIntent['confidence']
-                saveMessage(conversationID, intentID, userMessage,intentConfidence*100,dateIssue)
+                await createChatmessage(conversationID, intentID, userMessage,intentConfidence*100)
 
             if(events[i]['event'] == 'bot'):    
                 dateIssue = datetime.fromtimestamp(events[i]['timestamp'])
                 botMessage = events[i]['text']
                 botIntent = events[i-1]
-                intentID = getIntentID(botIntent['name'])
+                aux = await intentionByName(userIntent['name'])
+                try:
+                    intentID = aux['intentionByName']['intention_id']
+                except:
+                    intentID = 0
                 intentConfidence = events[i-1]['confidence']
-                saveMessage(conversationID, intentID, botMessage,intentConfidence*100,dateIssue)
+                await createChatmessage(conversationID, intentID, botMessage,intentConfidence*100)
 
         return []    
 
