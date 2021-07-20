@@ -98,18 +98,21 @@ class ActionInitConversation(Action):
             userID = tracker.latest_message['text'].split('@')[1]
             chatbotID = tracker.latest_message['text'].split('@')[2]
             conversationID = tracker.latest_message['text'].split('@')[3]
+            if(conversationID != 'null'):
+                aux = await getChatmessagesByDialogue(conversationID)
+                old_messages = aux['chatmessagesByDialogue']
+                dispatcher.utter_message("Cargando conversacion previa: ")
+                for i in range(1,len(old_messages)):
+                    dispatcher.utter_message(old_messages[i]['information'])
+            else:
+                aux = await createDialogue(userID, chatbotID)
+                conversationID = aux['createDialogue']                
         except:
-            userID = tracker.get_slot('userID')
-            chatbotID = tracker.get_slot('chatbotID')
-        if(conversationID == 'null'):
+            userID = tracker.latest_message['text'].split('@')[1]
+            chatbotID = tracker.latest_message['text'].split('@')[2]
             aux = await createDialogue(userID, chatbotID)
             conversationID = aux['createDialogue']
-        else:
-            aux = await getChatmessagesByDialogue(conversationID)
-            old_messages = aux['chatmessagesByDialogue']
-            dispatcher.utter_message("Cargando conversacion previa: ")
-            for i in range(1,len(old_messages)):
-                dispatcher.utter_message(old_messages[i]['information'])            
+          
         return [SlotSet('userID',userID),SlotSet('conversationID',conversationID),SlotSet('chatbotID',chatbotID)]
 
 
