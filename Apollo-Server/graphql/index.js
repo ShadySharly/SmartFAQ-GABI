@@ -109,6 +109,7 @@ const typeDefs = gql`
         createAnswer(intention_id: Int!, information: String!, image_url: String!, video_url: String!): Boolean
         updateIntention(intention_id: Int!, intention_name: String!): Boolean
         removeIntention(intention_id: Int!): Boolean
+        createUserquestion(client_id: Int!,dialogue_id: Int!,information: String!): Boolean
         updateUserquestion(userquestion_id: Int!, intention_id: Int!): Boolean
         removeUserquestion(userquestion_id: Int!): Boolean
         createRequest(intention_id: Int!, information: String!): Boolean
@@ -231,6 +232,17 @@ const resolvers = {
                 .del(['intention_id', 'intention_id'], { includeTriggerModifications: true })
                 if(intention==null){return false}
                 else{return true}          
+            } catch (error) {
+                console.log(error)
+                return false
+            }
+        },
+        async createUserquestion(_,{client_id,dialogue_id, information}){
+            try {
+                const [userquestion] = await knex("userquestion")
+                .returning("*")
+                .insert({client_id, dialogue_id, information});
+                return true                            
             } catch (error) {
                 console.log(error)
                 return false

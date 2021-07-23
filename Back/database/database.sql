@@ -246,9 +246,12 @@ INSERT INTO intention VALUES (42, 'utter_evaluate');
 INSERT INTO intention VALUES (46, 'utter_bad_evaluate');
 INSERT INTO intention VALUES (47, 'utter_moderate_evaluate');
 INSERT INTO intention VALUES (48, 'utter_good_evaluate');
+INSERT INTO intention VALUES (52, 'nlu_fallback');
+INSERT INTO intention VALUES (53, 'utter_default');
 
 INSERT INTO intention VALUES (49, 'action_init_conversation');
 INSERT INTO intention VALUES (50, 'action_save_conversation');
+INSERT INTO intention VALUES (54, 'action_fallback');
 
 INSERT INTO answer VALUES (1,22,'¡Hola! ¿En que puedo ayudarte?','URL imagen','URL video');
 INSERT INTO answer VALUES (2,23,'¿Que lugar buscas?','URL imagen','URL video');
@@ -276,6 +279,7 @@ INSERT INTO answer VALUES (21,42,'¿Que tan bien respondi?','URL imagen','URL vi
 INSERT INTO answer VALUES (22,46,'¡Que mal!, seguire mejorando','URL imagen','URL video');
 INSERT INTO answer VALUES (23,47,'Me alegra ser de ayuda!.','URL imagen','URL video');
 INSERT INTO answer VALUES (24,48,'¡Exelente!, me alegra mucho','URL imagen','URL video');
+INSERT INTO answer VALUES (25,53,'Aun no puedo responder esta pregunta. Se la mandare a un mentor!','URL imagen','URL video');
 
 INSERT INTO request VALUES (1,1,'login');
 INSERT INTO request VALUES (2,1,'register');
@@ -784,7 +788,7 @@ INSERT INTO routine VALUES (19,'ask the student how they can help about course',
 INSERT INTO routine VALUES (20,'asks the student if they want to end the conversation (affirm)','story');
 INSERT INTO routine VALUES (21,'asks the student if they want to end the conversation (deny)','story');
 
-
+INSERT INTO routine VALUES (22,'Respond question without intention','rule');
 
 
 
@@ -872,6 +876,11 @@ INSERT INTO routine_intention VALUES (59,20,22,3,'action');
 INSERT INTO routine_intention VALUES (60,21,41,1,'action');
 INSERT INTO routine_intention VALUES (61,21,5,2,'intent');
 INSERT INTO routine_intention VALUES (62,21,42,3,'action');
+
+INSERT INTO routine_intention VALUES (63,22,52,1,'intent');
+INSERT INTO routine_intention VALUES (64,22,53,2,'action');
+INSERT INTO routine_intention VALUES (65,22,54,3,'action');
+INSERT INTO routine_intention VALUES (66,22,41,4,'action');
 
 SELECT setval(pg_get_serial_sequence('topic', 'topic_id'), (SELECT MAX(topic_id) FROM topic)+1);
 SELECT setval(pg_get_serial_sequence('duty', 'duty_id'), (SELECT MAX(duty_id) FROM duty)+1);

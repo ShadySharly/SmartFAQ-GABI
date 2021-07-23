@@ -55,6 +55,14 @@ mutation3 = gql(
 """
 )
 
+mutation4 = gql(
+    """
+        mutation m4($client_id: Int!, $dialogue_id: Int!,$information: String!){
+            createUserquestion(client_id:$client_id, dialogue_id:$dialogue_id,information:$information)
+        }
+"""
+)
+
 
 async def createDialogue(client_id, chatbot_id):
     params = {"client_id":int(client_id), "chatbot_id":int(chatbot_id)}
@@ -76,6 +84,11 @@ async def createChatmessage(dialogue_id,intention_id,information,confidence):
     params = {"dialogue_id":int(dialogue_id),"intention_id":int(intention_id),"information":information,"confidence":int(confidence)}
     return await client.execute_async(mutation3,variable_values=params)
 
+async def createUserquestion(client_id,dialogue_id,information):
+    params = {"client_id":int(client_id),"dialogue_id":int(dialogue_id),"information":information}
+    return await client.execute_async(mutation4,variable_values=params)
+
+
 def getUserEvaluation(userEvaluation):
     switcher= { 
         "/bad_evaluate" : 1,
@@ -83,6 +96,21 @@ def getUserEvaluation(userEvaluation):
         "/good_evaluate": 3
     }        
     return switcher.get(userEvaluation,-1)
+
+
+class ActionFallback(Action):
+    def name(self) -> Text:
+        return "action_fallback"
+    async def run(self, dispatcher: CollectingDispatcher,
+            tracker: Tracker,
+            domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
+        conversationID = tracker.get_slot('conversationID')
+        userID = tracker.get_slot('userID')
+        information = tracker.latest_message['text']
+        await createUserquestion(userID, conversationID, information)
+        return []
+
+
 
 
 class ActionInitConversation(Action):
@@ -98,21 +126,19 @@ class ActionInitConversation(Action):
             userID = tracker.latest_message['text'].split('@')[1]
             chatbotID = tracker.latest_message['text'].split('@')[2]
             conversationID = tracker.latest_message['text'].split('@')[3]
-            if(conversationID != 'null'):
-                aux = await getChatmessagesByDialogue(conversationID)
-                old_messages = aux['chatmessagesByDialogue']
-                dispatcher.utter_message("Cargando conversacion previa: ")
-                for i in range(1,len(old_messages)):
-                    dispatcher.utter_message(old_messages[i]['information'])
-            else:
-                aux = await createDialogue(userID, chatbotID)
-                conversationID = aux['createDialogue']                
         except:
             userID = tracker.latest_message['text'].split('@')[1]
             chatbotID = tracker.latest_message['text'].split('@')[2]
+            conversationID = 'null'
+        if(conversationID == 'null'):
             aux = await createDialogue(userID, chatbotID)
             conversationID = aux['createDialogue']
-          
+        else:  
+            aux = await getChatmessagesByDialogue(conversationID)
+            old_messages = aux['chatmessagesByDialogue']
+            dispatcher.utter_message("Cargando conversacion previa: ")
+            for i in range(1,len(old_messages)):
+                dispatcher.utter_message(old_messages[i]['information'])            
         return [SlotSet('userID',userID),SlotSet('conversationID',conversationID),SlotSet('chatbotID',chatbotID)]
 
 
@@ -124,9 +150,7 @@ class ActionSaveConversation(Action):
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
         dispatcher.utter_message(text="Adios!")
-        
         events = tracker.events
-
         conversationID = tracker.get_slot('conversationID')
         userID = tracker.get_slot('userID')
         chatbotID = tracker.get_slot('chatbotID')
