@@ -172,6 +172,7 @@ CREATE TABLE userQuestion (
     dialogue_id int,
     intention_id int,
     information varchar(256),
+    response varchar(256),
     CONSTRAINT fk_client
         FOREIGN KEY(client_id)
         REFERENCES client(client_id) ON DELETE CASCADE,    
@@ -736,9 +737,9 @@ INSERT INTO dialogue VALUES (1,1,1,'2002-02-16 20:38:40','2002-02-16 20:50:40',3
 INSERT INTO chatMessage VALUES (1,1,1,'¿Como puedo llegar a la libreria?',70,'2002-02-16 20:50:40');
 INSERT INTO client_topic VALUES (1,1,1);
 
-INSERT INTO userQuestion VALUES (1,1,1,0,'¿como puedo integrar?');
-INSERT INTO userQuestion VALUES (2,1,1,0,'dime como puedo integrar');
-INSERT INTO userQuestion VALUES (3,1,1,0,'¿como podia llegar al biblio?');
+INSERT INTO userQuestion VALUES (1,1,1,0,'¿como puedo integrar?','');
+INSERT INTO userQuestion VALUES (2,1,1,0,'dime como puedo integrar','');
+INSERT INTO userQuestion VALUES (3,1,1,0,'¿como podia llegar al biblio?','');
 
 INSERT INTO slot VALUES (1,'userID','unfeaturized',1);
 INSERT INTO slot VALUES (2,'conversationID','unfeaturized',1);

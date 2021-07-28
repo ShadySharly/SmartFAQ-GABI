@@ -217,11 +217,51 @@ async function generateFiles(name, content){
     });
 }
 
+async function parseUserquestion(knex, intention_id, information, response){
+    const [request] = await knex("request")
+    .returning("*")
+    .insert({intention_id, information:information});
+
+    const [userquestions] = await knex("routine_intention")
+    .where("intention_id", intention_id)
+    .select("*");
+    if(userquestions == null){
+        let title = "User ask about "+information
+        const [routine_id] = await knex("routine")
+        .insert({title:title, type:"rule"})
+        .returning("routine_id");
+        
+        const [aux] = await knex("intention")
+        .where({intention_id:intention_id})
+        .returning("intention_name");
+        let intention_name = aux['intention_name'].toString().replace("ask","utter")
+        
+        const [utter_intention] = await knex("intention")
+        .insert({intention_name:intention_name})
+        .returning("intention_id");
+        const [answer] = await knex("answer")
+        .insert({intention_id:utter_intention, information:response, image_url:"URL Imagen", video_url:"URL Video"})
+        .returning("*");
+
+        const [routine_intention1] = await knex("routine_intention")
+        .insert({routine_id, intention_id, step_order:1,step_labbel:"intent"})
+        .returning("routine_id");
+        const [routine_intention2] = await knex("routine_intention")
+        .insert({routine_id, intention_id:utter_intention, step_order:2,step_labbel:"action"})
+        .returning("routine_id");
+        const [routine_intention3] = await knex("routine_intention")
+        .insert({routine_id, intention_id:41, step_order:3,step_labbel:"action"})
+        .returning("routine_id");
+        return true
+    }
+}
+
 module.exports = ({generateNLU,
     generateRules,
     generateStories,
     generateDomain,
     generatePLNFiles,
-    generateFiles
-})
+    generateFiles,
+    parseUserquestion
 
+})
