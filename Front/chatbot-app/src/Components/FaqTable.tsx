@@ -17,6 +17,23 @@ import AddIcon from '@material-ui/icons/Add';
 import DoneIcon from '@material-ui/icons/Done';
 
 
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import Grid from '@material-ui/core/Grid';
+import FolderIcon from '@material-ui/icons/Folder';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -27,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     secondaryHeading: {
       fontSize: theme.typography.pxToRem(15),
-      color: theme.palette.text.secondary,
+      color: theme.palette.text.primary,
     },
     icon: {
       verticalAlign: 'bottom',
@@ -50,6 +67,15 @@ const useStyles = makeStyles((theme: Theme) =>
       '&:hover': {
         textDecoration: 'underline',
       },
+    },
+    button: {
+      margin: theme.spacing(1),
+    },
+    margin: {
+      margin: theme.spacing(1),
+    },
+    extendedIcon: {
+      marginRight: theme.spacing(1),
     },
   }),
 );
@@ -94,53 +120,24 @@ const FaqTable: React.FunctionComponent<IProps> = props => {
   return (
     <div className={classes.root}>
 
-      <Accordion>
-        <AccordionDetails className={classes.details}>
-          <div className={classes.column}></div>
-          <div className={classes.column}>
-            <Chip label={<AddRequestForm intentId={props.intent.intention_id} />}
-              color="primary"
-              variant="default"
-              deleteIcon={<DoneIcon />}
-            />
-          </div>
-          <div className={clsx(classes.column, classes.helper)}>
-            <Typography variant="caption">
-              <br />
-              <Button size="small" color="primary">Editar</Button>
-            </Typography>
-          </div>
-        </AccordionDetails>
-      </Accordion>
-
       {data.requestByIntent.length > 0 ? (
         data.requestByIntent.map((r: Request) => (
-          <Accordion>
-            <AccordionDetails className={classes.details}>
-              <div className={classes.column}></div>
-              <div className={classes.column}>
-                <Chip
-                  label={<EditRequestForm
-                    request={r}
-                    intention={props.intent}
-                  />}
-                  onDelete={() => { onDeleteRequest(r) }}
-                  color="secondary" variant="default"
-                />
-              </div>
-              <div className={clsx(classes.column, classes.helper)}>
-                <Typography variant="caption">
-                  <br />
-                  <Button size="small" color="primary">Editar</Button>
-                </Typography>
-              </div>
-            </AccordionDetails>
-            <Divider />
-            <AccordionActions>
-              <Button size="small">Cancel</Button>
-              <Button size="small" color="primary">Save</Button>
-            </AccordionActions>
-          </Accordion>
+          <AccordionDetails className={classes.details}>
+            <div className={classes.column} />
+            <div className={classes.column}>
+              {r.information}
+            </div>
+            <div className={clsx(classes.column, classes.helper)}>
+              <Typography variant="caption">
+                  <IconButton aria-label="edit" className={classes.margin}>
+                    <EditIcon fontSize="large" />
+                  </IconButton>
+                  <IconButton aria-label="delete" className={classes.margin}>
+                    <DeleteIcon fontSize="large" onClick={() => { onDeleteRequest(r) }}/>
+                  </IconButton>
+              </Typography>
+            </div>
+          </AccordionDetails>
         ))
       ) : (
         <tr>
