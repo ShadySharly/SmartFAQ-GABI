@@ -242,7 +242,7 @@ const resolvers = {
             try {
                 const [userquestion] = await knex("userquestion")
                 .returning("*")
-                .insert({client_id, dialogue_id, information,response:''});
+                .insert({client_id, dialogue_id, information,response:'', intention_id: 0});
                 return true                            
             } catch (error) {
                 console.log(error)

@@ -1,36 +1,30 @@
-version: "2.0"
-
-stories:
+version: "v2"
+stories: 
 - story: ask the student how they can help about location
   steps:
   - intent: greet
   - action: utter_question
   - intent: ask_place
   - action: utter_place
-  
 - story: ask the student how they can help about process
   steps:
   - intent: greet
   - action: utter_question
   - intent: ask_process
   - action: utter_process
-
 - story: ask the student how they can help about course
   steps:
   - intent: greet
   - action: utter_question
   - intent: ask_courses
   - action: utter_courses
-
 - story: asks the student if they want to end the conversation (affirm)
   steps:
   - action: utter_ending_question
   - intent: affirm
-  - action: utter_question  
-
-
+  - action: utter_question
 - story: asks the student if they want to end the conversation (deny)
   steps:
   - action: utter_ending_question
   - intent: deny
-  - action: utter_evaluate    
+  - action: utter_evaluate

@@ -134,7 +134,7 @@ async function generateDomain_addRWithB(knex, domain_content){
     let auxIntention = 'null'
     for(let i = 0 ; i < answer_withButtons.length ; i++){
         if(answer_withButtons[i]['intention_name'] == auxIntention){
-            domain_content = domain_content + "    - payload: "+answer_withButtons[i]['payload']+"\n      title: "+answer_withButtons[i]['title']+"\n"
+            domain_content = domain_content + "    - payload: /"+answer_withButtons[i]['payload']+"\n      title: "+answer_withButtons[i]['title']+"\n"
         }else{
             if(auxIntention != 'null'){
                 domain_content = domain_content + "   text: "+answer_withButtons[i-1]['information']+"\n"
