@@ -3,8 +3,10 @@ import { useQuery, gql, useMutation } from '@apollo/client';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
-import {RiDeleteBin6Fill,RiEdit2Line} from 'react-icons/ri';
+import { RiDeleteBin6Fill, RiEdit2Line } from 'react-icons/ri';
 import styled from 'styled-components';
+import AddRequestForm from './AddRequestForm';
+import EditRequestForm from './EditRequestForm';
 
 const StyledDiv = styled.div`
   .MuiAccordionDetails-root{
@@ -16,7 +18,6 @@ const StyledDiv = styled.div`
   };
 
 `
-
 
 const REQUESTS_BY_INTENT = gql`
   query getRequests ($intention_id: Int!) {
@@ -82,7 +83,7 @@ const FaqTable: React.FunctionComponent<IProps> = props => {
 
       {data.requestByIntent.length > 0 ? (
         data.requestByIntent.map((r: Request) => (
-          <AccordionDetails className={classes.details} key={r.request_id}>
+          <AccordionDetails>
 
             {editRequest.request_id === r.request_id ? (
               <EditRequestForm
@@ -93,33 +94,23 @@ const FaqTable: React.FunctionComponent<IProps> = props => {
               />
             ) : (
               <div>
-                <div className={classes.column}>
+                <div className="Faq">
                   {r.information}
                 </div>
+                <div className="Icons">
 
-                <Typography variant="caption">
-                  <IconButton aria-label="edit" className={classes.margin}>
-                    <EditIcon fontSize="large" onClick={() => { onCurrentRequest(r) }} />
-          <AccordionDetails>
-            <div className="Faq">
-              {r.information}
-            </div>
-            <div className="Icons">
-              <Typography variant="caption">
-                  <IconButton aria-label="edit">
-                    <RiEdit2Line style={{fill:"#043C8B", fontSize:"20px"}} />
-                  </IconButton>
-                  <IconButton aria-label="delete" className={classes.margin}>
-                    <DeleteIcon fontSize="large" onClick={() => { onDeleteRequest(r) }} />
-                  <IconButton aria-label="delete">
-                    <RiDeleteBin6Fill style={{fontSize:"20px"}} onClick={() => { onDeleteRequest(r) }}/>
-                  </IconButton>
-                </Typography>
+                  <Typography variant="caption">
+                    <IconButton aria-label="edit">
+                      <RiEdit2Line style={{ fill: "#043C8B", fontSize: "20px" }} onClick={() => { onCurrentRequest(r) }} />
+                    </IconButton>
+                    <IconButton aria-label="delete">
+                      <RiDeleteBin6Fill style={{ fontSize: "20px" }} onClick={() => { onDeleteRequest(r) }} />
+                    </IconButton>
+                  </Typography>
 
+                </div>
               </div>
-
             )}
-
           </AccordionDetails>
         ))
       ) : (
@@ -127,8 +118,8 @@ const FaqTable: React.FunctionComponent<IProps> = props => {
           <td colSpan={3}>No hay Preguntas Frecuentes aún</td>
         </tr>
       )}
-    </div >
-    </StyledDiv>
+
+    </StyledDiv >
   )
 }
 
