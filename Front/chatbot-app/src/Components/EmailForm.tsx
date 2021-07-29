@@ -5,7 +5,7 @@ import { useQuery, gql, useMutation } from '@apollo/client';
 // Credenciales de Emailjs
 const SERVICE_ID = "email_gabi"
 const TEMPLATE_ID = "template_gabi"
-const USER_ID = "user_vV0bKQTzetKpbPwajilRT"
+const USER_ID = "user_ZzvYX0zvfN8BLkNencRPB"
 const GABI_EMAIL = "smartfaq.gabi@gmail.com"
 
 type Client = {
@@ -74,13 +74,12 @@ const EmailForm: React.FunctionComponent<IProps> = props => {
   return (
 
     <p>
-      Enter your email here
       <input
         type="email"
         onChange={(event) => setAnswer(event.target.value)}
       ></input>
       <button type="submit" onClick={handleClick}>
-        Send mail
+        Respuesta
       </button>
     </p>
 
