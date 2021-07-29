@@ -1,9 +1,36 @@
 // @ts-ignore
 import RasaWebchat from 'rasa-webchat';
-import React, { useRef, useLayoutEffect } from 'react';
 import { FC } from "react";
 import styled from 'styled-components';
 
+const StyledDiv = styled.div`
+  .rw-client{
+    background-color:#043C8B;
+  };
+  .rw-response{
+    background-color:#394049;
+    color:white;
+  };
+  .rw-reply{
+    background-color:#043C8B;
+  };
+  .rw-sender{
+    background-color:#394049;
+  };
+  .rw-new-message{
+    background-color:#D9D9D9;
+    margin-left:25px;
+    margin-right:25px;
+    border-radius:25px;
+    padding:10px;
+  };
+  .rw-send{
+    background-color:#394049;
+  };
+  .rw-send .rw-send-icon-ready{
+    fill:#D9D9D9;
+  }
+`
 
 
 function ChatbotConversation (){
@@ -30,9 +57,9 @@ function ChatbotConversation (){
   }
 
 const Chatbot: FC = () => {
-    return <div className = "chatbot">
+    return <StyledDiv className = "chatbot">
             <ChatbotConversation />    
-    </div>
+    </StyledDiv>
 }
 
 export default Chatbot;

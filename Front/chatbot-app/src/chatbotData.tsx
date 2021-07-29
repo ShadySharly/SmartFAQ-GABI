@@ -1,40 +1,65 @@
-//import gql from 'graphql-tag';
-import { useQuery, gql } from '@apollo/client';
+// @ts-ignore
+import RasaWebchat from 'rasa-webchat';
+import { FC } from "react";
 import styled from 'styled-components';
 
-const PERMISSION = gql`
-    query getPermissions {
-        permissions{
-            permission_id
-            permission_name
-        }
-    }
-`;
+const StyledDiv = styled.div`
+  .rw-client{
+    background-color:#043C8B;
+  };
+  .rw-response{
+    background-color:#394049;
+    color:white;
+  };
+  .rw-reply{
+    background-color:#043C8B;
+  };
+  .rw-sender{
+    background-color:#394049;
+  };
+  .rw-new-message{
+    background-color:#D9D9D9;
+    margin-left:25px;
+    margin-right:25px;
+    border-radius:25px;
+    padding:10px;
+  };
+  .rw-send{
+    background-color:#394049;
+  };
+  .rw-send .rw-send-icon-ready{
+    fill:#D9D9D9;
+  }
+`
 
-const Mov = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 2rem;
-    color: #000000;
-    height: 5vh;
-`;
 
-type Permission = {permission_id:number,permission_name:string};
+function ChatbotConversation (){
+    sessionStorage.clear();
+    return (
+      <RasaWebchat
+        ///login @userID @chatbotID
+        initPayload= {'/login @1 @1'}
+        socketUrl={"http://localhost:5005"}
+        socketPath={"/socket.io/"}
+        title={"GABI - General"}
+        inputTextFieldHint={"Escribe un mensaje"}
+        customData= {{ language: "en"}}
+        embedded = {true}
+        showFullScreenButton={true}
+        displayUnreadCount={true}
+        connectOn={"mount"}
+        showMessageDate={true}
+        params = {{
+          storage: "session"
+        }}
+      />
+    )
+  }
 
-function ChatbotData(){
-    const {loading, error, data} = useQuery(PERMISSION);
-
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :(</p>;
-
-    return data.permissions.map(({permission_id, permission_name}:Permission) => (
-        <Mov>
-            <div key={permission_id}>
-                <p>{permission_id}: {permission_name}</p>    
-            </div>
-        </Mov>
-    ));
+const Chatbot: FC = () => {
+    return <StyledDiv className = "chatbot">
+            <ChatbotConversation />    
+    </StyledDiv>
 }
 
-export default ChatbotData;
+export default Chatbot;

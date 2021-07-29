@@ -55,7 +55,7 @@ const EmailForm: React.FunctionComponent<IProps> = props => {
       to_first_name: props.client.first_name,
       to_last_name: props.client.last_name,
       from_name: 'GABI',
-      mentor_name: 'El dios Sharly',
+      mentor_name: 'Mentor X',
       subject: props.intention.intention_name,
       question: props.question,
       message: answer,
