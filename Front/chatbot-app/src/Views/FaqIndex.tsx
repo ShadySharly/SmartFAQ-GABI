@@ -79,8 +79,6 @@ function FaqIndex() {
     setExpanded(isExpanded ? panel : false);
   };
 
-
-
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
