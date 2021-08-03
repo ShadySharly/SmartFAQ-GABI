@@ -99,6 +99,7 @@ const typeDefs = gql`
         client(client_id: Int!): Client
         userquestions: [Userquestion]
         userquestion(userquestion_id: Int!): Userquestion    
+        userquestionByIntent(intention_id: Int!): [Userquestion]
         requestByIntent(intention_id: Int!): [Request]
         chatmessagesByDialogue(dialogue_id: Int!): [Chatmessage]
     }
@@ -182,6 +183,9 @@ const resolvers = {
         },
         async requestByIntent(_,{intention_id}) {
             return await knex("request").where({intention_id:intention_id}).select("*")
+        },
+        async userquestionByIntent(_,{intention_id}) {
+            return await knex("userquestion").where({intention_id:intention_id}).select("*")
         },
         async chatmessagesByDialogue(_,{dialogue_id}) {
             return await knex("chatmessage").where({dialogue_id:dialogue_id}).select("*")
