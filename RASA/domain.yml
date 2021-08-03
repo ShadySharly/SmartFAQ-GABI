@@ -49,7 +49,7 @@ responses:
     - payload: /ask_process
       title: Consulta de procesos
     - payload: /ask_courses
-      title: Consulta de lugares
+      title: Consulta de cursos
    text: ¡Hola! ¿En que puedo ayudarte?
  utter_place:
  - buttons:
