@@ -185,7 +185,20 @@ const resolvers = {
             return await knex("request").where({intention_id:intention_id}).select("*")
         },
         async userquestionByIntent(_,{intention_id}) {
-            return await knex("userquestion").where({intention_id:intention_id}).select("*")
+            const userquestions = await knex("userquestion").where({intention_id:intention_id}).select("*")
+            const intentionIds = Array.from(new Set(userquestions.map((t) => t.intention_id)))
+            const intentions = await knex('intention').whereIn('intention_id', intentionIds)       
+            
+            const clientIds = Array.from(new Set(userquestions.map((t) => t.client_id)))
+            const clients = await knex('client').whereIn('client_id', clientIds)
+
+            return userquestions.map((t) => {
+                return {
+                  ...t,
+                  client: clients.find((u) => u.client_id === t.client_id),
+                  intention: intentions.find((u) => u.intention_id === t.intention_id),
+                }
+              })
         },
         async chatmessagesByDialogue(_,{dialogue_id}) {
             return await knex("chatmessage").where({dialogue_id:dialogue_id}).select("*")
