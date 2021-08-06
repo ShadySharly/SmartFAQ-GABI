@@ -19,6 +19,21 @@ const knex = require("knex")({
     }
 });
 
+var cron = require('node-cron');
+
+cron.schedule('0 2 * * Monday', async () => {
+    console.log("Generando archivos del chatbot - Lunes 2:00 AM")
+    await resolvers.Mutation.generateChatbotFiles()
+});
+cron.schedule('15 2 * * Monday', async () => {
+    console.log("Entrenando nuevo chatbot - Lunes 2:15 AM")
+    await resolvers.Mutation.trainChatbot()
+});
+cron.schedule('45 2 * * Monday', async () => {
+    console.log("Ejecutando nuevo chatbot - Lunes 2:45 AM")
+    await resolvers.Mutation.deployChatbot()
+});
+
 const customScalarResolver = {
     Date: GraphQLDateTime
 };
@@ -119,7 +134,7 @@ const typeDefs = gql`
         createDialogue(client_id: Int!, chatbot_id: Int!): Int
         createChatmessage(dialogue_id: Int!, intention_id: Int!, information: String!, confidence: Int!): Boolean
         updateDialogue(dialogue_id: Int!,client_score: Int!): Boolean
-        generateChatbotFiles(chatbot_version: String!, umbral: Float!): Boolean
+        generateChatbotFiles: Boolean
         generatePLNFiles: Boolean
         trainChatbot: Boolean
         deployChatbot: Boolean
@@ -357,8 +372,12 @@ const resolvers = {
                 return false
             }
         },
-        async generateChatbotFiles(_, {chatbot_version, umbral}){
+        async generateChatbotFiles(_, args){
             try {
+                const chatbot = await knex("chatbot").orderBy('chatbot_id','desc').first("*")
+                chatbot_version = chatbot['chatbot_version']
+                umbral =  parseFloat(chatbot['confidence'])/100
+                console.log("Generando archivos de RASA")
                 let nlu_content = await chatbot_funct.generateNLU(knex,chatbot_version)             
                 let rules_content = await chatbot_funct.generateRules(knex, chatbot_version)
                 let stories_content = await chatbot_funct.generateStories(knex, chatbot_version)
@@ -370,7 +389,6 @@ const resolvers = {
                 await chatbot_funct.generateFiles('domain.yml', domain_content)
                 await chatbot_funct.generateFiles('config.yml', config_content)
                 return true
-                
             } catch (error) {
                 console.log(error)
                 return false
@@ -396,11 +414,13 @@ const resolvers = {
                     fs.unlinkSync(root_path+'domain.yml')
                     fs.unlinkSync(root_path+'config.yml')
                 }catch(err){console.error(err)}
-                fs.rename('nlu.yml',root_path+'data/nlu.yml',function(err){if(err) throw err})
-                fs.rename('rules.yml',root_path+'data/rules.yml',function(err){if(err) throw err})
-                fs.rename('stories.yml',root_path+'data/stories.yml',function(err){if(err) throw err})
-                fs.rename('domain.yml',root_path+'domain.yml',function(err){if(err) throw err})    
-                fs.rename('config.yml',root_path+'config.yml',function(err){if(err) throw err})   
+                try{
+                    fs.rename('nlu.yml',root_path+'data/nlu.yml',function(err){if(err) throw err})
+                    fs.rename('rules.yml',root_path+'data/rules.yml',function(err){if(err) throw err})
+                    fs.rename('stories.yml',root_path+'data/stories.yml',function(err){if(err) throw err})
+                    fs.rename('domain.yml',root_path+'domain.yml',function(err){if(err) throw err})    
+                    fs.rename('config.yml',root_path+'config.yml',function(err){if(err) throw err})   
+                }catch(err){console.error(err)}
                 shell.cd(root_path);                
                 shell.exec('rasa train');
                 shell.cd(__dirname)
