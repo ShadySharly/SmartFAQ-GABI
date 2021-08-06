@@ -181,6 +181,16 @@ async function generateDomain(knex, chatbot_version){
     return domain_content
 }
 
+async function generateConfig(umbral){
+    let config_content = "language: es\npipeline:";
+    config_content = config_content + "\n- name: SpacyNLP\n- name: SpacyTokenizer\n- name: SpacyFeaturizer\n- name: RegexFeaturizer"
+    config_content = config_content + "\n- name: LexicalSyntacticFeaturizer\n- name: CountVectorsFeaturizer\n- name: CountVectorsFeaturizer"
+    config_content = config_content + "\n  analyzer: char_wb\n  min_ngram: 1\n  max_ngram: 4\n- name: DIETClassifier\n  epochs: 100"
+    config_content = config_content + "\n- name: EntitySynonymMapper\n- name: ResponseSelector\n  epochs: 100\n- name: FallbackClassifier\n  threshold: "+String(umbral)
+    config_content = config_content + "\n\npolicies:\n- name: MemoizationPolicy\n- name: RulePolicy\n  core_fallback_threshold: 0.3\n  core_fallback_action_name: \"action_default_fallback\"\n  enable_fallback_prediction: True\n- name: TEDPolicy\n  max_history: 5\n  epochs: 100\n  constrain_similarities: True"
+    return config_content
+}
+
 async function generatePLNFiles(knex){
     const aux = await knex("chatmessage")
     .innerJoin('intention','chatmessage.intention_id',"=","intention.intention_id")
@@ -262,6 +272,6 @@ module.exports = ({generateNLU,
     generateDomain,
     generatePLNFiles,
     generateFiles,
-    parseUserquestion
-
+    parseUserquestion,
+    generateConfig
 })

@@ -119,7 +119,7 @@ const typeDefs = gql`
         createDialogue(client_id: Int!, chatbot_id: Int!): Int
         createChatmessage(dialogue_id: Int!, intention_id: Int!, information: String!, confidence: Int!): Boolean
         updateDialogue(dialogue_id: Int!,client_score: Int!): Boolean
-        generateChatbotFiles(chatbot_version: String!): Boolean
+        generateChatbotFiles(chatbot_version: String!, umbral: Float!): Boolean
         generatePLNFiles: Boolean
         trainChatbot: Boolean
         deployChatbot: Boolean
@@ -357,16 +357,18 @@ const resolvers = {
                 return false
             }
         },
-        async generateChatbotFiles(_, {chatbot_version}){
+        async generateChatbotFiles(_, {chatbot_version, umbral}){
             try {
                 let nlu_content = await chatbot_funct.generateNLU(knex,chatbot_version)             
                 let rules_content = await chatbot_funct.generateRules(knex, chatbot_version)
                 let stories_content = await chatbot_funct.generateStories(knex, chatbot_version)
                 let domain_content = await chatbot_funct.generateDomain(knex, chatbot_version)
+                let config_content = await chatbot_funct.generateConfig(umbral)
                 await chatbot_funct.generateFiles('rules.yml', rules_content)
                 await chatbot_funct.generateFiles('stories.yml', stories_content)
                 await chatbot_funct.generateFiles('nlu.yml', nlu_content)
                 await chatbot_funct.generateFiles('domain.yml', domain_content)
+                await chatbot_funct.generateFiles('config.yml', config_content)
                 return true
                 
             } catch (error) {
@@ -387,14 +389,18 @@ const resolvers = {
         async trainChatbot(_,args){
             try{
                 var root_path = __dirname.replace('/Apollo-Server/graphql','/RASA/')
-                fs.unlinkSync(root_path+'data/nlu.yml') 
-                fs.unlinkSync(root_path+'data/rules.yml')   
-                fs.unlinkSync(root_path+'data/stories.yml')   
-                fs.unlinkSync(root_path+'domain.yml')
+                try{
+                    fs.unlinkSync(root_path+'data/nlu.yml') 
+                    fs.unlinkSync(root_path+'data/rules.yml')   
+                    fs.unlinkSync(root_path+'data/stories.yml')   
+                    fs.unlinkSync(root_path+'domain.yml')
+                    fs.unlinkSync(root_path+'config.yml')
+                }catch(err){console.error(err)}
                 fs.rename('nlu.yml',root_path+'data/nlu.yml',function(err){if(err) throw err})
                 fs.rename('rules.yml',root_path+'data/rules.yml',function(err){if(err) throw err})
                 fs.rename('stories.yml',root_path+'data/stories.yml',function(err){if(err) throw err})
-                fs.rename('domain.yml',root_path+'domain.yml',function(err){if(err) throw err})     
+                fs.rename('domain.yml',root_path+'domain.yml',function(err){if(err) throw err})    
+                fs.rename('config.yml',root_path+'config.yml',function(err){if(err) throw err})   
                 shell.cd(root_path);                
                 shell.exec('rasa train');
                 shell.cd(__dirname)

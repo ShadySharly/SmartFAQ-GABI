@@ -747,7 +747,7 @@ INSERT INTO slot VALUES (3,'chatbotID','unfeaturized',1);
 
 INSERT INTO button VALUES (1,'ask_place','Consulta de lugares',1);
 INSERT INTO button VALUES (2,'ask_process','Consulta de procesos',1);
-INSERT INTO button VALUES (3,'ask_courses','Consulta de lugares',1);
+INSERT INTO button VALUES (3,'ask_courses','Consulta de cursos',1);
 INSERT INTO button VALUES (4,'ask_place_EAO','EAO',2);
 INSERT INTO button VALUES (5,'ask_place_library','Biblioteca',2);
 INSERT INTO button VALUES (6,'ask_process_pagare','Pagare',5);
