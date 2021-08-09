@@ -21,6 +21,10 @@ const knex = require("knex")({
 
 var cron = require('node-cron');
 
+cron.schedule('45 1 * * Monday', async () => {
+    console.log("Agregando consultas a la base de conicimiento - Lunes 1:45 AM")
+    await resolvers.Mutation.parseUserquestions()
+});
 cron.schedule('0 2 * * Monday', async () => {
     console.log("Generando archivos del chatbot - Lunes 2:00 AM")
     await resolvers.Mutation.generateChatbotFiles()
@@ -138,6 +142,7 @@ const typeDefs = gql`
         generatePLNFiles: Boolean
         trainChatbot: Boolean
         deployChatbot: Boolean
+        parseUserquestions: Boolean
     }
 `;
 
@@ -287,13 +292,16 @@ const resolvers = {
                 .update({intention_id:intention_id})
                 .returning("*");
                 if(userquestion==null){return false}
-                
-                else{
-                    //let information = userquestion['information']
-                    //await chatbot_funct.parseUserquestion(knex, intention_id, information,response)
-                    return true
-                }      
-                    
+                else{return true}       
+            } catch (error) {
+                console.log(error)
+                return false
+            }
+        },
+        async parseUserquestions(){
+            try {
+                await chatbot_funct.parseUserquestion(knex)
+                return true          
             } catch (error) {
                 console.log(error)
                 return false
