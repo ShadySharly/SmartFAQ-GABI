@@ -12,6 +12,8 @@ import QueryAssignment from '../Views/QueryAssignment';
 import IntentIndex from '../Views/IntentIndex';
 import FaqIndex from '../Views/FaqIndex';
 import GroupIntention from '../Views/GroupIntention';
+import Login from '../Auth/Login';
+import Register from '../Auth/Register';
 
 const cache = new InMemoryCache()
 
@@ -31,6 +33,8 @@ const App = () => {
           <Sidebar isOpen={sidebarOpen} showSidebar={showOpenSidebar} />
             <Container isSidebarOpen={sidebarOpen}>
                 <Switch>
+                    <Route path="/login" component={Login} exact></Route>
+                    <Route path="/register" component={Register} exact></Route>
                     <Route path="/overview" component={Overview} exact></Route>
                     <Route path="/movies" component={ChatbotData} exact></Route>
                     <Route path="/generalFAQ" component={Chatbot} exact></Route>
