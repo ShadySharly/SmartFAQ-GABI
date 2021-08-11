@@ -62,6 +62,7 @@ export default function QueryAssignment() {
   if (error) return <div>Error :(s</div>
 
   return (
+    <div>
     <TableContainer component={Paper} classes={{ root: classes.customTableContainer }}>
       <Table aria-label="collapsible table" stickyHeader>
         <TableHead>
@@ -80,5 +81,6 @@ export default function QueryAssignment() {
         </TableBody>
       </Table>
     </TableContainer>
+    </div >
   );
 }

@@ -11,7 +11,7 @@ import { useState } from 'react';
 import QueryAssignment from '../Views/QueryAssignment';
 import IntentIndex from '../Views/IntentIndex';
 import FaqIndex from '../Views/FaqIndex';
-import GroupIntention from '../Views/GroupIntention';
+import GroupingIndex from '../Views/GroupingIndex';
 
 const cache = new InMemoryCache()
 
@@ -36,7 +36,7 @@ const App = () => {
                     <Route path="/generalFAQ" component={Chatbot} exact></Route>
                     <Route path="/queryassignment" component={QueryAssignment} exact></Route>
                     <Route path="/intentindex" component={IntentIndex} exact></Route>
-                    <Route path="/groupintention" component={GroupIntention} exact></Route>
+                    <Route path="/groupintention" component={GroupingIndex} exact></Route>
                     <Route path="/faqindex" component={FaqIndex} exact></Route>
                 </Switch>
             </Container>
