@@ -4,12 +4,12 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import GroupingToolbar from '../Components/GroupingToolbar';
+import GroupingHead from '../Components/GroupingHead';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import { NetworkStatus } from '@apollo/client';
 
@@ -35,36 +35,6 @@ type Userquestion = {
   userquestion_id: number,
   information: string,
   intention: Intention,
-}
-
-interface EnhancedTableProps {
-  numSelected: number;
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  rowCount: number;
-}
-
-function EnhancedTableHead(props: EnhancedTableProps) {
-  const { onSelectAllClick, numSelected, rowCount } = props;
-
-
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
-          />
-
-        </TableCell>
-        <TableCell align="left">Consulta</TableCell>
-        <TableCell align="right">Intención Actual</TableCell>
-      </TableRow>
-    </TableHead>
-  );
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -95,7 +65,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function GroupingIndex() {
   const classes = useStyles();
-  const { loading, error, data, refetch, networkStatus } = useQuery(GET_USERQUESTIONS, {notifyOnNetworkStatusChange: true,});
+  const { loading, error, data, refetch, networkStatus } = useQuery(GET_USERQUESTIONS, { notifyOnNetworkStatusChange: true, });
   const [selected, setSelected] = React.useState<number[]>([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -165,7 +135,7 @@ export default function GroupingIndex() {
             size={'medium'}
             aria-label="enhanced table"
           >
-            <EnhancedTableHead
+            <GroupingHead
               numSelected={selected.length}
               onSelectAllClick={handleSelectAllClick}
               rowCount={data.userquestions.length}
