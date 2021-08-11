@@ -36,12 +36,6 @@ type Intention = {
   intention_name: string
 }
 
-type Userquestion = {
-  userquestion_id: number,
-  information: string,
-  intention: Intention,
-}
-
 const useToolbarStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {

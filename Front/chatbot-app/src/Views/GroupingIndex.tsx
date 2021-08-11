@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -10,12 +9,9 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import GroupingToolbar from '../Components/GroupingToolbar';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import { NetworkStatus } from '@apollo/client';
-
 
 const GET_USERQUESTIONS = gql`
   query getUserquestions {
