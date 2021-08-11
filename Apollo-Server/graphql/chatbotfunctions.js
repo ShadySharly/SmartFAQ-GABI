@@ -38,7 +38,7 @@ async function generateRules (knex, chatbot_version){
     let auxTitle = 'null'
     let auxValues = null
     for(let i=0 ; i < routine_intention.length ; i++){
-        if(routine_intention[i]['type'] == 'rule'){
+        if(routine_intention[i]['type'] == 'rule' || routine_intention[i]['type'] == 'answer'){
             if(routine_intention[i]['title'] == auxTitle){
                 auxValues.push(routine_intention[i])
             }else{
@@ -181,6 +181,16 @@ async function generateDomain(knex, chatbot_version){
     return domain_content
 }
 
+async function generateConfig(umbral){
+    let config_content = "language: es\npipeline:";
+    config_content = config_content + "\n- name: SpacyNLP\n- name: SpacyTokenizer\n- name: SpacyFeaturizer\n- name: RegexFeaturizer"
+    config_content = config_content + "\n- name: LexicalSyntacticFeaturizer\n- name: CountVectorsFeaturizer\n- name: CountVectorsFeaturizer"
+    config_content = config_content + "\n  analyzer: char_wb\n  min_ngram: 1\n  max_ngram: 4\n- name: DIETClassifier\n  epochs: 100"
+    config_content = config_content + "\n- name: EntitySynonymMapper\n- name: ResponseSelector\n  epochs: 100\n- name: FallbackClassifier\n  threshold: "+String(umbral)
+    config_content = config_content + "\n\npolicies:\n- name: MemoizationPolicy\n- name: RulePolicy\n  core_fallback_threshold: 0.3\n  core_fallback_action_name: \"action_default_fallback\"\n  enable_fallback_prediction: True\n- name: TEDPolicy\n  max_history: 5\n  epochs: 100\n  constrain_similarities: True"
+    return config_content
+}
+
 async function generatePLNFiles(knex){
     const aux = await knex("chatmessage")
     .innerJoin('intention','chatmessage.intention_id',"=","intention.intention_id")
@@ -188,72 +198,108 @@ async function generatePLNFiles(knex){
     .select("chatmessage_id")
 
     let lista_ids = new Array();
-    for (let i = 0; i < aux.length ; i++){
-        lista_ids.push(aux[i]['chatmessage_id'])
-        lista_ids.push(aux[i]['chatmessage_id']+1)
+        for (let i = 0; i < aux.length ; i++){
+            lista_ids.push(aux[i]['chatmessage_id'])
+            lista_ids.push(aux[i]['chatmessage_id']+1)
+        }
+        const chatmessage = await knex("chatmessage")
+        .whereIn("chatmessage_id", lista_ids)
+        .select("information")
+
+        var data = []
+        var csv = 'Pregunta,Respuesta\n'
+        for(let i = 0; i < chatmessage.length;i=i+2){
+            data[i] = new Array ();
+            data[i].push(chatmessage[i]['information'])
+            data[i].push(chatmessage[i+1]['information'])
+        }
+        data.forEach(function(row){
+            csv += row.join(',');
+            csv += "\n";
+        })
+        return csv
     }
-    const chatmessage = await knex("chatmessage")
-    .whereIn("chatmessage_id", lista_ids)
-    .select("information")
 
-    var data = []
-    var csv = 'Pregunta,Respuesta\n'
-    for(let i = 0; i < chatmessage.length;i=i+2){
-        data[i] = new Array ();
-        data[i].push(chatmessage[i]['information'])
-        data[i].push(chatmessage[i+1]['information'])
+    async function generateFiles(name, content){
+        fs.writeFile(name, content, function (err) {
+            if (err) return console.log(err);
+            console.log("Generated: "+name)
+        });
     }
-    data.forEach(function(row){
-        csv += row.join(',');
-        csv += "\n";
-    })
-    return csv
-}
 
-async function generateFiles(name, content){
-    fs.writeFile(name, content, function (err) {
-        if (err) return console.log(err);
-        console.log("Generated: "+name)
-    });
-}
-
-async function parseUserquestion(knex, intention_id, information, response){
-    const [request] = await knex("request")
-    .returning("*")
-    .insert({intention_id, information:information});
-
-    const [userquestions] = await knex("routine_intention")
-    .where("intention_id", intention_id)
-    .select("*");
-    if(userquestions == null){
-        let title = "User ask about "+information
-        const [routine_id] = await knex("routine")
-        .insert({title:title, type:"rule"})
-        .returning("routine_id");
-        
-        const [aux] = await knex("intention")
-        .where({intention_id:intention_id})
-        .returning("intention_name");
-        let intention_name = aux['intention_name'].toString().replace("ask","utter")
-        
-        const [utter_intention] = await knex("intention")
-        .insert({intention_name:intention_name})
-        .returning("intention_id");
-        const [answer] = await knex("answer")
-        .insert({intention_id:utter_intention, information:response, image_url:"URL Imagen", video_url:"URL Video"})
+    async function removeOldsUserquestion(knex){
+        const routine = await knex("routine")
+        .where("type","answer")
         .returning("*");
-
-        const [routine_intention1] = await knex("routine_intention")
-        .insert({routine_id, intention_id, step_order:1,step_labbel:"intent"})
-        .returning("routine_id");
-        const [routine_intention2] = await knex("routine_intention")
-        .insert({routine_id, intention_id:utter_intention, step_order:2,step_labbel:"action"})
-        .returning("routine_id");
-        const [routine_intention3] = await knex("routine_intention")
-        .insert({routine_id, intention_id:41, step_order:3,step_labbel:"action"})
-        .returning("routine_id");
-        return true
+        for (let i = 0; i < routine.length ; i++){
+            const routine_intention = await knex("routine_intention")
+            .where("routine_id",routine[i]['routine_id'])
+            .orderBy("step_order","asc")
+            .returning("*");
+            console.log(routine_intention[0]['intention_id'])
+            await knex("request")
+            .where({intention_id: routine_intention[0]['intention_id']})
+            .del(['request_id', 'request_id'], { includeTriggerModifications: true })
+            await knex("intention")
+            .where({intention_id: routine_intention[1]['intention_id']})
+            .del(['intention_id', 'intention_id'], { includeTriggerModifications: true })
+            await knex("routine")
+            .where({routine_id: routine[i]['routine_id']})
+            .del(['routine_id', 'routine_id'], { includeTriggerModifications: true })
+        }
     }
+
+
+
+    async function parseUserquestion(knex){
+        
+        await removeOldsUserquestion(knex)
+        const auxa = await knex("userquestion")
+        .whereNot("intention_id",0)
+        .returning("*");
+        for (let i = 0; i < auxa.length ; i++){
+            let intention_id = auxa[i]['intention_id']
+            let information = auxa[i]['information']
+            let response = auxa[i]['response']
+            const [request] = await knex("request")
+            .returning("*")
+            .insert({intention_id, information:information});
+
+            const [userquestions] = await knex("routine_intention")
+            .where("intention_id", intention_id)
+            .select("*");
+            if(userquestions == null){
+                let title = "User ask about "+information
+                const [routine_id] = await knex("routine")
+                .insert({title:title, type:"answer"})
+                .returning("routine_id");
+                
+                const [aux] = await knex("intention")
+                .where({intention_id:intention_id})
+                .returning("intention_name");
+                let intention_name = aux['intention_name'].toString().replace("ask","utter")
+                
+                const [utter_intention] = await knex("intention")
+                .insert({intention_name:intention_name})
+                .returning("intention_id");
+
+                await knex("answer")
+                .insert({intention_id:utter_intention, information:response, image_url:"URL Imagen", video_url:"URL Video"})
+                .returning("*");
+                await knex("routine_intention")
+                .insert({routine_id, intention_id, step_order:1,step_labbel:"intent"})
+                .returning("routine_id");
+                await knex("routine_intention")
+                .insert({routine_id, intention_id:utter_intention, step_order:2,step_labbel:"action"})
+                .returning("routine_id");
+                await knex("routine_intention")
+                .insert({routine_id, intention_id:41, step_order:3,step_labbel:"action"})
+                .returning("routine_id");
+
+            }
+    }
+    return true
+    
 }
 
 module.exports = ({generateNLU,
@@ -262,6 +308,6 @@ module.exports = ({generateNLU,
     generateDomain,
     generatePLNFiles,
     generateFiles,
-    parseUserquestion
-
+    parseUserquestion,
+    generateConfig
 })

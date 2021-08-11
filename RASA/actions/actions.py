@@ -160,7 +160,6 @@ class ActionSaveConversation(Action):
         
         for i in range(len(events)):
             if(events[i]['event'] == 'user'):
-                dateIssue = datetime.fromtimestamp(events[i]['timestamp'])
                 userMessage = events[i]['text']
                 userIntent = events[i]['parse_data']['intent']
                 aux = await intentionByName(userIntent['name'])
@@ -172,10 +171,9 @@ class ActionSaveConversation(Action):
                 await createChatmessage(conversationID, intentID, userMessage,intentConfidence*100)
 
             if(events[i]['event'] == 'bot'):    
-                dateIssue = datetime.fromtimestamp(events[i]['timestamp'])
                 botMessage = events[i]['text']
                 botIntent = events[i-1]
-                aux = await intentionByName(userIntent['name'])
+                aux = await intentionByName(botIntent['name'])
                 try:
                     intentID = aux['intentionByName']['intention_id']
                 except:

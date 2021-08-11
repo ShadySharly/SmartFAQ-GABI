@@ -6,6 +6,8 @@ const { GraphQLDateTime } = require("graphql-iso-date");
 const fs = require('fs');
 const { domain } = require('process');
 var shell = require('shelljs');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const knex = require("knex")({
@@ -17,6 +19,25 @@ const knex = require("knex")({
         database:"df0iofqaap79fh",
         ssl: true
     }
+});
+
+var cron = require('node-cron');
+
+cron.schedule('45 1 * * Monday', async () => {
+    console.log("Agregando consultas a la base de conicimiento - Lunes 1:45 AM")
+    await resolvers.Mutation.parseUserquestions()
+});
+cron.schedule('0 2 * * Monday', async () => {
+    console.log("Generando archivos del chatbot - Lunes 2:00 AM")
+    await resolvers.Mutation.generateChatbotFiles()
+});
+cron.schedule('15 2 * * Monday', async () => {
+    console.log("Entrenando nuevo chatbot - Lunes 2:15 AM")
+    await resolvers.Mutation.trainChatbot()
+});
+cron.schedule('45 2 * * Monday', async () => {
+    console.log("Ejecutando nuevo chatbot - Lunes 2:45 AM")
+    await resolvers.Mutation.deployChatbot()
 });
 
 const customScalarResolver = {
@@ -47,6 +68,12 @@ const typeDefs = gql`
         first_name: String!
         last_name: String!
         email: String!
+    }
+
+    type AuthData {
+        userId: Int!
+        token: String!
+        tokenExpiration: Int!
     }
 
     type Userquestion {
@@ -90,6 +117,7 @@ const typeDefs = gql`
     }
 
     type Query {
+        login(email: String!, password: String!): AuthData
         permissions: [Permission]
         permission(permission_id: Int!): Permission
         intentions: [Intention]
@@ -105,6 +133,7 @@ const typeDefs = gql`
     }
 
     type Mutation{
+        register(first_name: String!, last_name: String!, email: String!, password: String!): Boolean
         createPermission(permission_name: String!): Boolean
         createIntention(intention_name: String!): Boolean
         createAnswer(intention_id: Int!, information: String!, image_url: String!, video_url: String!): Boolean
@@ -119,15 +148,41 @@ const typeDefs = gql`
         createDialogue(client_id: Int!, chatbot_id: Int!): Int
         createChatmessage(dialogue_id: Int!, intention_id: Int!, information: String!, confidence: Int!): Boolean
         updateDialogue(dialogue_id: Int!,client_score: Int!): Boolean
-        generateChatbotFiles(chatbot_version: String!): Boolean
+        generateChatbotFiles: Boolean
         generatePLNFiles: Boolean
         trainChatbot: Boolean
         deployChatbot: Boolean
+        parseUserquestions: Boolean
     }
 `;
 
 const resolvers = {
     Query: {
+        async login(_,{email, password}){
+            const [client] = await knex("client")
+            .where({email})
+            .returning("*");
+            if(client == null){
+                return {userId: -1, token: "null", tokenExpiration: -1}
+            }
+            else{
+                console.log(client['auth_key'])
+                console.log(password)
+                const isEqual = await bcrypt.compare(password,client['auth_key'])
+                console.log(isEqual)
+                if(!isEqual){return null}
+                else{
+                    const token = jwt.sign(
+                        {userId: client['client_id'],email: client['email']},
+                        'secretKEY',
+                        {
+                            expiresIn: '1h'
+                        }
+                    )
+                    return {userId: client['client_id'], token: token, tokenExpiration: 1}
+                }
+            }
+        },
         async permissions(_, args){
             return await knex("permission").select("*");
         },
@@ -185,7 +240,20 @@ const resolvers = {
             return await knex("request").where({intention_id:intention_id}).select("*")
         },
         async userquestionByIntent(_,{intention_id}) {
-            return await knex("userquestion").where({intention_id:intention_id}).select("*")
+            const userquestions = await knex("userquestion").where({intention_id:intention_id}).select("*")
+            const intentionIds = Array.from(new Set(userquestions.map((t) => t.intention_id)))
+            const intentions = await knex('intention').whereIn('intention_id', intentionIds)       
+            
+            const clientIds = Array.from(new Set(userquestions.map((t) => t.client_id)))
+            const clients = await knex('client').whereIn('client_id', clientIds)
+
+            return userquestions.map((t) => {
+                return {
+                  ...t,
+                  client: clients.find((u) => u.client_id === t.client_id),
+                  intention: intentions.find((u) => u.intention_id === t.intention_id),
+                }
+              })
         },
         async chatmessagesByDialogue(_,{dialogue_id}) {
             return await knex("chatmessage").where({dialogue_id:dialogue_id}).select("*")
@@ -193,6 +261,25 @@ const resolvers = {
     },
     
     Mutation: {
+        async register(_,{first_name, last_name, email, password}){
+            try {
+                const [client] = await knex("client")
+                .where({email})
+                .returning("*");
+                if(client != null){return false}
+                else{
+                    let hashed_password = await bcrypt.hash(password,12)
+                    console.log(hashed_password)
+                    const [client] = await knex("client")
+                    .insert({first_name,last_name,avatar_url:"URL Avatar",duty_id:1, email, auth_key:hashed_password})
+                    .returning("*");
+                }
+                return true                
+            } catch (error) {
+                console.log(error)
+                return false
+            }            
+        },
         async createPermission(_,{permission_name}){
             try {
                 const [permission] = await knex("permission")
@@ -259,13 +346,16 @@ const resolvers = {
                 .update({intention_id:intention_id})
                 .returning("*");
                 if(userquestion==null){return false}
-                
-                else{
-                    //let information = userquestion['information']
-                    //await chatbot_funct.parseUserquestion(knex, intention_id, information,response)
-                    return true
-                }      
-                    
+                else{return true}       
+            } catch (error) {
+                console.log(error)
+                return false
+            }
+        },
+        async parseUserquestions(){
+            try {
+                await chatbot_funct.parseUserquestion(knex)
+                return true          
             } catch (error) {
                 console.log(error)
                 return false
@@ -344,18 +434,23 @@ const resolvers = {
                 return false
             }
         },
-        async generateChatbotFiles(_, {chatbot_version}){
+        async generateChatbotFiles(_, args){
             try {
+                const chatbot = await knex("chatbot").orderBy('chatbot_id','desc').first("*")
+                chatbot_version = chatbot['chatbot_version']
+                umbral =  parseFloat(chatbot['confidence'])/100
+                console.log("Generando archivos de RASA")
                 let nlu_content = await chatbot_funct.generateNLU(knex,chatbot_version)             
                 let rules_content = await chatbot_funct.generateRules(knex, chatbot_version)
                 let stories_content = await chatbot_funct.generateStories(knex, chatbot_version)
                 let domain_content = await chatbot_funct.generateDomain(knex, chatbot_version)
+                let config_content = await chatbot_funct.generateConfig(umbral)
                 await chatbot_funct.generateFiles('rules.yml', rules_content)
                 await chatbot_funct.generateFiles('stories.yml', stories_content)
                 await chatbot_funct.generateFiles('nlu.yml', nlu_content)
                 await chatbot_funct.generateFiles('domain.yml', domain_content)
+                await chatbot_funct.generateFiles('config.yml', config_content)
                 return true
-                
             } catch (error) {
                 console.log(error)
                 return false
@@ -374,14 +469,20 @@ const resolvers = {
         async trainChatbot(_,args){
             try{
                 var root_path = __dirname.replace('/Apollo-Server/graphql','/RASA/')
-                fs.unlinkSync(root_path+'data/nlu.yml') 
-                fs.unlinkSync(root_path+'data/rules.yml')   
-                fs.unlinkSync(root_path+'data/stories.yml')   
-                fs.unlinkSync(root_path+'domain.yml')
-                fs.rename('nlu.yml',root_path+'data/nlu.yml',function(err){if(err) throw err})
-                fs.rename('rules.yml',root_path+'data/rules.yml',function(err){if(err) throw err})
-                fs.rename('stories.yml',root_path+'data/stories.yml',function(err){if(err) throw err})
-                fs.rename('domain.yml',root_path+'domain.yml',function(err){if(err) throw err})     
+                try{
+                    fs.unlinkSync(root_path+'data/nlu.yml') 
+                    fs.unlinkSync(root_path+'data/rules.yml')   
+                    fs.unlinkSync(root_path+'data/stories.yml')   
+                    fs.unlinkSync(root_path+'domain.yml')
+                    fs.unlinkSync(root_path+'config.yml')
+                }catch(err){console.error(err)}
+                try{
+                    fs.rename('nlu.yml',root_path+'data/nlu.yml',function(err){if(err) throw err})
+                    fs.rename('rules.yml',root_path+'data/rules.yml',function(err){if(err) throw err})
+                    fs.rename('stories.yml',root_path+'data/stories.yml',function(err){if(err) throw err})
+                    fs.rename('domain.yml',root_path+'domain.yml',function(err){if(err) throw err})    
+                    fs.rename('config.yml',root_path+'config.yml',function(err){if(err) throw err})   
+                }catch(err){console.error(err)}
                 shell.cd(root_path);                
                 shell.exec('rasa train');
                 shell.cd(__dirname)
