@@ -96,7 +96,7 @@ CREATE TABLE client (
     first_name varchar(64) NOT NULL,
     last_name varchar(64) NOT NULL,
     avatar_url varchar(128) NOT NULL,
-    auth_key varchar(32) NOT NULL,
+    auth_key varchar(128) NOT NULL,
     email varchar(128) NOT NULL,
     CONSTRAINT fk_duty 
         FOREIGN KEY(duty_id) 

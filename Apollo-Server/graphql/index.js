@@ -6,6 +6,8 @@ const { GraphQLDateTime } = require("graphql-iso-date");
 const fs = require('fs');
 const { domain } = require('process');
 var shell = require('shelljs');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const knex = require("knex")({
@@ -68,6 +70,12 @@ const typeDefs = gql`
         email: String!
     }
 
+    type AuthData {
+        userId: Int!
+        token: String!
+        tokenExpiration: Int!
+    }
+
     type Userquestion {
         userquestion_id: Int!
         client: Client!
@@ -109,6 +117,7 @@ const typeDefs = gql`
     }
 
     type Query {
+        login(email: String!, password: String!): AuthData
         permissions: [Permission]
         permission(permission_id: Int!): Permission
         intentions: [Intention]
@@ -124,6 +133,7 @@ const typeDefs = gql`
     }
 
     type Mutation{
+        register(first_name: String!, last_name: String!, email: String!, password: String!): Boolean
         createPermission(permission_name: String!): Boolean
         createIntention(intention_name: String!): Boolean
         createAnswer(intention_id: Int!, information: String!, image_url: String!, video_url: String!): Boolean
@@ -148,6 +158,31 @@ const typeDefs = gql`
 
 const resolvers = {
     Query: {
+        async login(_,{email, password}){
+            const [client] = await knex("client")
+            .where({email})
+            .returning("*");
+            if(client == null){
+                return {userId: -1, token: "null", tokenExpiration: -1}
+            }
+            else{
+                console.log(client['auth_key'])
+                console.log(password)
+                const isEqual = await bcrypt.compare(password,client['auth_key'])
+                console.log(isEqual)
+                if(!isEqual){return null}
+                else{
+                    const token = jwt.sign(
+                        {userId: client['client_id'],email: client['email']},
+                        'secretKEY',
+                        {
+                            expiresIn: '1h'
+                        }
+                    )
+                    return {userId: client['client_id'], token: token, tokenExpiration: 1}
+                }
+            }
+        },
         async permissions(_, args){
             return await knex("permission").select("*");
         },
@@ -226,6 +261,25 @@ const resolvers = {
     },
     
     Mutation: {
+        async register(_,{first_name, last_name, email, password}){
+            try {
+                const [client] = await knex("client")
+                .where({email})
+                .returning("*");
+                if(client != null){return false}
+                else{
+                    let hashed_password = await bcrypt.hash(password,12)
+                    console.log(hashed_password)
+                    const [client] = await knex("client")
+                    .insert({first_name,last_name,avatar_url:"URL Avatar",duty_id:1, email, auth_key:hashed_password})
+                    .returning("*");
+                }
+                return true                
+            } catch (error) {
+                console.log(error)
+                return false
+            }            
+        },
         async createPermission(_,{permission_name}){
             try {
                 const [permission] = await knex("permission")
