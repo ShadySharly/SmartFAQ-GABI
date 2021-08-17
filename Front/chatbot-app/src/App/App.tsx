@@ -5,7 +5,7 @@ import ChatbotData from '../chatbotData'
 import Chatbot from '../Views/Chatbot';
 import Sidebar from '../Components/Sidebar';
 import Container from '../Components/Container';
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
+import {BrowserRouter as Router, Route, Switch, Redirect} from 'react-router-dom'
 import Overview from '../Views/Overview';
 import { useState } from 'react';
 import QueryAssignment from '../Views/QueryAssignment';
@@ -14,6 +14,8 @@ import FaqIndex from '../Views/FaqIndex';
 import GroupIntention from '../Views/GroupIntention';
 import Login from '../Auth/Login';
 import Register from '../Auth/Register';
+import AuthContext from '../Context/auth-context';
+
 
 const cache = new InMemoryCache()
 
@@ -33,6 +35,7 @@ const App = () => {
           <Sidebar isOpen={sidebarOpen} showSidebar={showOpenSidebar} />
             <Container isSidebarOpen={sidebarOpen}>
                 <Switch>
+                    <Redirect from="/" to="/login" exact/> 
                     <Route path="/login" component={Login} exact></Route>
                     <Route path="/register" component={Register} exact></Route>
                     <Route path="/overview" component={Overview} exact></Route>

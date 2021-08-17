@@ -1,13 +1,26 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import { useQuery, gql, useMutation } from '@apollo/client';
+import { Link } from 'react-router-dom';
+import AuthContext from '../Context/auth-context';
 
 
-const StyledDiv = styled.div`
+const StyledLoginDiv = styled.div`
     margin-top:10%;
     background-color:#043C8B;
     border-radius:0px 30px 30px 0px;
     width:30%;
     height:250px;
+    box-shadow: 10px 10px 10px rgba(9, 19, 20, 0.35);
+`
+const StyledRegisterDiv = styled.div`
+    padding:10px;
+    margin:auto;
+    margin-top:50px;
+    background-color:#043C8B;
+    border-radius:30px;
+    width:25%;
+    height:350px;
     box-shadow: 10px 10px 10px rgba(9, 19, 20, 0.35);
 `
 
@@ -37,34 +50,56 @@ const StyledButton = styled.button`
     width: 150px;
     height:35px;
     font-size:20px;
+    cursor:pointer;
+
+    &:hover{
+        background-color: #FF9933;
+        border-color:#FF9933;
+        color: white;
+    };
 `
+
+const REQUEST_LOGIN = gql`
+    query requestLogin ($email: email, $password: password) {
+        login (email: $email, password: $password) {
+            userID
+            token
+            tokenExpiration
+        }
+    }
+`;
 
 const Login = () => {
 
-    const[{email,password}, setCredentials]=useState({
-        email:'',
-        password:''
-    })
-    const login = (event: React.FormEvent) => {
+
+    const [ email, setEmail ] = useState("");
+    const [ password, setPassword ] = useState("");
+
+    const { loading, error, data } = useQuery(REQUEST_LOGIN);
+
+
+
+    const onLogin = (event: React.FormEvent) => {
         event.preventDefault();
-        console.log('logeado')
+        
     }
     return (
-        <StyledDiv>
-            <StyledForm onSubmit={login}>
-                <label htmlFor="email"/>
-                <StyledInput  placeholder="Correo" value={email} onChange={(event)=> setCredentials({
-                    email: event.target.value,
-                    password
-                })}/>
-                <label htmlFor="password"/>
-                <StyledInput  placeholder="Contrasena" type="password" value={password} onChange={(event)=> setCredentials({
-                    email,
-                    password: event.target.value,
-                })}/>
-                <StyledButton type="submit"> Iniciar sesion </StyledButton>
+        
+        <StyledForm onSubmit={onLogin}>
+                <StyledLoginDiv>
+                    <label htmlFor="email"/>
+                    <StyledInput  placeholder="Correo" value={email} onChange={(event)=> setEmail(event.target.value)}/>
+                    <label htmlFor="password"/>
+                    <StyledInput  placeholder="Contrasena" type="password" value={password} onChange={(event)=> setPassword(event.target.value)}/>
+                    <StyledButton type="submit" onClick={onLogin}> Iniciar sesion </StyledButton>
+                </StyledLoginDiv>
+                <div>
+                    <span>No tienes cuenta? </span>
+                    <Link to ="/register">Registrate</Link>
+                </div>
             </StyledForm>
-        </StyledDiv>
+            
+        
     
     )
 }

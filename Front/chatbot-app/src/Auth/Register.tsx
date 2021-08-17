@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import {gql, useMutation } from '@apollo/client';
 
-const StyledDiv = styled.div`
+const StyledRegisterDiv = styled.div`
     padding:10px;
     margin:auto;
     margin-top:50px;
@@ -42,65 +43,51 @@ const StyledButton = styled.button`
     width: 150px;
     height:40px;
     font-size:20px;
+
+    &:hover{
+        background-color: #FF9933;
+        border-color:#FF9933;
+        color: white;
+    };
 `
+const REQUEST_REGISTER = gql`
+    mutation requestRegister($first_name:String!, $last_name:String!, $email:String!, $password:String!){
+        register(first_name:$first_name, last_name:$last_name, email:$email, password:$password)
+    }
+`;
 
 
 const Register = () => {
-
-    const [{username,email,password,repeatPassword}, setRegisterData] = useState({
-        username: '',
-        email: '',
-        password: '',
-        repeatPassword:''
-    })
+    const  [setRegisterData] = useMutation(REQUEST_REGISTER);
+    const [ first_name, setFirstName ] = useState("");
+    const [ last_name, setLastName ] = useState("");
+    const [ email, setEmail ] = useState("");
+    const [ password, setPassword ] = useState("");
 
     const [error,setError] = useState('')
 
-    const register= (event:React.FormEvent)=> {
+    const onRegister= (event:React.FormEvent)=> {
         event.preventDefault();
-        if(password===repeatPassword){
-            //llamado a api
-        }else{
-            setError('Las  contrasenas deben coincidir')
-        }
+        setRegisterData({ variables: { first_name: first_name, last_name: last_name, email: email, password: password }});
+ 
         console.log('registrado')
     }
 
     return (
-        <StyledDiv>
-            <StyledForm onSubmit={register}>
-                <label htmlFor="username"/>
-                <StyledInput placeholder="Nombre Completo" name="username" value={username} onChange={(event)=> setRegisterData({
-                    username:event.target.value,
-                    email,
-                    password,
-                    repeatPassword
-                })}/>
+        <StyledRegisterDiv>
+            <StyledForm onSubmit={onRegister}>
+                <label htmlFor="first_name"/>
+                <StyledInput placeholder="Nombre" name="first_name" value={first_name} onChange={(event) => setFirstName(event.target.value)}/>
+                <label htmlFor="last_name"/>
+                <StyledInput placeholder="Apellido" name="last_name" value={last_name} onChange={(event)=> setLastName(event.target.value)}/>
                 <label htmlFor="email"/>
-                <StyledInput placeholder="Correo Electronico" name="email" value={email} onChange={(event)=> setRegisterData({
-                    username,
-                    email:event.target.value,
-                    password,
-                    repeatPassword
-                })}/>
+                <StyledInput placeholder="Correo Electronico" name="email" value={email} onChange={(event) => setEmail(event.target.value)}/>
                 <label htmlFor="password"/>
-                <StyledInput type="password" placeholder="Contrasena" name="password" value={password} onChange={(event)=> setRegisterData({
-                    username,
-                    email,
-                    password:event.target.value,
-                    repeatPassword
-                })}/>
-                <label htmlFor="repeatPassword"/>
-                <StyledInput type="password" placeholder="Repetir contrasena" name="repeatPassword" value={repeatPassword} onChange={(event)=> setRegisterData({
-                    username:event.target.value,
-                    email,
-                    password,
-                    repeatPassword:event.target.value
-                })}/>
+                <StyledInput type="password" placeholder="Contrasena" name="password" value={password} onChange={(event) => setPassword(event.target.value)}/>
                 <StyledButton type="submit"> Registrarse </StyledButton>
                 {error.length > 0 && <p>{error}</p>}
             </StyledForm>
-        </StyledDiv>
+        </StyledRegisterDiv>
     )
 }
 
