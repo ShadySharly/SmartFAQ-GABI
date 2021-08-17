@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { useQuery, gql, useMutation } from '@apollo/client';
+import { useQuery, gql, useMutation, useLazyQuery } from '@apollo/client';
 import { Link } from 'react-router-dom';
 import AuthContext from '../Context/auth-context';
+import { useEffect } from 'react';
 
 
 const StyledLoginDiv = styled.div`
@@ -60,48 +61,63 @@ const StyledButton = styled.button`
 `
 
 const REQUEST_LOGIN = gql`
-    query requestLogin ($email: email, $password: password) {
-        login (email: $email, password: $password) {
-            userID
-            token
-            tokenExpiration
-        }
+  mutation requestLogin ($email: String!, $password: String!) {
+    login (email: $email, password: $password) {
+      client_id,
+      first_name,
+      last_name,
+      email
     }
+  }
 `;
 
-const Login = () => {
+type Client = {
+  client_id: number,
+  first_name: string,
+  last_name: string,
+  email: string
+}
 
+interface IProps {
+  onHandleSignIn: (client_id: Client) => void;
+}
 
-    const [ email, setEmail ] = useState("");
-    const [ password, setPassword ] = useState("");
+const Login: React.FunctionComponent<IProps> = props => {
 
-    const { loading, error, data } = useQuery(REQUEST_LOGIN);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-
-
-    const onLogin = (event: React.FormEvent) => {
-        event.preventDefault();
-        
+  const [getValidation] = useMutation(REQUEST_LOGIN, {
+    onCompleted(getValidation) {
+      props.onHandleSignIn(getValidation.login);
     }
-    return (
-        
-        <StyledForm onSubmit={onLogin}>
-                <StyledLoginDiv>
-                    <label htmlFor="email"/>
-                    <StyledInput  placeholder="Correo" value={email} onChange={(event)=> setEmail(event.target.value)}/>
-                    <label htmlFor="password"/>
-                    <StyledInput  placeholder="Contrasena" type="password" value={password} onChange={(event)=> setPassword(event.target.value)}/>
-                    <StyledButton type="submit" onClick={onLogin}> Iniciar sesion </StyledButton>
-                </StyledLoginDiv>
-                <div>
-                    <span>No tienes cuenta? </span>
-                    <Link to ="/register">Registrate</Link>
-                </div>
-            </StyledForm>
-            
-        
-    
-    )
+  });
+
+  const onSubmitButton = (e: React.FormEvent) => {
+    e.preventDefault();
+    getValidation({
+      variables: {
+        email: email,
+        password: password
+      }
+    });
+  }
+
+  return (
+    <StyledForm onSubmit={onSubmitButton}>
+      <StyledLoginDiv>
+        <label htmlFor="email" />
+        <StyledInput placeholder="Correo" value={email} onChange={(event) => setEmail(event.target.value)} />
+        <label htmlFor="password" />
+        <StyledInput placeholder="Contrasena" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+        <StyledButton type="submit"> Iniciar sesion </StyledButton>
+      </StyledLoginDiv>
+      <div>
+        <span>No tienes cuenta? </span>
+        <Link to="/register">Registrate</Link>
+      </div>
+    </StyledForm>
+  )
 }
 
 export default Login;

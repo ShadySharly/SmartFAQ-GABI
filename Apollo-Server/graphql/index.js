@@ -117,7 +117,6 @@ const typeDefs = gql`
     }
 
     type Query {
-        login(email: String!, password: String!): AuthData
         permissions: [Permission]
         permission(permission_id: Int!): Permission
         intentions: [Intention]
@@ -133,6 +132,7 @@ const typeDefs = gql`
     }
 
     type Mutation{
+        login(email: String!, password: String!): Client
         register(first_name: String!, last_name: String!, email: String!, password: String!): Boolean
         createPermission(permission_name: String!): Boolean
         createIntention(intention_name: String!): Boolean
@@ -158,31 +158,6 @@ const typeDefs = gql`
 
 const resolvers = {
     Query: {
-        async login(_,{email, password}){
-            const [client] = await knex("client")
-            .where({email})
-            .returning("*");
-            if(client == null){
-                return {userId: -1, token: "null", tokenExpiration: -1}
-            }
-            else{
-                console.log(client['auth_key'])
-                console.log(password)
-                const isEqual = await bcrypt.compare(password,client['auth_key'])
-                console.log(isEqual)
-                if(!isEqual){return null}
-                else{
-                    const token = jwt.sign(
-                        {userId: client['client_id'],email: client['email']},
-                        'secretKEY',
-                        {
-                            expiresIn: '1h'
-                        }
-                    )
-                    return {userId: client['client_id'], token: token, tokenExpiration: 1}
-                }
-            }
-        },
         async permissions(_, args){
             return await knex("permission").select("*");
         },
@@ -261,6 +236,34 @@ const resolvers = {
     },
     
     Mutation: {
+        async login(_,{email, password}){
+            const [client] = await knex("client")
+            .where({email})
+            .returning("*");
+            if(client == null){
+                return -1
+            }
+            else{
+                console.log(client['auth_key'])
+                console.log(password)
+                const isEqual = await bcrypt.compare(password,client['auth_key'])
+                console.log(isEqual)
+                if(!isEqual){return null}
+                else{
+                    const token = jwt.sign(
+                        {userId: client['client_id'],email: client['email']},
+                        'secretKEY',
+                        {
+                            expiresIn: '1h'
+                        }
+                    )
+                    const [final] = await knex("client")
+                    .where({client_id:client['client_id']})
+                    .returning("*");
+                    return final
+                }
+            }
+        },
         async register(_,{first_name, last_name, email, password}){
             try {
                 const [client] = await knex("client")
