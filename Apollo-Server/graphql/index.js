@@ -264,13 +264,10 @@ const resolvers = {
             .where({email})
             .returning("*");
             if(client == null){
-                return -1
+                return null
             }
             else{
-                console.log(client['auth_key'])
-                console.log(password)
                 const isEqual = await bcrypt.compare(password,client['auth_key'])
-                console.log(isEqual)
                 if(!isEqual){return null}
                 else{
                     const token = jwt.sign(
@@ -280,10 +277,18 @@ const resolvers = {
                             expiresIn: '1h'
                         }
                     )
-                    const [final] = await knex("client")
+                    const clients = await knex("client")
                     .where({client_id:client['client_id']})
                     .returning("*");
-                    return final
+                    console.log(clients)
+                    const dutysId = Array.from(new Set(clients.map((t) => t.duty_id)))
+                    const dutys = await knex('duty').whereIn('duty_id', dutysId)       
+                    return clients.map((t) => {
+                        return {
+                          ...t,
+                          duty: dutys.find((u) => u.duty_id === t.duty_id),
+                        }
+                      })[0]
                 }
             }
         },

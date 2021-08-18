@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import {gql, useMutation } from '@apollo/client';
+import { Link } from 'react-router-dom';
 
 const StyledRegisterDiv = styled.div`
     padding:10px;
@@ -50,6 +51,11 @@ const StyledButton = styled.button`
         color: white;
     };
 `
+const StyledSpan = styled.span`
+    color: black;
+    margin-left:44%;
+`
+
 const REQUEST_REGISTER = gql`
     mutation requestRegister($first_name:String!, $last_name:String!, $email:String!, $password:String!){
         register(first_name:$first_name, last_name:$last_name, email:$email, password:$password)
@@ -74,6 +80,7 @@ const Register = () => {
     }
 
     return (
+        <div>
         <StyledRegisterDiv>
             <StyledForm onSubmit={onRegister}>
                 <label htmlFor="first_name"/>
@@ -88,6 +95,9 @@ const Register = () => {
                 {error.length > 0 && <p>{error}</p>}
             </StyledForm>
         </StyledRegisterDiv>
+            <StyledSpan>Ya tienes cuenta? </StyledSpan>
+            <Link to="/login">Inicia sesion</Link>
+        </div>
     )
 }
 

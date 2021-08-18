@@ -1,5 +1,5 @@
 import React from 'react';
-import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import GroupingToolbar from '../Components/GroupingToolbar';
 import GroupingHead from '../Components/GroupingHead';
-import { useQuery, gql, useMutation } from '@apollo/client';
+import { useQuery, gql} from '@apollo/client';
 import { NetworkStatus } from '@apollo/client';
 
 const GET_USERQUESTIONS = gql`

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useQuery, gql, useMutation } from '@apollo/client';
+import React from 'react';
+import { useQuery, gql } from '@apollo/client';
 import Accordion from '@material-ui/core/Accordion';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import AccordionSummary from '@material-ui/core/AccordionSummary';

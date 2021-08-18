@@ -1,28 +1,18 @@
 import { useState } from 'react';
 import styled from 'styled-components';
-import { useQuery, gql, useMutation, useLazyQuery } from '@apollo/client';
-import { Link } from 'react-router-dom';
-import AuthContext from '../Context/auth-context';
-import { useEffect } from 'react';
+import {gql, useMutation} from '@apollo/client';
+import { Link, Redirect } from 'react-router-dom';
 
 
 const StyledLoginDiv = styled.div`
-    margin-top:10%;
-    background-color:#043C8B;
-    border-radius:0px 30px 30px 0px;
-    width:30%;
-    height:250px;
-    box-shadow: 10px 10px 10px rgba(9, 19, 20, 0.35);
-`
-const StyledRegisterDiv = styled.div`
-    padding:10px;
-    margin:auto;
-    margin-top:50px;
-    background-color:#043C8B;
-    border-radius:30px;
-    width:25%;
-    height:350px;
-    box-shadow: 10px 10px 10px rgba(9, 19, 20, 0.35);
+  padding:10px;
+  margin:auto;
+  margin-top:50px;
+  background-color:#043C8B;
+  border-radius:30px;
+  width:25%;
+  height:200px;
+  box-shadow: 10px 10px 10px rgba(9, 19, 20, 0.35);
 `
 
 const StyledForm = styled.form`
@@ -60,13 +50,23 @@ const StyledButton = styled.button`
     };
 `
 
+const StyledSpan = styled.span`
+  margin-top:50px;
+    color: black;
+    margin-left:44%;
+`
+
 const REQUEST_LOGIN = gql`
   mutation requestLogin ($email: String!, $password: String!) {
     login (email: $email, password: $password) {
       client_id,
       first_name,
       last_name,
-      email
+      email,
+      duty {
+        duty_id,
+        duty_name
+      }
     }
   }
 `;
@@ -75,23 +75,36 @@ type Client = {
   client_id: number,
   first_name: string,
   last_name: string,
-  email: string
+  email: string,
+  duty:Duty
 }
 
-interface IProps {
-  onHandleSignIn: (client_id: Client) => void;
+type Duty = {
+  duty_id: number,
+  duty_name: string
 }
+
+
+interface IProps {
+  setActiveUser:React.Dispatch<React.SetStateAction<Client>>,
+}
+
+const DefaultUser: Client = { client_id: -1, first_name: "", last_name: "", email: "", duty:{duty_id:-1, duty_name:""}};
 
 const Login: React.FunctionComponent<IProps> = props => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [user, setUser] = useState(DefaultUser);
 
   const [getValidation] = useMutation(REQUEST_LOGIN, {
     onCompleted(getValidation) {
-      props.onHandleSignIn(getValidation.login);
+      setUser(getValidation.login);
+      props.setActiveUser(getValidation.login);
+      localStorage.setItem("user", JSON.stringify(getValidation.login));
     }
   });
+
 
   const onSubmitButton = (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,20 +116,28 @@ const Login: React.FunctionComponent<IProps> = props => {
     });
   }
 
+  if (user.client_id !== -1){
+    return (
+      <Redirect to="/overview" exact />
+    )
+  }
+
   return (
-    <StyledForm onSubmit={onSubmitButton}>
+    <div>
       <StyledLoginDiv>
-        <label htmlFor="email" />
-        <StyledInput placeholder="Correo" value={email} onChange={(event) => setEmail(event.target.value)} />
-        <label htmlFor="password" />
-        <StyledInput placeholder="Contrasena" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
-        <StyledButton type="submit"> Iniciar sesion </StyledButton>
+        <StyledForm onSubmit={onSubmitButton}>
+          <label htmlFor="email" />
+          <StyledInput placeholder="Correo" value={email} onChange={(event) => setEmail(event.target.value)} />
+          <label htmlFor="password" />
+          <StyledInput placeholder="Contrasena" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+          <StyledButton type="submit"> Iniciar sesion </StyledButton>
+        </StyledForm>
       </StyledLoginDiv>
-      <div>
-        <span>No tienes cuenta? </span>
+      
+        <StyledSpan>No tienes cuenta? </StyledSpan>
         <Link to="/register">Registrate</Link>
       </div>
-    </StyledForm>
+    
   )
 }
 

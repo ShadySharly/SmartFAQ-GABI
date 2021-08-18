@@ -1,4 +1,3 @@
-import React from 'react'; 
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { IconContext } from 'react-icons';
@@ -33,8 +32,6 @@ const NavIcon = styled(Link)`
     font-size: 2rem;
     margin-left: 2rem;
 `
-
-const SidebarWrap = styled.div ``;
 
 type SidebarProps = {isOpen:boolean, showSidebar: () => void } 
 const Sidebar = (props: SidebarProps) => {

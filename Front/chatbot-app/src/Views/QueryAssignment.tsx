@@ -9,7 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import QueryTable from '../Components/QueryTable';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
