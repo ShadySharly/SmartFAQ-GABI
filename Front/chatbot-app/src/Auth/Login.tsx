@@ -5,12 +5,14 @@ import { Link, Redirect } from 'react-router-dom';
 
 
 const StyledLoginDiv = styled.div`
-    margin-top:10%;
-    background-color:#043C8B;
-    border-radius:0px 30px 30px 0px;
-    width:30%;
-    height:250px;
-    box-shadow: 10px 10px 10px rgba(9, 19, 20, 0.35);
+  padding:10px;
+  margin:auto;
+  margin-top:50px;
+  background-color:#043C8B;
+  border-radius:30px;
+  width:25%;
+  height:200px;
+  box-shadow: 10px 10px 10px rgba(9, 19, 20, 0.35);
 `
 
 const StyledForm = styled.form`
@@ -49,8 +51,9 @@ const StyledButton = styled.button`
 `
 
 const StyledSpan = styled.span`
+  margin-top:50px;
     color: black;
-    margin-left 130px;
+    margin-left:44%;
 `
 
 const REQUEST_LOGIN = gql`
@@ -59,7 +62,11 @@ const REQUEST_LOGIN = gql`
       client_id,
       first_name,
       last_name,
-      email
+      email,
+      duty {
+        duty_id,
+        duty_name
+      }
     }
   }
 `;
@@ -68,14 +75,21 @@ type Client = {
   client_id: number,
   first_name: string,
   last_name: string,
-  email: string
+  email: string,
+  duty:Duty
 }
+
+type Duty = {
+  duty_id: number,
+  duty_name: string
+}
+
 
 interface IProps {
   setActiveUser:React.Dispatch<React.SetStateAction<Client>>,
 }
 
-const DefaultUser: Client = { client_id: -1, first_name: "", last_name: "", email: "" };
+const DefaultUser: Client = { client_id: -1, first_name: "", last_name: "", email: "", duty:{duty_id:-1, duty_name:""}};
 
 const Login: React.FunctionComponent<IProps> = props => {
 
@@ -88,7 +102,6 @@ const Login: React.FunctionComponent<IProps> = props => {
       setUser(getValidation.login);
       props.setActiveUser(getValidation.login);
       localStorage.setItem("user", JSON.stringify(getValidation.login));
-      console.log(getValidation);
     }
   });
 

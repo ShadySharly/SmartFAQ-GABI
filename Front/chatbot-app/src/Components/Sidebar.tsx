@@ -33,8 +33,6 @@ const NavIcon = styled(Link)`
     margin-left: 2rem;
 `
 
-const SidebarWrap = styled.div ``;
-
 type SidebarProps = {isOpen:boolean, showSidebar: () => void } 
 const Sidebar = (props: SidebarProps) => {
     const isOpen = props.isOpen;

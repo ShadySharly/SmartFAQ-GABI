@@ -16,17 +16,6 @@ import Login from '../Auth/Login';
 import Register from '../Auth/Register';
 import AdministrationIndex from '../Views/AdministrationIndex';
 
-const GET_USER = gql`
-  query getUser ($client_id: Int!) {
-    client (client_id: $client_id) {
-      client_id,
-      first_name,
-      last_name,
-      email
-    }
-  }
-`;
-
 const cache = new InMemoryCache()
 
 const client = new ApolloClient({
@@ -38,10 +27,16 @@ type Client = {
   client_id: number,
   first_name: string,
   last_name: string,
-  email: string
+  email: string,
+  duty:Duty
 }
 
-const DefaultUser: Client = { client_id: -1, first_name: "", last_name: "", email: "" };
+type Duty = {
+  duty_id: number,
+  duty_name: string
+}
+
+const DefaultUser: Client = { client_id: -1, first_name: "", last_name: "", email: "", duty:{duty_id:-1, duty_name:""} };
 
 const App = () => {
   const [sidebarOpen, setSidebar] = useState(false);
@@ -61,7 +56,6 @@ const App = () => {
     setUser(DefaultUser);
     localStorage.clear();
   };
-  console.log(user);
 
   return (
     <ApolloProvider client={client}>
