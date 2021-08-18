@@ -87,6 +87,7 @@ const typeDefs = gql`
         client: Client!
         intention: Intention!
         information: String!
+        response: String!
     }    
 
     type Answer {
@@ -149,7 +150,7 @@ const typeDefs = gql`
         updateIntention(intention_id: Int!, intention_name: String!): Boolean
         removeIntention(intention_id: Int!): Boolean
         createUserquestion(client_id: Int!,dialogue_id: Int!,information: String!): Boolean
-        updateUserquestion(userquestion_id: Int!, intention_id: Int!): Boolean
+        updateUserquestion(userquestion_id: Int!, intention_id: Int!, response: String!): Boolean
         removeUserquestion(userquestion_id: Int!): Boolean
         createRequest(intention_id: Int!, information: String!): Boolean
         updateRequest(request_id: Int!, intention_id: Int!, information: String!): Boolean
@@ -263,13 +264,10 @@ const resolvers = {
             .where({email})
             .returning("*");
             if(client == null){
-                return -1
+                return null
             }
             else{
-                console.log(client['auth_key'])
-                console.log(password)
                 const isEqual = await bcrypt.compare(password,client['auth_key'])
-                console.log(isEqual)
                 if(!isEqual){return null}
                 else{
                     const token = jwt.sign(
@@ -279,10 +277,18 @@ const resolvers = {
                             expiresIn: '1h'
                         }
                     )
-                    const [final] = await knex("client")
+                    const clients = await knex("client")
                     .where({client_id:client['client_id']})
                     .returning("*");
-                    return final
+                    console.log(clients)
+                    const dutysId = Array.from(new Set(clients.map((t) => t.duty_id)))
+                    const dutys = await knex('duty').whereIn('duty_id', dutysId)       
+                    return clients.map((t) => {
+                        return {
+                          ...t,
+                          duty: dutys.find((u) => u.duty_id === t.duty_id),
+                        }
+                      })[0]
                 }
             }
         },
@@ -406,11 +412,11 @@ const resolvers = {
                 return false
             }
         },
-        async updateUserquestion(_,{userquestion_id,intention_id}){
+        async updateUserquestion(_,{userquestion_id,intention_id,response}){
             try {
                 const [userquestion] = await knex("userquestion")
                 .where({userquestion_id: userquestion_id})
-                .update({intention_id:intention_id})
+                .update({intention_id:intention_id, response:response})
                 .returning("*");
                 if(userquestion==null){return false}
                 else{return true}       
