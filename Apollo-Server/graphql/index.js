@@ -68,6 +68,7 @@ const typeDefs = gql`
         first_name: String!
         last_name: String!
         email: String!
+        duty_id: Int!
     }
 
     type AuthData {
@@ -119,11 +120,13 @@ const typeDefs = gql`
     type Query {
         permissions: [Permission]
         permission(permission_id: Int!): Permission
+        chatbots: [Chatbot]
         intentions: [Intention]
         intentionsOfRequest:[Intention]
         intentionByName(intention_name: String): Intention
         intention(intention_id: Int!): Intention
         client(client_id: Int!): Client
+        clients: [Client]
         userquestions: [Userquestion]
         userquestion(userquestion_id: Int!): Userquestion    
         userquestionByIntent(intention_id: Int!): [Userquestion]
@@ -134,6 +137,8 @@ const typeDefs = gql`
     type Mutation{
         login(email: String!, password: String!): Client
         register(first_name: String!, last_name: String!, email: String!, password: String!): Boolean
+        updateClient(client_id: Int!, duty_id: Int!): Boolean
+        removeClient(client_id: Int!): Boolean
         createPermission(permission_name: String!): Boolean
         createIntention(intention_name: String!): Boolean
         createAnswer(intention_id: Int!, information: String!, image_url: String!, video_url: String!): Boolean
@@ -148,6 +153,7 @@ const typeDefs = gql`
         createDialogue(client_id: Int!, chatbot_id: Int!): Int
         createChatmessage(dialogue_id: Int!, intention_id: Int!, information: String!, confidence: Int!): Boolean
         updateDialogue(dialogue_id: Int!,client_score: Int!): Boolean
+        updateChatbot(confidence: Int): Boolean
         generateChatbotFiles: Boolean
         generatePLNFiles: Boolean
         trainChatbot: Boolean
@@ -178,6 +184,12 @@ const resolvers = {
         },
         async client(_, {client_id}){
             return await knex("client").where('client_id', client_id).select("*").first()
+        },
+        async clients(_, args){
+            return await knex("client").select("*")
+        },
+        async chatbots(_, args){
+            return await knex("chatbot").select("*")
         },
         async userquestions(_,args){ 
             const userquestions = await knex("userquestion").select("*")
@@ -283,6 +295,22 @@ const resolvers = {
                 return false
             }            
         },
+        async updateChatbot(_,{confidence}){
+            try {
+                const aux = await knex("chatbot")
+                .orderBy('chatbot_id','desc').first("*")
+                const chatbot = await knex("chatbot")
+                .returning("*")
+                .where({chatbot_id: aux['chatbot_id']})
+                .update({confidence:confidence});
+                if(chatbot==null){return false}
+                else{return true}           
+            } catch (error) {
+                console.log(error)
+                return false
+            }
+        },
+
         async createPermission(_,{permission_name}){
             try {
                 const [permission] = await knex("permission")
@@ -325,6 +353,32 @@ const resolvers = {
                 .where({intention_id: intention_id})
                 .del(['intention_id', 'intention_id'], { includeTriggerModifications: true })
                 if(intention==null){return false}
+                else{return true}          
+            } catch (error) {
+                console.log(error)
+                return false
+            }
+        },
+        async updateClient(_,{client_id, duty_id}){
+            try {
+                const [client] = await knex("client")
+                .returning("*")
+                .where({client_id: client_id})
+                .update({duty_id:duty_id});    
+                if(client==null){return false}
+                else{return true}           
+            } catch (error) {
+                console.log(error)
+                return false
+            }
+        },
+        async removeClient(_,{client_id}){
+            try {
+                const [client] = await knex("client")
+                .returning("*")
+                .where({client_id: client_id})
+                .del(['client_id', 'client_id'], { includeTriggerModifications: true })
+                if(client==null){return false}
                 else{return true}          
             } catch (error) {
                 console.log(error)
