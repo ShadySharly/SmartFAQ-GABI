@@ -188,7 +188,7 @@ const resolvers = {
             return await knex("intention").where('intention_name',intention_name).select("*").first()
         },
         async clients(_, args){
-            const clients = await knex("client").select("*")
+            const clients = await knex("client").orderBy("client_id","desc").select("*")
             const dutysId = Array.from(new Set(clients.map((t) => t.duty_id)))
             const dutys = await knex('duty').whereIn('duty_id', dutysId)       
             return clients.map((t) => {
