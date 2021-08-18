@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -70,6 +70,26 @@ const EDIT_CLIENT = gql`
   }
 `;
 
+type Duty = {
+  duty_id: number,
+  duty_name: string
+}
+
+const duties: Duty[] = [
+  {
+    duty_id: 1,
+    duty_name: 'Alumno'
+  },
+  {
+    duty_id: 2,
+    duty_name: 'Mentor'
+  },
+  {
+    duty_id: 3,
+    duty_name: 'Cientista'
+  }
+]
+
 interface IProps {
   client_id: number;
   duty_id: number;
@@ -82,16 +102,15 @@ const AdministrationForm: React.FunctionComponent<IProps> = props => {
   const [selectedDuty, setSelectedDuty] = useState(props.duty_id);
   const [editing, setEdit] = useState(false);
 
+  useEffect(() => {
+    if (props.duty_id !== selectedDuty)
+      setEdit(true);
+    else
+      setEdit(false);
+  }, [props.duty_id, selectedDuty]);
+
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSelectedDuty(event.target.value as number);
-    if (props.duty_id !== selectedDuty) {
-      setEdit(true);
-    }
-
-    else if (props.duty_id === selectedDuty) {
-      setEdit(false);
-    }
-    console.log(selectedDuty);
   };
 
   const onDeleteClient = () => {
@@ -124,22 +143,17 @@ const AdministrationForm: React.FunctionComponent<IProps> = props => {
               displayEmpty
               className={classes.selectEmpty}
             >
-              <MenuItem value={1}>Alumno</MenuItem>
-              <MenuItem value={2}>Mentor</MenuItem>
-              <MenuItem value={3}>Cientista</MenuItem>
-
+              {duties.map((duty) => (
+                <MenuItem value={duty.duty_id}>
+                  {duty.duty_name}
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
 
-          {editing ? (
-            <IconButton aria-label="Aceptar" type="submit">
-              <SaveIcon fontSize="large" />
-            </IconButton>
-          ) : (
-            <IconButton aria-label="Aceptar" type="submit" disabled>
-              <SaveIcon fontSize="large" />
-            </IconButton>
-          )}
+          <IconButton aria-label="Aceptar" type="submit" disabled={editing ? (false) : (true)}>
+            <SaveIcon fontSize="large" />
+          </IconButton>
 
         </form>
       </TableCell>
