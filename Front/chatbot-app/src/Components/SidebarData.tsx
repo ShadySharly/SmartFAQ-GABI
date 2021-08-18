@@ -50,4 +50,9 @@ export const SidebarData: SidebarItem[] = [
         path: '/groupintention',
         icon: < FaLayerGroup style={{fill:"#043C8B"}}/>,
     },
+    {
+        title: 'Administración de Usuarios',
+        path: '/adminindex',
+        icon: < FaLayerGroup style={{fill:"#043C8B"}}/>,
+    },
 ];

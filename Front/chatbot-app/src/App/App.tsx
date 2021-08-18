@@ -11,10 +11,11 @@ import React, { useState, useEffect } from "react";
 import QueryAssignment from '../Views/QueryAssignment';
 import IntentIndex from '../Views/IntentIndex';
 import FaqIndex from '../Views/FaqIndex';
-import GroupIntention from '../Views/GroupIntention';
+import GroupingIndex from '../Views/GroupingIndex';
 import Login from '../Auth/Login';
 import Register from '../Auth/Register';
 import AuthContext from '../Context/auth-context';
+import AdministrationIndex from '../Views/AdministrationIndex';
 
 const GET_USER = gql`
   query getUser ($client_id: Int!) {
@@ -44,7 +45,6 @@ type Client = {
 const DefaultUser: Client = { client_id: -1, first_name: "", last_name: "", email: "" };
 
 const App = () => {
-  localStorage.clear();
   const [sidebarOpen, setSidebar] = useState(false);
   const showOpenSidebar = () => setSidebar(!sidebarOpen);
 
@@ -85,8 +85,9 @@ const App = () => {
                 <Route path="/generalFAQ" component={Chatbot} exact></Route>
                 <Route path="/queryassignment" component={QueryAssignment} exact></Route>
                 <Route path="/intentindex" component={IntentIndex} exact></Route>
-                <Route path="/groupintention" component={GroupIntention} exact></Route>
+                <Route path="/groupintention" component={GroupingIndex} exact></Route>
                 <Route path="/faqindex" component={FaqIndex} exact></Route>
+                <Route path="/adminindex" component={AdministrationIndex} exact></Route>
               </Switch>
             </Container>
           </div>
