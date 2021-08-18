@@ -127,6 +127,7 @@ const typeDefs = gql`
         permissions: [Permission]
         permission(permission_id: Int!): Permission
         chatbots: [Chatbot]
+        chatbot: Chatbot
         intentions: [Intention]
         intentionsOfRequest:[Intention]
         intentionByName(intention_name: String): Intention
@@ -137,6 +138,7 @@ const typeDefs = gql`
         userquestionByIntent(intention_id: Int!): [Userquestion]
         requestByIntent(intention_id: Int!): [Request]
         chatmessagesByDialogue(dialogue_id: Int!): [Chatmessage]
+
     }
 
     type Mutation{
@@ -186,6 +188,20 @@ const resolvers = {
         },
         async intentionByName(_,{intention_name}){
             return await knex("intention").where('intention_name',intention_name).select("*").first()
+        },
+        async chatbot(_,args){
+            try {
+                const aux = await knex("chatbot")
+                .orderBy('chatbot_id','desc').first("*")
+                const chatbot = await knex("chatbot")
+                .returning("*")
+                .where({chatbot_id: aux['chatbot_id']})
+                if(chatbot==null){return null}
+                else{return chatbot[0]}           
+            } catch (error) {
+                console.log(error)
+                return null
+            }
         },
         async clients(_, args){
             const clients = await knex("client").orderBy("client_id","desc").select("*")
