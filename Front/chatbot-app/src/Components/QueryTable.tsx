@@ -1,38 +1,12 @@
 import React, { useState } from 'react';
-import Box from '@material-ui/core/Box';
 import Collapse from '@material-ui/core/Collapse';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import Button from '@material-ui/core/Button';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
-import ImageIcon from '@material-ui/icons/Image';
-import SendIcon from '@material-ui/icons/Send';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import { useQuery, gql, useMutation } from '@apollo/client';
 import EmailForm from '../Components/EmailForm';
-
-const GET_INTENTIONS = gql`
-  query getIntentions {
-    intentions{
-      intention_id
-      intention_name
-    }
-  }
-`;
 
 const useRowStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -81,19 +55,8 @@ interface IProps {
 }
 
 const QueryTable: React.FunctionComponent<IProps> = props => {
-  const { loading, error, data } = useQuery(GET_INTENTIONS);
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
-
-  const [selectedIntent, setSelectedIntent] = useState(props.userquestion.intention.intention_id);
-
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setSelectedIntent(event.target.value as number);
-    console.log(selectedIntent);
-  };
-
-  if (loading) return <div>Loading...</div>
-  if (error) return <div>Error :(s</div>
 
   return (
     <React.Fragment>

@@ -16,8 +16,8 @@ const useStyles = makeStyles({
 });
 
 const GET_USERQUESTIONS = gql`
-  query getUserquestions {
-    userquestions{
+  query getUserquestions ($intention_id: Int!) {
+    userquestionByIntent (intention_id: $intention_id) {
       userquestion_id
       information
       intention{
@@ -55,32 +55,36 @@ type Userquestion = {
 
 export default function QueryAssignment() {
   const classes = useStyles();
-  const { loading, error, data } = useQuery(GET_USERQUESTIONS);
-
+  const { loading, error, data } = useQuery(GET_USERQUESTIONS, {
+    variables: {
+      intention_id: 0
+    },
+    pollInterval: 500
+  });
 
   if (loading) return <div>Loading...</div>
   if (error) return <div>Error :(s</div>
 
   return (
     <div>
-    <TableContainer component={Paper} classes={{ root: classes.customTableContainer }}>
-      <Table aria-label="collapsible table" stickyHeader>
-        <TableHead>
-          <TableRow>
-            <TableCell />
-            <TableCell>Consulta</TableCell>
-            <TableCell align="right">Autor</TableCell>
-            <TableCell align="right">Correo</TableCell>
-            <TableCell align="right">Fecha</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {data.userquestions.map((u: Userquestion) => (
-            <QueryTable userquestion={u} />
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+      <TableContainer component={Paper} classes={{ root: classes.customTableContainer }}>
+        <Table aria-label="collapsible table" stickyHeader>
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>Consulta</TableCell>
+              <TableCell align="right">Autor</TableCell>
+              <TableCell align="right">Correo</TableCell>
+              <TableCell align="right">Fecha</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.userquestionByIntent.map((u: Userquestion) => (
+              <QueryTable userquestion={u} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div >
   );
 }
