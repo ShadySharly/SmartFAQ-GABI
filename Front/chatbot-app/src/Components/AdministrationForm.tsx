@@ -1,31 +1,15 @@
 
 import React, { useState, useEffect } from 'react';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-import TablePagination from '@material-ui/core/TablePagination';
-import { useQuery, gql, useMutation } from '@apollo/client';
-import QueryTable from '../Components/QueryTable';
+import {  gql, useMutation } from '@apollo/client';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import clsx from 'clsx';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
-import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import SaveIcon from '@material-ui/icons/Save';
 import Select from '@material-ui/core/Select';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-
-
-
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -92,6 +76,8 @@ const duties: Duty[] = [
 
 interface IProps {
   client_id: number;
+  client_name: string;
+  client_email: string;
   duty_id: number;
 }
 
@@ -132,7 +118,13 @@ const AdministrationForm: React.FunctionComponent<IProps> = props => {
   }
 
   return (
-    <div>
+    <TableRow className={classes.root}>
+      <TableCell component="th" scope="row">
+        {props.client_name}
+      </TableCell>
+      <TableCell align="right">
+        {props.client_email}
+      </TableCell>
       <TableCell align="right">
         <form className={classes.root} noValidate autoComplete="off" onSubmit={onFormSubmit}>
 
@@ -164,7 +156,7 @@ const AdministrationForm: React.FunctionComponent<IProps> = props => {
         </IconButton>
       </TableCell>
 
-    </div>
+    </TableRow>
   )
 }
 

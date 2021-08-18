@@ -104,20 +104,14 @@ function AdministrationIndex() {
               {data.clients
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((c: Client) => (
-                  <TableRow className={classes.root}>
-                    <TableCell component="th" scope="row">
-                      {c.first_name + c.last_name}
-                    </TableCell>
-                    <TableCell align="right">
-                      {c.email}
-                    </TableCell>
 
-                    <AdministrationForm
-                      client_id={c.client_id}
-                      duty_id={c.duty.duty_id}
-                    />
+                  <AdministrationForm
+                    client_id={c.client_id}
+                    client_name={c.first_name + c.last_name}
+                    client_email={c.email}
+                    duty_id={c.duty.duty_id}
+                  />
 
-                  </TableRow>
                 ))}
             </TableBody>
           </Table>
