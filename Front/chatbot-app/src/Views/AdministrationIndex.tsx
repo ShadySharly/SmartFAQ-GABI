@@ -10,6 +10,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import QueryTable from '../Components/QueryTable';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import AdministrationForm from '../Components/AdministrationForm';
 
 const GET_CLIENTS = gql`
   query getClients {
@@ -18,7 +19,10 @@ const GET_CLIENTS = gql`
       first_name,
       last_name,
       email,
-      duty_id
+      duty {
+        duty_id,
+        duty_name
+      }
     }
   }
 `;
@@ -28,7 +32,12 @@ type Client = {
   first_name: string,
   last_name: string,
   email: string,
-  duty_id: number
+  duty: Duty
+}
+
+type Duty = {
+  duty_id: number,
+  duty_name: string
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -54,11 +63,14 @@ const useStyles = makeStyles((theme: Theme) =>
       top: 20,
       width: 1,
     },
+    customTableContainer: {
+      overflowX: "initial"
+    }
   }),
 );
 function AdministrationIndex() {
   const classes = useStyles();
-  const { loading, error, data } = useQuery(GET_CLIENTS);
+  const { loading, error, data } = useQuery(GET_CLIENTS, { pollInterval: 500 });
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
@@ -78,12 +90,14 @@ function AdministrationIndex() {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <TableContainer>
+        <TableContainer classes={{ root: classes.customTableContainer }}>
           <Table aria-label="collapsible table" stickyHeader>
             <TableHead>
               <TableRow>
                 <TableCell>Nombre</TableCell>
                 <TableCell align="right">Correo</TableCell>
+                <TableCell align="right">Rol</TableCell>
+                <TableCell align="right">Eliminar</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -97,6 +111,12 @@ function AdministrationIndex() {
                     <TableCell align="right">
                       {c.email}
                     </TableCell>
+
+                    <AdministrationForm
+                      client_id={c.client_id}
+                      duty_id={c.duty.duty_id}
+                    />
+
                   </TableRow>
                 ))}
             </TableBody>
