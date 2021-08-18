@@ -11,9 +11,6 @@ const StyledContainer = styled.div<{isSidebarOpen:boolean}>`
     transition: 350ms;
 `
 
-const SidebarWrap = styled.div ``;
-
-
 type ContainerProps  = {isSidebarOpen:boolean, children:React.ReactNode} 
 
 const Container = (props: ContainerProps) => {

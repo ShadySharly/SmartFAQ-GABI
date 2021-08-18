@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { IBaseIntent, IIntent } from '../Models/Intent';
+import React, { useState} from 'react';
 import { gql, useMutation } from '@apollo/client';
-import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';

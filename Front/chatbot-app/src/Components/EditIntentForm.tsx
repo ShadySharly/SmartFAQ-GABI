@@ -1,7 +1,5 @@
 import React, { useState, useEffect} from 'react';
-import { IBaseIntent, IIntent } from '../Models/Intent';
 import { gql, useMutation } from '@apollo/client';
-import styled from 'styled-components';
 
 const UPDATE_INTENT = gql`
     mutation updateIntent($intention_id: Int!,$intention_name: String!) {

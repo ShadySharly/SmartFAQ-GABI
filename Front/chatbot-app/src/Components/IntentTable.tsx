@@ -1,7 +1,4 @@
 import React from "react";
-import { IIntent } from '../Models/Intent';
-import { gql, useMutation } from '@apollo/client';
-import styled from "styled-components";
 
 /*
 const DELETE_INTENT = gql`

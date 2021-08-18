@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import AddIntentForm from '../Components/AddIntentForm';
 import EditIntentForm from '../Components/EditIntentForm';
 import IntentTable from '../Components/IntentTable';
-import { IIntent, IBaseIntent } from '../Models/Intent';
-import { ApolloClient } from '@apollo/client';
+import { IIntent } from '../Models/Intent';
 import { useQuery, gql , useMutation} from '@apollo/client';
 import '../styles.css';
 import styled from 'styled-components';

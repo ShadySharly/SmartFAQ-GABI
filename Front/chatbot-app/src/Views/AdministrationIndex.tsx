@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -7,8 +7,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import TablePagination from '@material-ui/core/TablePagination';
-import { useQuery, gql, useMutation } from '@apollo/client';
-import QueryTable from '../Components/QueryTable';
+import { useQuery, gql} from '@apollo/client';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AdministrationForm from '../Components/AdministrationForm';
 

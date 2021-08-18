@@ -16,7 +16,6 @@ const StyledDiv = styled.div`
   .Icons{
     align-items:left;
   };
-
 `
 
 const REQUESTS_BY_INTENT = gql`
