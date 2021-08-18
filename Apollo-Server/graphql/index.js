@@ -68,7 +68,12 @@ const typeDefs = gql`
         first_name: String!
         last_name: String!
         email: String!
+        duty: Duty!
+    }
+
+    type Duty {
         duty_id: Int!
+        duty_name: String!
     }
 
     type AuthData {
@@ -125,7 +130,6 @@ const typeDefs = gql`
         intentionsOfRequest:[Intention]
         intentionByName(intention_name: String): Intention
         intention(intention_id: Int!): Intention
-        client(client_id: Int!): Client
         clients: [Client]
         userquestions: [Userquestion]
         userquestion(userquestion_id: Int!): Userquestion    
@@ -182,11 +186,17 @@ const resolvers = {
         async intentionByName(_,{intention_name}){
             return await knex("intention").where('intention_name',intention_name).select("*").first()
         },
-        async client(_, {client_id}){
-            return await knex("client").where('client_id', client_id).select("*").first()
-        },
         async clients(_, args){
-            return await knex("client").select("*")
+            const clients = await knex("client").select("*")
+            const dutysId = Array.from(new Set(clients.map((t) => t.duty_id)))
+            const dutys = await knex('duty').whereIn('duty_id', dutysId)       
+            return clients.map((t) => {
+                return {
+                  ...t,
+                  duty: dutys.find((u) => u.duty_id === t.duty_id),
+                }
+              })
+
         },
         async chatbots(_, args){
             return await knex("chatbot").select("*")
