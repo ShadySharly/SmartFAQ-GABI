@@ -18,7 +18,7 @@ import BackupIcon from '@material-ui/icons/Backup';
 
 const GET_INTENTIONS = gql`
   query getIntentions {
-    intentions{
+    intentionsOfRequest{
       intention_id
       intention_name
     }
@@ -135,7 +135,7 @@ const GroupingToolbar: React.FunctionComponent<IProps> = props => {
               displayEmpty
               className={classes.selectEmpty}
             >
-              {data.intentions.map((i: Intention) => (
+              {data.intentionsOfRequest.map((i: Intention) => (
 
                 <MenuItem value={i.intention_id}>
                   {i.intention_name}

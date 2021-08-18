@@ -61,7 +61,7 @@ interface IProps {
 
 const GET_INTENTIONS = gql`
   query getIntentions {
-    intentions{
+    intentionsOfRequest{
       intention_id
       intention_name
     }
@@ -79,6 +79,7 @@ const EmailForm: React.FunctionComponent<IProps> = props => {
   const [answer, setAnswer] = React.useState("");
   const [editQuestion] = useMutation(UPDATE_USERQUESTION);
   const { loading, error, data } = useQuery(GET_INTENTIONS);
+  const [editing, setEdit] = useState(false);
 
   const [selectedIntent, setSelectedIntent] = useState(props.intention.intention_id);
 
@@ -116,6 +117,8 @@ const EmailForm: React.FunctionComponent<IProps> = props => {
         console.log(err);
       }
     );
+    setAnswer("");
+    return false;
   }
 
   if (loading) return <div>Loading...</div>
@@ -164,7 +167,7 @@ const EmailForm: React.FunctionComponent<IProps> = props => {
               displayEmpty
               className={classes.selectEmpty}
             >
-              {data.intentions.map((i: Intention) => (
+              {data.intentionsOfRequest.map((i: Intention) => (
 
                 <MenuItem value={i.intention_id}>
                   {i.intention_name}
