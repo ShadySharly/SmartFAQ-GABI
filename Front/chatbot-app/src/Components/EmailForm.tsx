@@ -59,17 +59,6 @@ interface IProps {
   question: string;
 }
 
-const CREATE_ANSWER = gql`
-  mutation addAnswer ($intention_id: Int!, $information: String!, $image_url: String!, $video_url: String!) {
-    createAnswer (
-      intention_id: $intention_id
-      information: $information
-      image_url: $image_url
-      video_url: $video_url
-    )
-  }
-`;
-
 const GET_INTENTIONS = gql`
   query getIntentions {
     intentions{
@@ -80,15 +69,14 @@ const GET_INTENTIONS = gql`
 `;
 
 const UPDATE_USERQUESTION = gql`
-  mutation updateUserQuestion ($userquestion_id: Int!, $intention_id: Int!) {
-    updateUserquestion (userquestion_id: $userquestion_id, intention_id: $intention_id)
+  mutation updateUserQuestion ($userquestion_id: Int!, $intention_id: Int!, $response: String!) {
+    updateUserquestion (userquestion_id: $userquestion_id, intention_id: $intention_id, response: $response)
   }
 `;
 
 const EmailForm: React.FunctionComponent<IProps> = props => {
   const classes = useRowStyles();
   const [answer, setAnswer] = React.useState("");
-  const [newAnswer] = useMutation(CREATE_ANSWER);
   const [editQuestion] = useMutation(UPDATE_USERQUESTION);
   const { loading, error, data } = useQuery(GET_INTENTIONS);
 
@@ -101,19 +89,11 @@ const EmailForm: React.FunctionComponent<IProps> = props => {
 
   function onFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    newAnswer({
-      variables: {
-        intention_id: selectedIntent,
-        information: answer,
-        image_url: "",
-        video_url: ""
-      }
-    });
-    
     editQuestion({
       variables: {
         userquestion_id: props.userquestion_id,
-        intention_id: selectedIntent
+        intention_id: selectedIntent,
+        response: answer
       }
     })
 
