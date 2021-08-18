@@ -87,6 +87,7 @@ const typeDefs = gql`
         client: Client!
         intention: Intention!
         information: String!
+        response: String!
     }    
 
     type Answer {
@@ -149,7 +150,7 @@ const typeDefs = gql`
         updateIntention(intention_id: Int!, intention_name: String!): Boolean
         removeIntention(intention_id: Int!): Boolean
         createUserquestion(client_id: Int!,dialogue_id: Int!,information: String!): Boolean
-        updateUserquestion(userquestion_id: Int!, intention_id: Int!): Boolean
+        updateUserquestion(userquestion_id: Int!, intention_id: Int!, response: String!): Boolean
         removeUserquestion(userquestion_id: Int!): Boolean
         createRequest(intention_id: Int!, information: String!): Boolean
         updateRequest(request_id: Int!, intention_id: Int!, information: String!): Boolean
@@ -406,11 +407,11 @@ const resolvers = {
                 return false
             }
         },
-        async updateUserquestion(_,{userquestion_id,intention_id}){
+        async updateUserquestion(_,{userquestion_id,intention_id,response}){
             try {
                 const [userquestion] = await knex("userquestion")
                 .where({userquestion_id: userquestion_id})
-                .update({intention_id:intention_id})
+                .update({intention_id:intention_id, response:response})
                 .returning("*");
                 if(userquestion==null){return false}
                 else{return true}       
