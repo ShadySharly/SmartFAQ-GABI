@@ -153,6 +153,7 @@ const typeDefs = gql`
         removeIntention(intention_id: Int!): Boolean
         createUserquestion(client_id: Int!,dialogue_id: Int!,information: String!): Boolean
         updateUserquestion(userquestion_id: Int!, intention_id: Int!, response: String!): Boolean
+        updateUserquestionByIntention(userquestion_id: Int!, intention_id: Int!): Boolean
         removeUserquestion(userquestion_id: Int!): Boolean
         createRequest(intention_id: Int!, information: String!): Boolean
         updateRequest(request_id: Int!, intention_id: Int!, information: String!): Boolean
@@ -433,6 +434,19 @@ const resolvers = {
                 const [userquestion] = await knex("userquestion")
                 .where({userquestion_id: userquestion_id})
                 .update({intention_id:intention_id, response:response})
+                .returning("*");
+                if(userquestion==null){return false}
+                else{return true}       
+            } catch (error) {
+                console.log(error)
+                return false
+            }
+        },
+        async updateUserquestionByIntention(_,{userquestion_id,intention_id}){
+            try {
+                const [userquestion] = await knex("userquestion")
+                .where({userquestion_id: userquestion_id})
+                .update({intention_id:intention_id})
                 .returning("*");
                 if(userquestion==null){return false}
                 else{return true}       
