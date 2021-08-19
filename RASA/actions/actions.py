@@ -121,7 +121,7 @@ class ActionInitConversation(Action):
     async def run(self, dispatcher: CollectingDispatcher,
             tracker: Tracker,
             domain: Dict[Text, Any]) -> List[Dict[Text, Any]]:
-        dispatcher.utter_message(text="Contectado!")
+        dispatcher.utter_message(text="Conectado!")
         try:
             userID = tracker.latest_message['text'].split('@')[1]
             chatbotID = tracker.latest_message['text'].split('@')[2]
