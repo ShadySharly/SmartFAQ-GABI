@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import * as emailjs from "emailjs-com";
 import { useQuery, gql, useMutation } from '@apollo/client';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
@@ -74,12 +74,24 @@ const UPDATE_USERQUESTION = gql`
   }
 `;
 
+const DefaultUser: Client = { client_id: -1, first_name: "", last_name: "", email: "" };
+
+
 const EmailForm: React.FunctionComponent<IProps> = props => {
   const classes = useRowStyles();
   const [answer, setAnswer] = React.useState("");
   const [editQuestion] = useMutation(UPDATE_USERQUESTION);
   const { loading, error, data } = useQuery(GET_INTENTIONS);
   const [editing, setEdit] = useState(false);
+  const [user, setUser] = useState(DefaultUser);
+
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("user");
+    if (loggedInUser) {
+      const foundUser = JSON.parse(loggedInUser);
+      setUser(foundUser);
+    }
+  }, []);
 
   const [selectedIntent, setSelectedIntent] = useState(props.intention.intention_id);
 
@@ -103,7 +115,7 @@ const EmailForm: React.FunctionComponent<IProps> = props => {
       to_first_name: props.client.first_name,
       to_last_name: props.client.last_name,
       from_name: 'GABI',
-      mentor_name: 'Mentor X',
+      mentor_name: user.first_name + " " + user.last_name,
       question: props.question,
       message: answer,
       reply_to: GABI_EMAIL
