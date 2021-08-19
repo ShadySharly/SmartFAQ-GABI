@@ -26,7 +26,7 @@ const GET_INTENTIONS = gql`
 
 const UPDATE_USERQUESTION = gql`
   mutation updateUserQuestion ($userquestion_id: Int!, $intention_id: Int!) {
-    updateUserquestion (userquestion_id: $userquestion_id, intention_id: $intention_id)
+    updateUserquestionByIntention (userquestion_id: $userquestion_id, intention_id: $intention_id)
   }
 `;
 
@@ -82,7 +82,11 @@ interface IProps {
 const GroupingToolbar: React.FunctionComponent<IProps> = props => {
   const classes = useToolbarStyles();
   const { loading, error, data } = useQuery(GET_INTENTIONS);
-  const [editQuestion] = useMutation(UPDATE_USERQUESTION);
+  const [editQuestion] = useMutation(UPDATE_USERQUESTION, {
+    onCompleted() {
+      props.onUpdateQuestions();
+    }
+  });
   const [selectedIntent, setSelectedIntent] = useState(-1);
   const { numSelected } = props;
 
@@ -93,10 +97,9 @@ const GroupingToolbar: React.FunctionComponent<IProps> = props => {
         variables: {
           userquestion_id: id,
           intention_id: selectedIntent
-        }
+        },
       })
     ))
-    props.onUpdateQuestions();
   }
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
