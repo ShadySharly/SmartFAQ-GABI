@@ -160,7 +160,7 @@ const typeDefs = gql`
         createDialogue(client_id: Int!, chatbot_id: Int!): Int
         createChatmessage(dialogue_id: Int!, intention_id: Int!, information: String!, confidence: Int!): Boolean
         updateDialogue(dialogue_id: Int!,client_score: Int!): Boolean
-        updateChatbot(confidence: Int): Boolean
+        updateChatbot(confidence: Int!): Boolean
         generateChatbotFiles: Boolean
         generatePLNFiles: Boolean
         trainChatbot: Boolean

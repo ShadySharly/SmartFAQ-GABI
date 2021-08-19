@@ -4,18 +4,9 @@ import { RiMailDownloadFill } from "react-icons/ri";
 import { FaLayerGroup } from "react-icons/fa";
 import {RiQuestionAnswerFill} from "react-icons/ri";
 import { SidebarItem } from "../Models/SidebarItem";
+import SettingsIcon from '@material-ui/icons/Settings';
 
-export const SidebarData: SidebarItem[] = [
-    {
-        title: 'Preguntas Generales',
-        path: '/generalFAQ',
-        icon: < RiQuestionAnswerFill style={{fill:"#043C8B"}}/>,
-    },
-    {
-        title: 'Asignacion de Consultas',
-        path: '/queryassignment',
-        icon: < RiMailDownloadFill style={{fill:"#043C8B"}}/>,
-    },
+export const SidebarDataScientist: SidebarItem[] = [
     {
         title: 'Administración de Intenciones',
         path: '/intentindex',
@@ -35,5 +26,10 @@ export const SidebarData: SidebarItem[] = [
         title: 'Administración de Usuarios',
         path: '/adminindex',
         icon: < AiOutlineUser style={{fill:"#043C8B"}}/>,
+    },
+    {
+        title: 'Ajustes',
+        path: '/settingindex',
+        icon: < SettingsIcon style={{fill:"#043C8B"}}/>,
     },
 ];

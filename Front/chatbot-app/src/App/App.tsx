@@ -15,6 +15,7 @@ import GroupingIndex from '../Views/GroupingIndex';
 import Login from '../Auth/Login';
 import Register from '../Auth/Register';
 import AdministrationIndex from '../Views/AdministrationIndex';
+import SettingIndex from '../Views/SettingIndex';
 
 const cache = new InMemoryCache()
 
@@ -43,7 +44,7 @@ const App = () => {
   const showOpenSidebar = () => setSidebar(!sidebarOpen);
 
   const [user, setUser] = useState(DefaultUser);
-  console.log(user.duty.duty_id);
+  console.log("ID USUARIO: " + user.client_id);
 
   useEffect(() => {
     const loggedInUser = localStorage.getItem("user");
@@ -85,6 +86,7 @@ const App = () => {
                       <Route path="/groupintention" component={GroupingIndex} exact></Route>
                       <Route path="/faqindex" component={FaqIndex} exact></Route>
                       <Route path="/adminindex" component={AdministrationIndex} exact></Route>
+                      <Route path="/settingindex" component={SettingIndex} exact></Route>
                     </div>
                   )
                 )}
