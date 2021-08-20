@@ -1,119 +1,147 @@
-version: '2.0'
-config:
-  store_entities_as_slots: true
-session_config:
-  session_expiration_time: 60
-  carry_over_slots_to_new_session: true
+version: "v2"
+config: 
+ store_entities_as_slots: true
 intents:
-- greet:
-    use_entities: true
-- goodbye:
-    use_entities: true
-- affirm:
-    use_entities: true
-- deny:
-    use_entities: true
-- mood_great:
-    use_entities: true
-- mood_unhappy:
-    use_entities: true
-- bot_challenge:
-    use_entities: true
-- ask_place:
-    use_entities: true
-- ask_process:
-    use_entities: true
-- ask_courses:
-    use_entities: true
-- ask_place_EAO:
-    use_entities: true
-- ask_place_library:
-    use_entities: true
-- ask_process_pagare:
-    use_entities: true
-- ask_process_date_pagare:
-    use_entities: true
-- ask_process_req_pagare:
-    use_entities: true
-- ask_process_info_pagare:
-    use_entities: true
-- ask_courses_calculo1:
-    use_entities: true
-- ask_date_pep1_calculo1:
-    use_entities: true
-- ask_about_calculo1_derivative:
-    use_entities: true
-- ask_content_pep1_calculo1:
-    use_entities: true
-entities: []
-slots: {}
+ - login
+ - save
+ - greet
+ - goodbye
+ - affirm
+ - deny
+ - mood_great
+ - mood_unhappy
+ - bot_challenge
+ - ask_place
+ - ask_process
+ - ask_courses
+ - ask_place_EAO
+ - ask_place_library
+ - ask_process_pagare
+ - ask_process_date_pagare
+ - ask_process_req_pagare
+ - ask_process_info_pagare
+ - ask_courses_calculo1
+ - ask_date_pep1_calculo1
+ - ask_about_calculo1_derivative
+ - ask_content_pep1_calculo1
+ - bad_evaluate
+ - regular_evaluate
+ - good_evaluate
+ - nlu_fallback
+ - Invalido
+ - Nueva Intencion
+entities:
+  - userID
+  - conversationID
+  - chatbotID
+slots:
+ userID:
+  type: unfeaturized
+ conversationID:
+  type: unfeaturized
+ chatbotID:
+  type: unfeaturized
 responses:
-  utter_question:
-  - buttons:
+ utter_question:
+ - buttons:
     - payload: /ask_place
       title: Consulta de lugares
     - payload: /ask_process
       title: Consulta de procesos
     - payload: /ask_courses
       title: Consulta de cursos
-    text: ¡Hola! ¿En que puedo ayudarte?
-  utter_place:
-  - text: ¿Que lugar buscas?
-  utter_place_EAO:
-  - text: La EAO se encuentra en la av ecuador 500.
-  utter_place_library:
-  - text: La biblioteca se encuentra al frente de finanzas
-  utter_process:
-  - buttons:
+   text: ¡Hola! ¿En que puedo ayudarte?
+ utter_place:
+ - buttons:
+    - payload: /ask_place_EAO
+      title: EAO
+    - payload: /ask_place_library
+      title: Biblioteca
+   text: ¿Que lugar buscas?
+ utter_process:
+ - buttons:
     - payload: /ask_process_pagare
       title: Pagare
-    text: ¿Que proceso buscas?
-  utter_process_pagare:
-  - buttons:
+   text: ¿Que proceso buscas?
+ utter_process_pagare:
+ - buttons:
     - payload: /ask_process_date_pagare
       title: Fecha
     - payload: /ask_process_req_pagare
-      title: Requisitos
+      title: Pagare
     - payload: /ask_process_info_pagare
       title: Informacion
-    text: ¿Que informacion buscas?
-  utter_date_pagare:
-  - text: La fecha limite para pagar el pagare es el 20/10
-  utter_req_pagare:
-  - text: Los requisitos para el pagar el pagare son los siguientes.
-  utter_info_pagare:
-  - text: El pagare consiste en un documento que pacta el compromiso de un pago.
-  utter_courses:
-  - buttons:
+   text: ¿Que informacion buscas?
+ utter_courses:
+ - buttons:
     - payload: /ask_courses_calculo1
       title: Calculo 1
-    text: ¿Sobre que curso?
-  utter_courses_calculo1:
-  - buttons:
+   text: ¿Sobre que curso?
+ utter_courses_calculo1:
+ - buttons:
     - payload: /ask_date_pep1_calculo1
       title: Fecha de PEP1
     - payload: /ask_content_pep1_calculo1
       title: Contenido PEP1
     - payload: /ask_about_calculo1_derivative
       title: Como derivar
-    text: ¿Que quieres saber sobre Calculo 1?
-  utter_date_pep1_calculo1:
+   text: ¿Que quieres saber sobre Calculo 1?
+ utter_ending_question:
+ - buttons:
+    - payload: /affirm
+      title: Si
+    - payload: /deny
+      title: No
+   text: ¿Hay algo mas en lo que pueda ayudarte?
+ utter_evaluate:
+ - buttons:
+    - payload: /bad_evaluate
+      title: ⭐
+    - payload: /regular_evaluate
+      title: ⭐⭐
+    - payload: /good_evaluate
+      title: ⭐⭐⭐
+   text: ¿Que tan bien respondi?
+ utter_place_EAO:
+  - text: La EAO se encuentra en la av ecuador 500.
+ utter_place_library:
+  - text: La biblioteca se encuentra al frente de finanzas
+ utter_date_pagare:
+  - text: La fecha limite para pagar el pagare es el 20/10
+ utter_req_pagare:
+  - text: Los requisitos para el pagar el pagare son los siguientes.
+ utter_info_pagare:
+  - text: El pagare consiste en un documento que pacta el compromiso de un pago.
+ utter_date_pep1_calculo1:
   - text: Es el 5 de Marzo del 2020
-  utter_content_pep1_calculo1:
+ utter_content_pep1_calculo1:
   - text: En la PEP1 de calculo 1 entra derivadas, suma y resta.
-  utter_about_calculo1_derivative:
+ utter_about_calculo1_derivative:
   - text: Para derivar tienes que seguir las siguientes instrucciones ...
-  utter_cheer_up:
-  - image: https://i.imgur.com/nGF1K8f.jpg
-    text: 'Aquí tienes algo para animarte:'
-  utter_did_that_help:
+ utter_cheer_up:
+  - text: Aquí tienes algo para animarte
+ utter_did_that_help:
   - text: ¿Ha sido de ayuda?
-  utter_happy:
+ utter_happy:
   - text: ¡Genial! ¡Sigue adelante!
-  utter_goodbye:
-  - text: Adiós.
-  utter_iamabot:
+ utter_goodbye:
+  - text: Adiós
+ utter_iamabot:
   - text: Soy un bot, Rasa es mi motor.
-actions: []
+ utter_bad_evaluate:
+  - text: ¡Que mal!, seguire mejorando
+ utter_moderate_evaluate:
+  - text: Me alegra ser de ayuda!.
+ utter_good_evaluate:
+  - text: ¡Exelente!, me alegra mucho
+ utter_default:
+  - text: Aun no puedo responder esta pregunta. Se la mandare a un mentor!
+actions:
+ - action_init_conversation
+ - action_save_conversation
+ - action_fallback
 forms: {}
 e2e_actions: []
+sesion_config:
+ session_expiration_time: 60
+ carry_over_slots_to_new_session: true

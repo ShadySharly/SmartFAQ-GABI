@@ -1,165 +1,487 @@
-version: "2.0"
-nlu:
+version: "v2"
+nlu: 
 - intent: greet
   examples: |
-    - hola
-    - Hola hola
-    - Buenas tardes
-    - Buenos Días!
-    - Qué tal
-    - qué hay
-    - vamos
-    - hola amigo
-    - hey
-    - qué onda
-    - buendía
-    - buenastardes
-    - Hola
-    - saludos
+   - qué onda
+   - buendia
+   - buenastardes
+   - Hola
+   - saludos
 - intent: goodbye
   examples: |
-    - hasta luego
-    - Adiós
-    - bye
-    - despedida
-    - nos vemos
-    - que tenga un buen día
-    - adiós adios
-    - nos vemos después
-    - salu2
-    - bye bye
-    - hasta pronto
+   - nos vemos despues
+   - salu2
+   - bye bye
+   - hasta pronto
 - intent: affirm
   examples: |
-    - sí
-    - si claro
-    - por supuesto
-    - ok
-    - afirmativo
-    - así es
-    - sin duda
+   - sí
+   - si claro
+   - por supuesto
+   - ok
+   - afirmativo
+   - así es
+   - sin duda
 - intent: deny
   examples: |
-    - no
-    - para nada
-    - no me gusta
-    - Nunca
-    - Claro que no
-    - jamás
-    - no no no
+   - no
+   - para nada
+   - no me gusta
+   - Nunca
+   - Claro que no
+   - jamás
+   - no no no
 - intent: mood_great
   examples: |
-    - perfecto
-    - grandioso
-    - Increíble
-    - me siento como un rey
-    - maravilloso
-    - Me siento bien
-    - Estoy súper bien
-    - me encuentro increíble
-    - Voy a salvar al mundo
-    - emocionado
-    - extremadamente bien
-    - tan tan bien
-    - muy bien
-    - good
-    - bien
+   - perfecto
+   - grandioso
+   - Increible
+   - me siento como un rey
+   - maravilloso
+   - Me siento bien
+   - Estoy super bien
+   - me encuentro increible
+   - Voy a salvar al mundo
+   - emocionado
+   - extremadamente bien
+   - tan tan bien
+   - muy bien
+   - good
+   - bien
 - intent: mood_unhappy
   examples: |
-    - mi día estuvo horrible
-    - estoy triste
-    - No me siento mu bien
-    - Estoy decepcionado
-    - super triste
-    - Estoy muy triste
-    - triste
-    - tan triste
-    - infeliz
-    - nada bien
-    - no muy bien
-    - extremadamente triste
-    - muuuy tristeee
-    - Muy triste
-    - mal
+   - mi dia estuvo horrible
+   - estoy triste
+   - No me siento mu bien
+   - Estoy decepcionado
+   - super triste
+   - Estoy muy triste
+   - triste
+   - tan triste
+   - infeliz
+   - nada bien
+   - no muy bien
+   - extremadamente triste
+   - muuuy tristeee
+   - Muy triste
+   - mal
 - intent: bot_challenge
   examples: |
-    - Eres un robot?
-    - ¿eres un bot?
-    - Eres humano?
-    - ¿estoy hablando con un bot?
-    - estoy hablando con una persona?
+   - Eres un robot?
+   - ¿eres un bot?
+   - Eres humano?
+   - ¿estoy hablando con un bot?
+   - estoy hablando con una persona?
+   - Que eres?
+   - bot
 - intent: ask_place
   examples: |
-    - null
+   - Que lugares puedo buscar
+   - Lugares que puedo buscar
+   - Que lugares puedo encontrar
+   - Lugares que puedo encontrar
+   - Que lugares encuentro
+   - Cuentame los lugares
+   - Dime los lugares
+   - Que lugares hay
+   - Que lugares
+   - Lugares ai
+   - Lugares
 - intent: ask_process
   examples: |
-    - null
+   - Que procesos puedo ver
+   - Dime sobre los procesos
+   - Hablame sobre los procesos
+   - Cuentame sobre los procesos
+   - Que procesos hay actualmente
+   - Que procesos hay
+   - Q procesos hay
+   - Q prosesos hai
+   - Q procesos
+   - Q prosesos
+   - Dime que procesos
+   - Dime q proceso
+   - Dime q proseso
+   - Que procesos
+   - Procesos
 - intent: ask_courses
   examples: |
-    - null
+   - Que cursos tienes
+   - Hablame de los cursos
+   - Cuentame sobre los ramos
+   - Que ramos tienes
+   - Que ramos hay
+   - Que cursos hay
+   - Dime que ramos puedo encontrar
+   - Dime que ramos puedo cursar
+   - Informame sobre los ramos
+   - Q cursos hay
+   - Q cursos hai
+   - Q cursos ai
+   - Q ramos hay
+   - Q ramos hai
+   - Q ramos ai
 - intent: ask_place_EAO
   examples: |
-    - Como llego a la EAO
-    - Donde esta la EAO
-    - EAO
-    - Escuela de artes y oficios
-    - Donde estan los sapitos
-    - donde esta la EAO
+   - Como llego a la EAO
+   - como llego a la Eao
+   - como llego a la eao
+   - Donde esta la EAO
+   - donde esta la eao
+   - donde esta la Eao
+   - EAO
+   - Eao
+   - eao
+   - Escuela de artes y oficios
+   - Donde estan los sapitos
+   - donde esta la EAO
+   - Donde esta el casino
+   - Donde encuentro el casino
+   - Como puedo llegar a la EAO
+   - Como puedo llegar a los sapos
+   - Como puedo llegar al casino
 - intent: ask_place_library
   examples: |
-    - Como llego a la biblioteca
-    - Donde esta la biblio
-    - Biblioteca
-    - biblio
-    - viblioteca
-
-
+   - Como llego a la biblioteca
+   - como llego a la biblioteca
+   - Como llego a la biblio
+   - como llego a la biblio
+   - Donde esta la biblio
+   - Donde se encuentra la biblioteca
+   - Donde se encuentra la biblio
+   - Como encuentro la biblioteca
+   - como encuentro la biblioteca
+   - Como encuentro la biblio
+   - como encuentro la biblio
+   - Biblioteca
+- intent: greet
+  examples: |
+   - Hola hola
+- intent: goodbye
+  examples: |
+   - Adiosin
+- intent: greet
+  examples: |
+   - Buenas
+- intent: deny
+  examples: |
+   - naniii
+- intent: greet
+  examples: |
+   - Buenos Diaah!
+   - Que tal
+   - que hay
+- intent: goodbye
+  examples: |
+   - nos vemos
+- intent: affirm
+  examples: |
+   - okii
+- intent: goodbye
+  examples: |
+   - bom dia
+- intent: greet
+  examples: |
+   - hola amigo xddddddddd
+- intent: ask_place_library
+  examples: |
+   - biblioteca
+   - viblioteca
+   - Biblio
+   - biblio
+   - vivlio
+   - viblio
 - intent: ask_process_pagare
   examples: |
-    - null
+   - Hablame del pagare
+   - hablame del pagare
+   - Dime sobre el pagare
+   - dime sobre el pagare
+   - Hablame sobre el pagare
+   - hablame sobre el pagare
+   - Cuentame sobre el pagare
+   - cuentame sobre el pagare
+   - Que sabes del pagare
+   - que sabes del pagare
+   - Cuentame del pagare
+   - cuentame del pagare
+   - Q sabes del pagare
+   - q sabes del pagare
+   - Pagare
+   - pagare
 - intent: ask_process_date_pagare
   examples: |
-    - cuando se paga el pagare
-    - hasta cuando puedo pagar el pagare
-    - pagare
-    - fecha del pagare
-    - cuando me echan de la u
+   - Cuando se firma el pagare
+   - cuando se firma el pagare
+   - Hasta cuando puedo firmar el pagare
+   - hasta cuando puedo firmar el pagare
+   - Hasta cuando peudo firmar el pagare
+   - hasta cuando peudo firmar el pagare
+   - Asta cuando puedo firmar el pagare
+   - asta cuando puedo firmar el pagare
+   - Asta cuando peudo firmar el pagare
+   - asta cuando peudo firmar el pagare
+   - Fecha limite del pagare
+   - fecha limite del pagare
+   - Liimite del pagare
+   - liimite del pagare
+   - Limite del pagaree
+   - limite del pagaree
+   - Fecha del pagare
+   - fecha del pagare
+   - Firmar el pagare
+   - firmar el pagare
+   - Cuando me echan de la u
+   - cuando me echan de la u
 - intent: ask_process_req_pagare
   examples: |
-    - que necesito para pagar el pagare
-    - que requisitos tiene el pagare
-    - requisitos para el pagare
-    - req para el pagare
-    - requisitos pagare
-    - req pagare
-    - necesito pagare
+   - Que necesito para firmar el pagare
+   - que necesito para firmar el pagare
+   - Que requisitos tiene el pagare
+   - que requisitos tiene el pagare
+   - Que requisitos posee el pagare
+   - que requisitos posee el pagare
+   - Requisitos para el pagare
+   - requisitos para el pagare
+   - Req para el pagare
+   - req para el pagare
+   - Requisitos pagare
+   - requisitos pagare
+   - Req pagare
+   - req pagare
+   - Que necesito para el pagare
+   - que necesito para el pagare
+   - Que nesesito para el pagare
+   - que nesesito para el pagare
+   - Que nesecito para el pagare
+   - que nesecito para el pagare
+   - Que nececito para el pagare
+   - que nececito para el pagare
 - intent: ask_process_info_pagare
   examples: |
-    - que es el pagare
-    - en que consiste el pagare
-    - que pagare
-    - consiste pagare
-
+   - En que consiste el proceso del pagare
+   - en que consiste el proceso del pagare
+   - En que conciste el proceso del pagare
+   - en que conciste el proceso del pagare
+   - En que consiste el proseso del pagare
+   - en que consiste el proseso del pagare
+   - En que conciste el proseso del pagare
+   - en que conciste el proseso del pagare
+   - En que consiste el pagare
+   - en que consiste el pagare
+   - En que conciste el pagare
+   - en que conciste el pagare
+   - Consiste pagare
+   - consiste pagare
+   - Conciste pagare
+   - conciste pagare
+   - Info del proceso del pagare
+   - info del proceso del pagare
+   - Info del proseso del pagare
+   - info del proseso del pagare
+   - Proceso del pagare
+   - proceso del pagare
+   - Proseso del pagare
+   - proseso del pagare
 - intent: ask_courses_calculo1
   examples: |
-    - Calculo 1
+   - Dame informacion sobre Calculo 1
+   - dame informacion sobre Calculo 1
+   - Dame informacion sobre calculo 1
+   - dame informacion sobre calculo 1
+   - Que sabes sobre calculo 1
+   - que sabes sobre calculo 1
+   - Dame informacion de Calculo 1
+   - dame informacion de Calculo 1
+   - Dame informacion de calculo 1
+   - dame informacion de calculo 1
+   - Puedes darme informacion de Calculo 1
+   - puedes darme informacion de Calculo 1
+   - Puedes darme informacion de calculo 1
+   - puedes darme informacion de calculo 1
+   - Dame info de Calculo 1
+   - dame info de Calculo 1
+   - Dame info de calculo 1
+   - dame info de calculo 1
+   - Info de Calculo 1
+   - info de Calculo 1
+   - Info de calculo 1
+   - info de calculo 1
+   - Calculo 1
+   - calculo 1
 - intent: ask_date_pep1_calculo1
   examples: |
-    - cuando es la pep1 de calculo 1
-    - cuando es pep1 de calculo 1
-    - que dia es pep 1 de calculo1
-    - fecha de la pep 1 de calculo 1
-    - cuando es la fecha de la pep1 de calculo 1   
-- intent: ask_content_pep1_calculo1
-  examples: |
-    - cual es el contenido pep1 de calculo 1
-    - que entra en la pep1 de calculo 1
-    - que materia entra en pep 1 de calculo1
-    - materia de pep 1 de calculo 1
-    - contenido de pep 1 de calculo 1     
+   - Cuando es la pep 1 de Calculo 1
+   - cuando es la pep 1 de Calculo 1
+   - Cuando es la pep 1 de calculo 1
+   - cuando es la pep 1 de calculo 1
+   - Cuando es la pep1 de Calculo 1
+   - cuando es la pep1 de Calculo 1
+   - Cuando es la pep1 de calculo 1
+   - cuando es la pep1 de calculo 1
+   - Cuando es pep 1 de Calculo 1
+   - cuando es pep 1 de Calculo 1
+   - Cuando es pep 1 de calculo 1
+   - cuando es pep 1 de calculo 1
+   - Cuando es pep1 de Calculo 1
+   - cuando es pep1 de Calculo 1
+   - Cuando es pep1 de calculo 1
+   - cuando es pep1 de calculo 1
+   - Que dia es la pep 1 de Calculo 1
+   - que dia es la pep 1 de Calculo 1
+   - Que dia es la pep 1 de calculo 1
+   - que dia es la pep 1 de calculo 1
+   - Que dia es la pep1 de Calculo 1
+   - que dia es la pep1 de Calculo 1
+   - Que dia es la pep1 de calculo 1
+   - que dia es la pep1 de calculo 1
+   - Que dia es pep 1 de Calculo 1
+   - Que dia es pep 1 de calculo 1
+   - que dia es pep 1 de Calculo 1
+   - que dia es pep 1 de calculo 1
+   - Que dia es pep1 de Calculo 1
+   - Que dia es pep1 de calculo 1
+   - que dia es pep1 de Calculo 1
+   - que dia es pep1 de calculo 1
+   - Fecha de la pep 1 de Calculo 1
+   - fecha de la pep 1 de Calculo 1
+   - Fecha de la pep 1 de calculo 1
+   - fecha de la pep 1 de calculo 1
+   - Fecha de la pep1 de Calculo 1
+   - fecha de la pep1 de Calculo 1
+   - Fecha de la pep1 de calculo 1
+   - fecha de la pep1 de calculo 1
+   - Cuando es la fecha de la pep 1 de Calculo 1
+   - cuando es la fecha de la pep 1 de Calculo 1
+   - Cuando es la fecha de la pep 1 de calculo 1
+   - Cuando es la fecha de la pep 1 de calculo 1
+   - Cuando es la fecha de la pep1 de Calculo 1
+   - cuando es la fecha de la pep1 de Calculo 1
+   - Cuando es la fecha de la pep1 de calculo 1
+   - Cuando es la fecha de la pep1 de calculo 1
+   - Fecha pep 1 Calculo 1
+   - fecha pep 1 Calculo 1
+   - Fecha pep 1 calculo 1
+   - fecha pep 1 calculo 1
+   - Fecha pep1 Calculo 1
+   - fecha pep1 Calculo 1
+   - Fecha pep1 calculo 1
+   - fecha pep1 calculo 1
 - intent: ask_about_calculo1_derivative
   examples: |
-    - como puedo derivar
-    - cuales son los pasos para derivar
-    - como derivo
-    - derivada
+   - Cuales son los pasos para derivar
+   - cuales son los pasos para derivar
+   - Como se deriva
+   - como se deriva
+   - Pasos para derivar
+   - pasos para derivar
+   - Como puedo derivar
+   - como puedo derivar
+   - Como derivo
+   - como derivo
+   - Derivada
+   - derivada
+   - Derivar
+   - derivar
+- intent: ask_content_pep1_calculo1
+  examples: |
+   - Cual es el contenido de la pep 1 de Calculo 1
+   - cual es el contenido de la pep 1 de Calculo 1
+   - Cual es el contenido de la pep 1 de calculo 1
+   - cual es el contenido de la pep 1 de calculo 1
+   - Cual es el contenido de la pep1 de Calculo 1
+   - cual es el contenido de la pep1 de Calculo 1
+   - Cual es el contenido de la pep1 de calculo 1
+   - cual es el contenido de la pep1 de calculo 1
+   - Cual es el contenido pep 1 de Calculo 1
+   - cual es el contenido pep 1 de Calculo 1
+   - Cual es el contenido pep 1 de calculo 1
+   - cual es el contenido pep 1 de calculo 1
+   - Cual es el contenido pep1 de Calculo 1
+   - cual es el contenido pep1 de Calculo 1
+   - Cual es el contenido pep1 de calculo 1
+   - cual es el contenido pep1 de calculo 1
+   - Que entra en la pep 1 de Calculo 1
+   - que entra en la pep 1 de Calculo 1
+   - Que entra en la pep 1 de calculo 1
+   - que entra en la pep 1 de calculo 1
+   - Que entra en la pep1 de Calculo 1
+   - que entra en la pep1 de Calculo 1
+   - Que entra en la pep1 de calculo 1
+   - que entra en la pep1 de calculo 1
+   - Que materia entra en la pep 1 de Calculo 1
+   - que materia entra en la pep 1 de Calculo 1
+   - Que materia entra en la pep 1 de calculo 1
+   - que materia entra en la pep 1 de calculo 1
+   - Que materia entra en la pep1 de Calculo 1
+   - que materia entra en la pep1 de Calculo 1
+   - Que materia entra en la pep1 de calculo 1
+   - que materia entra en la pep1 de calculo 1
+   - Que materia entra en pep 1 de Calculo 1
+   - que materia entra en pep 1 de Calculo 1
+   - Que materia entra en pep 1 de calculo 1
+   - que materia entra en pep 1 de calculo 1
+   - Que materia entra en pep1 de Calculo 1
+   - que materia entra en pep1 de Calculo 1
+   - Que materia entra en pep1 de calculo 1
+   - que materia entra en pep1 de calculo 1
+   - Materia pep 1 de Calculo 1
+   - materia pep 1 de Calculo 1
+   - Materia pep 1 de calculo 1
+   - materia pep 1 de calculo 1
+   - Materia pep1 de Calculo 1
+   - materia pep1 de Calculo 1
+   - Materia pep1 de calculo 1
+   - materia pep1 de calculo 1
+   - Materia de pep 1 de Calculo 1
+   - materia de pep 1 de Calculo 1
+   - Materia de pep 1 de calculo 1
+   - materia de pep 1 de calculo 1
+   - Materia de pep1 de Calculo 1
+   - materia de pep1 de Calculo 1
+   - Materia de pep1 de calculo 1
+   - materia de pep1 de calculo 1
+   - Contenido pep 1 de Calculo 1
+   - contenido pep 1 de Calculo 1
+   - Contenido pep 1 de calculo 1
+   - contenido pep 1 de calculo 1
+   - Contenido pep1 de Calculo 1
+   - contenido pep1 de Calculo 1
+   - Contenido pep1 de calculo 1
+   - contenido pep1 de calculo 1
+   - Contenido de pep 1 de Calculo 1
+   - contenido de pep 1 de Calculo 1
+   - Contenido de pep 1 de calculo 1
+   - contenido de pep 1 de calculo 1
+   - Contenido de pep1 de Calculo 1
+   - contenido de pep1 de Calculo 1
+   - Contenido de pep1 de calculo 1
+   - contenido de pep1 de calculo 1
+- intent: bad_evaluate
+  examples: |
+   - pesimo
+   - malo
+   - muy mal
+   - no me gusto
+   - respondiste muy mal
+   - horrible
+- intent: regular_evaluate
+  examples: |
+   - regular
+   - mas o menos
+   - no tan bueno
+   - respondiste regular
+- intent: good_evaluate
+  examples: |
+   - bien
+   - buenisimo
+   - correcto
+   - muy bien
+- intent: goodbye
+  examples: |
+   - Loh vimoh
+- intent: greet
+  examples: |
+   - Me parece
+   - Ok Amigo!!!
+   - VAMOOOOOH

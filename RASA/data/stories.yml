@@ -1,111 +1,30 @@
-version: "2.0"
-
-stories:
-
-- story: ask about location_EAO
+version: "v2"
+stories: 
+- story: ask the student how they can help about location
   steps:
   - intent: greet
   - action: utter_question
   - intent: ask_place
   - action: utter_place
-  - intent: ask_place_EAO
-  - action: utter_place_EAO
-  - action: utter_did_that_help
-  - intent: deny
-  - action: utter_goodbye  
-
-- story: ask about location_Library
-  steps:
-  - intent: greet
-  - action: utter_question
-  - intent: ask_place
-  - action: utter_place
-  - intent: ask_place_library
-  - action: utter_place_library
-  - action: utter_did_that_help
-  - intent: deny
-  - action: utter_goodbye
-
-- story: ask about process_date_Pagare
+- story: ask the student how they can help about process
   steps:
   - intent: greet
   - action: utter_question
   - intent: ask_process
   - action: utter_process
-  - intent: ask_process_pagare
-  - action: utter_process_pagare
-  - intent: ask_process_date_pagare
-  - action: utter_date_pagare
-  - action: utter_did_that_help
-  - intent: deny
-  - action: utter_goodbye
-
-- story: ask about process_req_Pagare
-  steps:
-  - intent: greet
-  - action: utter_question
-  - intent: ask_process
-  - action: utter_process
-  - intent: ask_process_pagare
-  - action: utter_process_pagare
-  - intent: ask_process_req_pagare
-  - action: utter_req_pagare
-  - action: utter_did_that_help
-  - intent: deny
-  - action: utter_goodbye
-
-- story: ask about process_info_Pagare
-  steps:
-  - intent: greet
-  - action: utter_question
-  - intent: ask_process
-  - action: utter_process
-  - intent: ask_process_pagare
-  - action: utter_process_pagare  
-  - intent: ask_process_info_pagare
-  - action: utter_info_pagare
-  - action: utter_did_that_help
-  - intent: deny
-  - action: utter_goodbye
-
-- story: ask about courses_date_pep1_calculo1
+- story: ask the student how they can help about course
   steps:
   - intent: greet
   - action: utter_question
   - intent: ask_courses
   - action: utter_courses
-  - intent: ask_courses_calculo1
-  - action: utter_courses_calculo1
-  - intent: ask_date_pep1_calculo1
-  - action: utter_date_pep1_calculo1
-  - action: utter_did_that_help
-  - intent: deny
-  - action: utter_goodbye
-
-- story: ask about courses_content_pep1_calculo1
+- story: asks the student if they want to end the conversation (affirm)
   steps:
-  - intent: greet
+  - action: utter_ending_question
+  - intent: affirm
   - action: utter_question
-  - intent: ask_courses
-  - action: utter_courses
-  - intent: ask_courses_calculo1
-  - action: utter_courses_calculo1  
-  - intent: ask_content_pep1_calculo1
-  - action: utter_content_pep1_calculo1
-  - action: utter_did_that_help
-  - intent: deny
-  - action: utter_goodbye
-
-- story: ask about courses_about_calculo1
+- story: asks the student if they want to end the conversation (deny)
   steps:
-  - intent: greet
-  - action: utter_question
-  - intent: ask_courses
-  - action: utter_courses
-  - intent: ask_courses_calculo1
-  - action: utter_courses_calculo1  
-  - intent: ask_about_calculo1_derivative
-  - action: utter_about_calculo1_derivative
-  - action: utter_did_that_help
+  - action: utter_ending_question
   - intent: deny
-  - action: utter_goodbye
+  - action: utter_evaluate
