@@ -1,0 +1,6 @@
+{
+  "name": "RASA",
+  "devDependencies": {
+    "sonarqube-scanner": "^2.8.1"
+  }
+}

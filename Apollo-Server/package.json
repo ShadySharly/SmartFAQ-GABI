@@ -23,5 +23,8 @@
     "node-cron": "^3.0.0",
     "pg": "^8.6.0",
     "shelljs": "^0.8.4"
+  },
+  "devDependencies": {
+    "sonarqube-scanner": "^2.8.1"
   }
 }
