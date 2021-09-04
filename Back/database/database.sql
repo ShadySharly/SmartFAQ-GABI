@@ -725,9 +725,9 @@ INSERT INTO request VALUES (418,45,'muy bien');
 INSERT INTO chatbot VALUES (1,1,'2002-02-16 20:38:40',60,'1.0.1b');
 INSERT INTO chatbot VALUES (2,2,'2002-02-16 20:40:40',50,'1.0.1c');
 
-INSERT INTO client VALUES (1,1,'Carlos','Perez','URL Avatar','asdfxd123','email@email.com');
-INSERT INTO client VALUES (2,2,'Matias','Coronado','URL Avatar','canito123','email@email.com');
-INSERT INTO client VALUES (3,3,'Bryan','Santelices','URL Avatar','macaco123','email@email.com');
+INSERT INTO client VALUES (1,1,'alumno','uno','URL Avatar','$2b$12$iIG6fGPtRpo7WKrA7MaMgObE9ytNbTliZgNS5ShP3JyozDQ.bE2ZG','email@email.com');
+INSERT INTO client VALUES (2,2,'mentor','uno','URL Avatar','$2b$12$InWkTikILioGKltoDB5eEuqEuOoa9IiNmeRng872PomyXPLNQgwDK','email@email.com');
+INSERT INTO client VALUES (3,3,'cientista','uno','URL Avatar','$2b$12$jbJchNrJ16u7Ih/I8.Hb.ORDAJJ2LBOcuBu4lVC.FmEX2w29BW2mC','email@email.com');
 
 INSERT INTO permission_duty VALUES (1,1,1);
 INSERT INTO permission_duty VALUES (2,2,2);
